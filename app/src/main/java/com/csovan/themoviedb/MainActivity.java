@@ -76,22 +76,15 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 setTitle(String.format(
-                        "%s - %s & %s",
-                        getString(R.string.app_name),
+                        "%s & %s",
                         getString(R.string.movies),
                         getString(R.string.tv_shows)));
                 return true;
             case R.id.nav_movies:
-                setTitle(String.format(
-                        "%s - %s",
-                        getString(R.string.app_name),
-                        getString(R.string.movies)));
+                setTitle(getString(R.string.movies));
                 return true;
             case R.id.nav_tv_shows:
-                setTitle(String.format(
-                        "%s - %s",
-                        getString(R.string.app_name),
-                        getString(R.string.tv_shows)));
+                setTitle(getString(R.string.tv_shows));
                 return true;
         }
         return false;
