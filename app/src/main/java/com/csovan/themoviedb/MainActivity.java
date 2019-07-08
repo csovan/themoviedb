@@ -23,11 +23,14 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         NavigationView navigationView = findViewById(R.id.nav_view_main);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_home);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
             return true;
         }
 
@@ -67,23 +70,30 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+        switch (id) {
+            case R.id.nav_home:
+                setTitle(String.format(
+                        "%s - %s & %s",
+                        getString(R.string.app_name),
+                        getString(R.string.movies),
+                        getString(R.string.tv_shows)));
+                return true;
+            case R.id.nav_movies:
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.movies)));
+                return true;
+            case R.id.nav_tv_shows:
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.tv_shows)));
+                return true;
+        }
+        return false;
     }
 }
