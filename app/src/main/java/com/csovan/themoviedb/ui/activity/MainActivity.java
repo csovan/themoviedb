@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        setTitle(String.format(
+        /*setTitle(String.format(
                 "%s & %s",
                 getString(R.string.menu_movies),
-                getString(R.string.menu_tv_shows)));
+                getString(R.string.menu_tv_shows)));*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         NavigationView navigationView = findViewById(R.id.nav_view_main);
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_home);
+        navigationView.setCheckedItem(R.id.nav_movies);
 
         setFragment(new MoviesFragment());
     }

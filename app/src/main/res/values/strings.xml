@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">themoviedb</string>
     <string name="more">More</string>
+    <string name="card_title">Card Title</string>
 
     <!-- Navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
