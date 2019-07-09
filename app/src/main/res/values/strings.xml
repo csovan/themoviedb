@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">themoviedb</string>
+    <string name="more">More</string>
+
+    <!-- Navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">The Movie Database</string>
     <string name="nav_header_subtitle">https://www.themoviedb.org</string>
     <string name="nav_header_desc">Navigation header desc</string>
     <string name="action_search">Search</string>
+
+    <!-- Content description strings-->
+    <string name="iv_backdrop_desc">Image view backdrop desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -14,10 +20,8 @@
     <string name="menu_favorites">Favorites</string>
     <string name="menu_help_feedback">Help &amp; feedback</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- Movies -->
+    <string name="movies_now_playing">Movies Now Playing</string>
 
     <!-- TV Shows -->
 
