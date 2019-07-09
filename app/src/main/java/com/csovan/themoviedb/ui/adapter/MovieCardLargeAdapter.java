@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 
 public class MovieCardLargeAdapter extends RecyclerView.Adapter<MovieCardLargeAdapter.MovieViewHolder> {
@@ -31,8 +32,12 @@ public class MovieCardLargeAdapter extends RecyclerView.Adapter<MovieCardLargeAd
     @Override
     public void onBindViewHolder(@NonNull MovieCardLargeAdapter.MovieViewHolder holder, int position) {
 
-        Glide.with(context)
+        Glide.with(context.getApplicationContext())
                 .load(R.drawable.ic_film)
+                .asBitmap()
+                .centerCrop()
+                .placeholder(R.drawable.ic_film)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageViewMovieBackdrop);
 
     }
