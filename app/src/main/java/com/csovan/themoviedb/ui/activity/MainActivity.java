@@ -1,4 +1,4 @@
-package com.csovan.themoviedb;
+package com.csovan.themoviedb.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import com.csovan.themoviedb.R;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -18,8 +20,13 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
+
+        setTitle(String.format(
+                "%s & %s",
+                getString(R.string.menu_movies),
+                getString(R.string.menu_tv_shows)));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         NavigationView navigationView = findViewById(R.id.nav_view_main);
@@ -77,14 +84,17 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_home:
                 setTitle(String.format(
                         "%s & %s",
-                        getString(R.string.movies),
-                        getString(R.string.tv_shows)));
+                        getString(R.string.menu_movies),
+                        getString(R.string.menu_tv_shows)));
                 return true;
             case R.id.nav_movies:
-                setTitle(getString(R.string.movies));
+                setTitle(getString(R.string.menu_movies));
                 return true;
             case R.id.nav_tv_shows:
-                setTitle(getString(R.string.tv_shows));
+                setTitle(getString(R.string.menu_tv_shows));
+                return true;
+            case R.id.nav_favorites:
+                setTitle(getString(R.string.menu_favorites));
                 return true;
         }
         return false;

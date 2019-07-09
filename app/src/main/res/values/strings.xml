@@ -14,10 +14,11 @@
     <string name="menu_favorites">Favorites</string>
     <string name="menu_help_feedback">Help &amp; feedback</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Movies -->
-    <string name="movies">Movies</string>
 
     <!-- TV Shows -->
-    <string name="tv_shows">TV Shows</string>
 
 </resources>
