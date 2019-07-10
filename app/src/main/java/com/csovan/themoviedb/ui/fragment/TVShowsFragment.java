@@ -1,5 +1,6 @@
 package com.csovan.themoviedb.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsPopularResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsTopRatedResponse;
+import com.csovan.themoviedb.ui.activity.TVShowsViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.TVShowCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
 
@@ -33,6 +35,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
+import static com.csovan.themoviedb.util.Constant.AIRING_TODAY_TV_SHOWS_TYPE;
+import static com.csovan.themoviedb.util.Constant.ON_THE_AIR_TV_SHOWS_TYPE;
+import static com.csovan.themoviedb.util.Constant.POPULAR_TV_SHOWS_TYPE;
+import static com.csovan.themoviedb.util.Constant.TOP_RATED_TV_SHOWS_TYPE;
+import static com.csovan.themoviedb.util.Constant.VIEW_ALL_TV_SHOWS_TYPE;
 
 public class TVShowsFragment extends Fragment {
     private ProgressBar progressBar;
@@ -129,6 +136,43 @@ public class TVShowsFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false));
 
         tvshowsTopRatedSectionLoaded = false;
+
+        // Set on click listener for view all
+        tvTVShowsOnTheAirViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, ON_THE_AIR_TV_SHOWS_TYPE);
+                startActivity(intent);
+            }
+        });
+
+        tvTVShowsPopularViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, POPULAR_TV_SHOWS_TYPE);
+                startActivity(intent);
+            }
+        });
+
+        tvTVShowsAiringTodayViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, AIRING_TODAY_TV_SHOWS_TYPE);
+                startActivity(intent);
+            }
+        });
+
+        tvTVShowsTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, TOP_RATED_TV_SHOWS_TYPE);
+                startActivity(intent);
+            }
+        });
 
         loadTVShowsFragment();
 

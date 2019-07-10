@@ -40,7 +40,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
 
     private RecyclerView rvViewAll;
     private List<MovieBrief> movieList;
-    private MovieCardSmallAdapter moviesAdapter;
+    private MovieCardSmallAdapter movieCardSmallAdapter;
 
     private int movieListType;
 
@@ -94,8 +94,8 @@ public class MoviesViewAllActivity extends AppCompatActivity {
 
         movieList = new ArrayList<>();
 
-        moviesAdapter = new MovieCardSmallAdapter(MoviesViewAllActivity.this, movieList);
-        rvViewAll.setAdapter(moviesAdapter);
+        movieCardSmallAdapter = new MovieCardSmallAdapter(MoviesViewAllActivity.this, movieList);
+        rvViewAll.setAdapter(movieCardSmallAdapter);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(
                 MoviesViewAllActivity.this, 3);
         rvViewAll.setLayoutManager(gridLayoutManager);
@@ -151,7 +151,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
-                        moviesAdapter.notifyDataSetChanged();
+                        movieCardSmallAdapter.notifyDataSetChanged();
                         if (response.body().getPage() == response.body().getTotalPages()){
                             pagesOver = true;
                         }else {
@@ -186,7 +186,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
-                        moviesAdapter.notifyDataSetChanged();
+                        movieCardSmallAdapter.notifyDataSetChanged();
                         if (response.body().getPage() == response.body().getTotalPages()){
                             pagesOver = true;
                         }else {
@@ -221,7 +221,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
-                        moviesAdapter.notifyDataSetChanged();
+                        movieCardSmallAdapter.notifyDataSetChanged();
                         if (response.body().getPage() == response.body().getTotalPages()){
                             pagesOver = true;
                         }else {
@@ -256,7 +256,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
-                        moviesAdapter.notifyDataSetChanged();
+                        movieCardSmallAdapter.notifyDataSetChanged();
                         if (response.body().getPage() == response.body().getTotalPages()){
                             pagesOver = true;
                         }else {
