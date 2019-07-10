@@ -98,9 +98,11 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
 
         rvViewAll.setAdapter(tvshowCardSmallAdapter);
 
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(TVShowsViewAllActivity.this, 3);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(
+                TVShowsViewAllActivity.this, 3);
 
         rvViewAll.setLayoutManager(gridLayoutManager);
+
         rvViewAll.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

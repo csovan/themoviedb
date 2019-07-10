@@ -9,6 +9,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_tv_shows_view_all"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/small"
+        android:layout_marginStart="@dimen/small"
+        android:layout_marginEnd="@dimen/small"/>
 
 </FrameLayout>

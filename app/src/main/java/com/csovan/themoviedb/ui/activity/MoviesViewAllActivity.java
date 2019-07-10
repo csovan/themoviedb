@@ -96,9 +96,12 @@ public class MoviesViewAllActivity extends AppCompatActivity {
 
         movieCardSmallAdapter = new MovieCardSmallAdapter(MoviesViewAllActivity.this, movieList);
         rvViewAll.setAdapter(movieCardSmallAdapter);
+
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(
                 MoviesViewAllActivity.this, 3);
+
         rvViewAll.setLayoutManager(gridLayoutManager);
+
         rvViewAll.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
