@@ -25,6 +25,8 @@
     <!-- Movies -->
     <string name="movies_now_playing">Movies Now Playing</string>
     <string name="movies_popular">Movies Popular</string>
+    <string name="movies_upcoming">Movies Upcoming</string>
+    <string name="movies_top_rated">Movies Top Rated</string>
 
     <!-- TV Shows -->
 

@@ -18,6 +18,8 @@ import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.MovieBrief;
 import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
+import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
+import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
 import com.csovan.themoviedb.ui.adapter.MovieCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 
@@ -45,6 +47,20 @@ public class MoviesFragment extends Fragment {
     private TextView tvMoviesPopularViewAll;
     private RecyclerView rvMoviesPopular;
     private MovieCardSmallAdapter moviesPopularAdapter;
+
+    // Movies upcoming
+    private List<MovieBrief> movieUpcomingList;
+    private Call<MoviesUpcomingResponse> moviesUpcomingResponseCall;
+    private TextView tvMoviesUpcomingViewAll;
+    private RecyclerView rvMoviesUpcoming;
+    private MovieCardSmallAdapter moviesUpcomingAdapter;
+
+    // Movies top rated
+    private List<MovieBrief> movieTopRatedList;
+    private Call<MoviesTopRatedResponse> moviesTopRatedResponseCall;
+    private TextView tvMoviesTopRatedViewAll;
+    private RecyclerView rvMoviesTopRated;
+    private MovieCardSmallAdapter moviesTopRatedAdapter;
 
     @Nullable
     @Override
@@ -74,6 +90,26 @@ public class MoviesFragment extends Fragment {
         rvMoviesPopular.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
+        // Movies upcoming section
+        tvMoviesUpcomingViewAll = view.findViewById(R.id.text_view_movies_upcoming_view_all);
+        rvMoviesUpcoming = view.findViewById(R.id.recycler_view_movies_upcoming);
+
+        movieUpcomingList = new ArrayList<>();
+        moviesUpcomingAdapter = new MovieCardSmallAdapter(getContext(), movieUpcomingList);
+        rvMoviesUpcoming.setAdapter(moviesUpcomingAdapter);
+        rvMoviesUpcoming.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+
+        // Movies top rated section
+        tvMoviesTopRatedViewAll = view.findViewById(R.id.text_view_movies_top_rated_view_all);
+        rvMoviesTopRated = view.findViewById(R.id.recycler_view_movies_top_rated);
+
+        movieTopRatedList = new ArrayList<>();
+        moviesTopRatedAdapter = new MovieCardSmallAdapter(getContext(), movieTopRatedList);
+        rvMoviesTopRated.setAdapter(moviesTopRatedAdapter);
+        rvMoviesTopRated.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+
         loadMoviesFragment();
 
         return view;
@@ -82,6 +118,8 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesFragment() {
         loadMoviesNowPlaying();
         loadMoviesPopular();
+        loadMoviesUpcoming();
+        loadMoviesTopRated();
     }
 
     private void loadMoviesNowPlaying() {
@@ -140,6 +178,70 @@ public class MoviesFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<MoviesPopularResponse> call, @NonNull Throwable t) {
+
+            }
+
+        });
+
+    }
+
+    private void loadMoviesUpcoming(){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        moviesUpcomingResponseCall = apiService.getUpcomingMovies(TMDB_API_KEY, 1, "US");
+        moviesUpcomingResponseCall.enqueue(new Callback<MoviesUpcomingResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Response<MoviesUpcomingResponse> response) {
+                if (!response.isSuccessful()) {
+                    moviesUpcomingResponseCall = call.clone();
+                    moviesUpcomingResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getResults() == null) return;
+
+                for (MovieBrief movie : response.body().getResults()) {
+                    if (movie != null && movie.getPosterPath() != null)
+                        movieUpcomingList.add(movie);
+                }
+                moviesUpcomingAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Throwable t) {
+
+            }
+
+        });
+
+    }
+
+    private void loadMoviesTopRated(){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        moviesTopRatedResponseCall = apiService.getTopRatedMovies(TMDB_API_KEY, 1, "US");
+        moviesTopRatedResponseCall.enqueue(new Callback<MoviesTopRatedResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Response<MoviesTopRatedResponse> response) {
+                if (!response.isSuccessful()) {
+                    moviesTopRatedResponseCall = call.clone();
+                    moviesTopRatedResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getResults() == null) return;
+
+                for (MovieBrief movie : response.body().getResults()) {
+                    if (movie != null && movie.getPosterPath() != null)
+                        movieTopRatedList.add(movie);
+                }
+                moviesTopRatedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Throwable t) {
 
             }
 

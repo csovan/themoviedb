@@ -25,6 +25,12 @@
             <include
                 layout="@layout/movies_popular_section" />
 
+            <include
+                layout="@layout/movies_upcoming_section" />
+
+            <include
+                layout="@layout/movies_top_rated_section" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
