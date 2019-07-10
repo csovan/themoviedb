@@ -1,5 +1,6 @@
 package com.csovan.themoviedb.data.api;
 
+import com.csovan.themoviedb.data.model.movie.Movie;
 import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
@@ -11,6 +12,7 @@ import com.csovan.themoviedb.data.model.tvshow.TVShowsTopRatedResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
@@ -39,6 +41,12 @@ public interface ApiInterface {
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
+
+    @GET("movie/{id}")
+    Call<Movie> getMovieDetails(
+            @Path("id") Integer movieId,
+            @Query("api_key") String apiKey);
+
 
     // TV Show services
     @GET("tv/on_the_air")
