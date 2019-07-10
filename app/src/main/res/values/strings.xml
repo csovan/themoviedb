@@ -34,4 +34,7 @@
     <string name="tv_shows_airing_today">TV Shows Airing Today</string>
     <string name="tv_shows_top_rated">TV Shows Top Rated</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

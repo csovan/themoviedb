@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.csovan.themoviedb.R;
+import com.csovan.themoviedb.ui.fragment.HomeFragment;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
 import com.csovan.themoviedb.ui.fragment.TVShowsFragment;
 
@@ -28,10 +29,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        /*setTitle(String.format(
+        setTitle(String.format(
                 "%s & %s",
                 getString(R.string.menu_movies),
-                getString(R.string.menu_tv_shows)));*/
+                getString(R.string.menu_tv_shows)));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         NavigationView navigationView = findViewById(R.id.nav_view_main);
@@ -42,9 +43,9 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_movies);
+        navigationView.setCheckedItem(R.id.nav_home);
 
-        setFragment(new MoviesFragment());
+        setFragment(new HomeFragment());
     }
 
     @Override
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_home:
+                setFragment(new HomeFragment());
                 setTitle(String.format(
                         "%s & %s",
                         getString(R.string.menu_movies),
