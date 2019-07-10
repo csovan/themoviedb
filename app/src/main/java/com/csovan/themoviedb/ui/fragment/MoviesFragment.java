@@ -17,7 +17,9 @@ import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.MovieBrief;
 import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
+import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.ui.adapter.MovieCardLargeAdapter;
+import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,13 @@ public class MoviesFragment extends Fragment {
     private RecyclerView rvMoviesNowPlaying;
     private MovieCardLargeAdapter moviesNowPlayingAdapter;
 
+    // Movies popular
+    private List<MovieBrief> moviePopularList;
+    private Call<MoviesPopularResponse> moviesPopularResponseCall;
+    private TextView tvMoviesPopularViewAll;
+    private RecyclerView rvMoviesPopular;
+    private MovieCardSmallAdapter moviesPopularAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -55,6 +64,16 @@ public class MoviesFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false));
         (new LinearSnapHelper()).attachToRecyclerView(rvMoviesNowPlaying);
 
+        // Movies popular section
+        tvMoviesPopularViewAll = view.findViewById(R.id.text_view_movies_popular_view_all);
+        rvMoviesPopular = view.findViewById(R.id.recycler_view_movies_popular);
+
+        moviePopularList = new ArrayList<>();
+        moviesPopularAdapter = new MovieCardSmallAdapter(getContext(), moviePopularList);
+        rvMoviesPopular.setAdapter(moviesPopularAdapter);
+        rvMoviesPopular.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+
         loadMoviesFragment();
 
         return view;
@@ -62,6 +81,7 @@ public class MoviesFragment extends Fragment {
 
     private void loadMoviesFragment() {
         loadMoviesNowPlaying();
+        loadMoviesPopular();
     }
 
     private void loadMoviesNowPlaying() {
@@ -93,5 +113,37 @@ public class MoviesFragment extends Fragment {
             }
 
         });
+    }
+
+    private void loadMoviesPopular() {
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        moviesPopularResponseCall = apiService.getPopularMovies(TMDB_API_KEY, 1, "US");
+        moviesPopularResponseCall.enqueue(new Callback<MoviesPopularResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MoviesPopularResponse> call, @NonNull Response<MoviesPopularResponse> response) {
+                if (!response.isSuccessful()) {
+                    moviesPopularResponseCall = call.clone();
+                    moviesPopularResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getResults() == null) return;
+
+                for (MovieBrief movie : response.body().getResults()) {
+                    if (movie != null && movie.getPosterPath() != null)
+                        moviePopularList.add(movie);
+                }
+                moviesPopularAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MoviesPopularResponse> call, @NonNull Throwable t) {
+
+            }
+
+        });
+
     }
 }
