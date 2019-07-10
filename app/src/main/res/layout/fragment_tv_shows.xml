@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame_layout_tv_shows"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.TVShowsFragment">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view_tv_shows"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/linear_layout_tv_shows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/tv_shows_airing_today_section" />
+
+            <include
+                layout="@layout/tv_shows_popular_section" />
+
+            <include
+                layout="@layout/tv_shows_on_the_air_section" />
+
+            <include
+                layout="@layout/tv_shows_top_rated_section" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <include layout="@layout/progress_bar" />
+
+</FrameLayout>

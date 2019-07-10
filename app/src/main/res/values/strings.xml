@@ -29,5 +29,9 @@
     <string name="movies_top_rated">Movies Top Rated</string>
 
     <!-- TV Shows -->
+    <string name="tv_shows_on_the_air">TV Shows On The Air</string>
+    <string name="tv_shows_popular">TV Shows Popular</string>
+    <string name="tv_shows_airing_today">TV Shows Airing Today</string>
+    <string name="tv_shows_top_rated">TV Shows Top Rated</string>
 
 </resources>

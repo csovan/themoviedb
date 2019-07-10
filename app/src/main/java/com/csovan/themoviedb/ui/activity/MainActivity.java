@@ -16,6 +16,7 @@ import android.view.Menu;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
+import com.csovan.themoviedb.ui.fragment.TVShowsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -94,9 +95,11 @@ public class MainActivity extends AppCompatActivity
                         getString(R.string.menu_tv_shows)));
                 return true;
             case R.id.nav_movies:
+                setFragment(new MoviesFragment());
                 setTitle(getString(R.string.menu_movies));
                 return true;
             case R.id.nav_tv_shows:
+                setFragment(new TVShowsFragment());
                 setTitle(getString(R.string.menu_tv_shows));
                 return true;
             case R.id.nav_favorites:
