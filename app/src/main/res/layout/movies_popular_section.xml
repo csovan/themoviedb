@@ -11,14 +11,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small"
         android:layout_marginTop="@dimen/small"
-        android:text="@string/movies_now_playing"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="@string/movies_popular"
         android:textSize="@dimen/text_size_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_movies_now_playing_view_all"
+        android:id="@+id/text_view_movies_popular_view_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small"
@@ -33,7 +32,7 @@
         app:layout_constraintTop_toTopOf="@+id/text_view_section_title" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_movies_now_playing"
+        android:id="@+id/recycler_view_movies_popular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small"
