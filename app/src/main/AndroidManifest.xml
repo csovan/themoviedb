@@ -14,10 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity android:name=".ui.activity.MovieDetailsActivity"></activity>
         <activity
             android:name=".ui.activity.TVShowsViewAllActivity"
             android:label="@string/title_activity_view_all_tv_shows"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activity.MoviesViewAllActivity"
             android:label="@string/title_activity_view_all_movies"
