@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.csovan.themoviedb.R;
@@ -34,12 +36,16 @@ import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
 
 public class MoviesFragment extends Fragment {
 
+    private ProgressBar progressBar;
+    private LinearLayout moviesLayout;
+
     // Movies now playing
     private List<MovieBrief> movieNowPlayingList;
     private Call<MoviesNowPlayingResponse> moviesNowPlayingResponseCall;
     private TextView tvMoviesNowPlayingViewAll;
     private RecyclerView rvMoviesNowPlaying;
     private MovieCardLargeAdapter moviesNowPlayingAdapter;
+    private boolean moviesNowPlayingSectionLoaded;
 
     // Movies popular
     private List<MovieBrief> moviePopularList;
@@ -47,6 +53,7 @@ public class MoviesFragment extends Fragment {
     private TextView tvMoviesPopularViewAll;
     private RecyclerView rvMoviesPopular;
     private MovieCardSmallAdapter moviesPopularAdapter;
+    private boolean moviesPopularSectionLoaded;
 
     // Movies upcoming
     private List<MovieBrief> movieUpcomingList;
@@ -54,6 +61,7 @@ public class MoviesFragment extends Fragment {
     private TextView tvMoviesUpcomingViewAll;
     private RecyclerView rvMoviesUpcoming;
     private MovieCardSmallAdapter moviesUpcomingAdapter;
+    private boolean moviesUpcomingSectionLoaded;
 
     // Movies top rated
     private List<MovieBrief> movieTopRatedList;
@@ -61,6 +69,7 @@ public class MoviesFragment extends Fragment {
     private TextView tvMoviesTopRatedViewAll;
     private RecyclerView rvMoviesTopRated;
     private MovieCardSmallAdapter moviesTopRatedAdapter;
+    private boolean moviesTopRatedSectionLoaded;
 
     @Nullable
     @Override
@@ -68,6 +77,10 @@ public class MoviesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState){
 
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
+
+        progressBar = view.findViewById(R.id.progress_bar);
+        moviesLayout = view.findViewById(R.id.linear_layout_movies);
+        moviesLayout.setVisibility(View.GONE);
 
         // Movies now playing section
         tvMoviesNowPlayingViewAll = view.findViewById(R.id.text_view_movies_now_playing_view_all);
@@ -80,6 +93,8 @@ public class MoviesFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false));
         (new LinearSnapHelper()).attachToRecyclerView(rvMoviesNowPlaying);
 
+        moviesNowPlayingSectionLoaded = false;
+
         // Movies popular section
         tvMoviesPopularViewAll = view.findViewById(R.id.text_view_movies_popular_view_all);
         rvMoviesPopular = view.findViewById(R.id.recycler_view_movies_popular);
@@ -89,6 +104,8 @@ public class MoviesFragment extends Fragment {
         rvMoviesPopular.setAdapter(moviesPopularAdapter);
         rvMoviesPopular.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
+
+        moviesPopularSectionLoaded = false;
 
         // Movies upcoming section
         tvMoviesUpcomingViewAll = view.findViewById(R.id.text_view_movies_upcoming_view_all);
@@ -100,6 +117,8 @@ public class MoviesFragment extends Fragment {
         rvMoviesUpcoming.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
+        moviesUpcomingSectionLoaded = false;
+
         // Movies top rated section
         tvMoviesTopRatedViewAll = view.findViewById(R.id.text_view_movies_top_rated_view_all);
         rvMoviesTopRated = view.findViewById(R.id.recycler_view_movies_top_rated);
@@ -109,6 +128,8 @@ public class MoviesFragment extends Fragment {
         rvMoviesTopRated.setAdapter(moviesTopRatedAdapter);
         rvMoviesTopRated.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
+
+        moviesTopRatedSectionLoaded = false;
 
         loadMoviesFragment();
 
@@ -137,6 +158,9 @@ public class MoviesFragment extends Fragment {
 
                 if (response.body() == null) return;
                 if (response.body().getResults() == null) return;
+
+                moviesNowPlayingSectionLoaded = true;
+                checkAllSectionLoaded();
 
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getBackdropPath() != null)
@@ -168,6 +192,9 @@ public class MoviesFragment extends Fragment {
 
                 if (response.body() == null) return;
                 if (response.body().getResults() == null) return;
+
+                moviesPopularSectionLoaded = true;
+                checkAllSectionLoaded();
 
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getPosterPath() != null)
@@ -201,6 +228,9 @@ public class MoviesFragment extends Fragment {
                 if (response.body() == null) return;
                 if (response.body().getResults() == null) return;
 
+                moviesUpcomingSectionLoaded = true;
+                checkAllSectionLoaded();
+
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getPosterPath() != null)
                         movieUpcomingList.add(movie);
@@ -233,6 +263,9 @@ public class MoviesFragment extends Fragment {
                 if (response.body() == null) return;
                 if (response.body().getResults() == null) return;
 
+                moviesTopRatedSectionLoaded = true;
+                checkAllSectionLoaded();
+
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getPosterPath() != null)
                         movieTopRatedList.add(movie);
@@ -247,5 +280,14 @@ public class MoviesFragment extends Fragment {
 
         });
 
+    }
+
+    private void checkAllSectionLoaded() {
+        if (moviesNowPlayingSectionLoaded && moviesPopularSectionLoaded
+                && moviesUpcomingSectionLoaded && moviesTopRatedSectionLoaded){
+
+            progressBar.setVisibility(View.GONE);
+            moviesLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

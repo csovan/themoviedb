@@ -32,7 +32,8 @@
                 layout="@layout/movies_top_rated_section" />
 
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
+
+    <include layout="@layout/progress_bar" />
 
 </FrameLayout>
