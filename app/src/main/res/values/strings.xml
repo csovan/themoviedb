@@ -13,6 +13,7 @@
 
     <!-- Content description strings-->
     <string name="iv_backdrop_desc">Image view backdrop desc</string>
+    <string name="iv_poster_desc">Image view poster desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
