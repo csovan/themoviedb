@@ -1,5 +1,6 @@
 package com.csovan.themoviedb.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
+import com.csovan.themoviedb.ui.activity.MoviesViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.MovieCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 
@@ -33,6 +35,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
+import static com.csovan.themoviedb.util.Constant.NOW_PLAYING_MOVIES_TYPE;
+import static com.csovan.themoviedb.util.Constant.POPULAR_MOVIES_TYPE;
+import static com.csovan.themoviedb.util.Constant.TOP_RATED_MOVIES_TYPE;
+import static com.csovan.themoviedb.util.Constant.UPCOMING_MOVIES_TYPE;
+import static com.csovan.themoviedb.util.Constant.VIEW_ALL_MOVIES_TYPE;
 
 public class MoviesFragment extends Fragment {
 
@@ -130,6 +137,43 @@ public class MoviesFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false));
 
         moviesTopRatedSectionLoaded = false;
+
+        // Set on click listener for view all
+        tvMoviesNowPlayingViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_MOVIES_TYPE, NOW_PLAYING_MOVIES_TYPE);
+                startActivity(intent);
+            }
+        });
+
+        tvMoviesPopularViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_MOVIES_TYPE, POPULAR_MOVIES_TYPE);
+                startActivity(intent);
+            }
+        });
+
+        tvMoviesUpcomingViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_MOVIES_TYPE, UPCOMING_MOVIES_TYPE);
+                startActivity(intent);
+            }
+        });
+
+        tvMoviesTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
+                intent.putExtra(VIEW_ALL_MOVIES_TYPE, TOP_RATED_MOVIES_TYPE);
+                startActivity(intent);
+            }
+        });
 
         loadMoviesFragment();
 
