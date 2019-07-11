@@ -39,13 +39,16 @@ public class TVShow {
     @SerializedName("status")
     private String status;
 
+    @SerializedName("vote_average")
+    private Double voteAverage;
+
     @SerializedName("genres")
     private List<TVShowGenres> genres;
 
     public TVShow(Integer id, String name, List<Integer> episodeRunTime, String firstAirDate,
                   String lastAirDate, Integer numberOfEpisodes, Integer numberOfSeasons,
                   String posterPath, String backdropPath, String overview, String status,
-                  List<TVShowGenres> genres) {
+                  Double voteAverage, List<TVShowGenres> genres) {
         this.id = id;
         this.name = name;
         this.episodeRunTime = episodeRunTime;
@@ -57,6 +60,7 @@ public class TVShow {
         this.backdropPath = backdropPath;
         this.overview = overview;
         this.status = status;
+        this.voteAverage = voteAverage;
         this.genres = genres;
     }
 
@@ -146,6 +150,14 @@ public class TVShow {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public List<TVShowGenres> getGenres() {

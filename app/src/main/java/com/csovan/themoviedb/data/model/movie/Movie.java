@@ -18,6 +18,9 @@ public class Movie {
     @SerializedName("runtime")
     private Integer runtime;
 
+    @SerializedName("vote_average")
+    private Double voteAverage;
+
     @SerializedName("overview")
     private String overview;
 
@@ -30,15 +33,18 @@ public class Movie {
     @SerializedName("genres")
     private List<MovieGenres> genres;
 
-    public Movie(Integer id, String title, String releaseDate, Integer runtime, String overview,
-                 String posterPath, String backdropPath, List<MovieGenres> genres) {
+    public Movie(Integer id, String title, String releaseDate, Integer runtime,
+                 Double voteAverage, String overview, String posterPath, String backdropPath,
+                 List<MovieGenres> genres) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
         this.runtime = runtime;
+        this.voteAverage = voteAverage;
         this.overview = overview;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
+        this.genres = genres;
     }
 
     public Integer getId() {
@@ -71,6 +77,14 @@ public class Movie {
 
     public void setRuntime(Integer runtime) {
         this.runtime = runtime;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getOverview() {

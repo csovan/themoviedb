@@ -47,12 +47,14 @@ public interface ApiInterface {
     @GET("movie/{id}")
     Call<Movie> getMovieDetails(
             @Path("id") Integer movieId,
-            @Query("api_key") String apiKey);
+            @Query("api_key") String apiKey,
+            @Query("region") String region);
 
     @GET("movie/{id}/videos")
     Call<VideosResponse> getMovieVideos(
             @Path("id") Integer movieId,
-            @Query("api_key") String apiKey);
+            @Query("api_key") String apiKey,
+            @Query("region") String region);
 
 
     // TV Show services
@@ -83,11 +85,13 @@ public interface ApiInterface {
     @GET("tv/{id}")
     Call<TVShow> getTVShowDetails(
             @Path("id") Integer tvshowId,
-            @Query("api_key") String apiKey);
+            @Query("api_key") String apiKey,
+            @Query("region") String region);
 
     @GET("tv/{id}/videos")
     Call<VideosResponse> getTVShowVideos(
             @Path("id") Integer tvshowId,
-            @Query("api_key") String apiKey);
+            @Query("api_key") String apiKey,
+            @Query("region") String region);
 
 }

@@ -62,6 +62,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView movieRuntime;
     private TextView movieOverview;
     private TextView movieGenres;
+    private TextView movieRating;
 
     private RecyclerView videoRecyclerView;
     private List<Video> videoList;
@@ -100,6 +101,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieRuntime = findViewById(R.id.text_view_runtime);
         movieOverview = findViewById(R.id.text_view_overview_content_section);
         movieGenres = findViewById(R.id.text_view_genres);
+        movieRating = findViewById(R.id.text_view_rating);
 
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
         videoList = new ArrayList<>();
@@ -116,7 +118,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        movieDetailsCall = apiService.getMovieDetails(movieId, TMDB_API_KEY);
+        movieDetailsCall = apiService.getMovieDetails(movieId, TMDB_API_KEY, "US");
         movieDetailsCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(@NonNull Call<Movie> call, @NonNull final Response<Movie> response) {
@@ -166,7 +168,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 // Get movie release date with simple date format
                 if (response.body().getReleaseDate() != null){
                     SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
                     try{
                         Date releaseDate = sdf1.parse(response.body().getReleaseDate());
                         movieReleaseDate.setText(sdf2.format(releaseDate));
@@ -175,6 +177,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
                 } else {
                     movieReleaseDate.setText("");
+                }
+
+                if (response.body().getVoteAverage() != null
+                        && response.body().getVoteAverage() != 0){
+                    movieRating.setText(String.valueOf(response.body().getVoteAverage()));
                 }
 
                 // Get movie runtime and format it to hrs and mins
@@ -214,7 +221,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY);
+        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY, "US");
         videosResponseCall.enqueue(new Callback<VideosResponse>() {
             @Override
             public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {

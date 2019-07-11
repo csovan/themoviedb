@@ -57,6 +57,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private ImageView posterImageView;
 
     private TextView tvshowTitle;
+    private TextView tvshowRating;
     private TextView firstAirDate;
     private TextView tvshowRuntime;
     private TextView tvshowOverview;
@@ -95,6 +96,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         posterImageView = findViewById(R.id.image_view_poster);
 
         tvshowTitle = findViewById(R.id.text_view_tv_show_title);
+        tvshowRating = findViewById(R.id.text_view_rating);
         firstAirDate = findViewById(R.id.text_view_release_date);
         tvshowRuntime = findViewById(R.id.text_view_runtime);
         tvshowOverview = findViewById(R.id.text_view_overview_content_section);
@@ -114,7 +116,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        tvshowDetailCall = apiService.getTVShowDetails(tvshowId, TMDB_API_KEY);
+        tvshowDetailCall = apiService.getTVShowDetails(tvshowId, TMDB_API_KEY, "US");
         tvshowDetailCall.enqueue(new Callback<TVShow>() {
             @Override
             public void onResponse(@NonNull Call<TVShow> call, @NonNull final Response<TVShow> response) {
@@ -164,7 +166,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 // Get tv show first air date and re-format
                 if (response.body().getFirstAirDate() != null){
                     SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
                     try {
                         Date releaseDate = sdf1.parse(response.body().getFirstAirDate());
                         firstAirDate.setText(sdf2.format(releaseDate));
@@ -173,6 +175,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     }
                 } else{
                     firstAirDate.setText("");
+                }
+
+                // Get tv show rating
+                if (response.body().getVoteAverage() != null
+                        && response.body().getVoteAverage() != 0){
+                    tvshowRating.setText(String.valueOf(response.body().getVoteAverage()));
                 }
 
                 List<Integer> runtime = response.body().getEpisodeRunTime();
@@ -210,7 +218,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        videosResponseCall = apiService.getTVShowVideos(tvshowId, TMDB_API_KEY);
+        videosResponseCall = apiService.getTVShowVideos(tvshowId, TMDB_API_KEY, "US");
         videosResponseCall.enqueue(new Callback<VideosResponse>() {
             @Override
             public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
