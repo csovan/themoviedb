@@ -4,11 +4,18 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -16,7 +23,17 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.Movie;
+import com.csovan.themoviedb.data.model.movie.MovieGenres;
+import com.csovan.themoviedb.data.model.video.Video;
+import com.csovan.themoviedb.data.model.video.VideosResponse;
+import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -30,13 +47,27 @@ import static com.csovan.themoviedb.util.Constant.MOVIE_ID;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private int movieId;
+    private boolean movieDetailsLoaded;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
+    private ProgressBar progressBar;
+    private NestedScrollView nestedScrollView;
 
     private ImageView backdropImageView;
+    private ImageView posterImageView;
+
+    private TextView movieReleaseDate;
+    private TextView movieRuntime;
+    private TextView movieOverview;
+    private TextView movieGenres;
+
+    private RecyclerView videoRecyclerView;
+    private List<Video> videoList;
+    private VideoAdapter videoAdapter;
 
     private Call<Movie> movieDetailsCall;
+    private Call<VideosResponse> videosResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +78,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        setTitle("");
+        movieDetailsLoaded = false;
+
         Intent receivedIntent = getIntent();
         movieId = receivedIntent.getIntExtra(MOVIE_ID,-1);
 
@@ -54,8 +88,23 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
         appBarLayout = findViewById(R.id.app_bar_movie_details);
+        progressBar = findViewById(R.id.progress_bar);
+        nestedScrollView = findViewById(R.id.nested_scroll_view_movie_details);
 
         backdropImageView = findViewById(R.id.image_view_backdrop);
+        posterImageView = findViewById(R.id.image_view_poster);
+
+        movieReleaseDate = findViewById(R.id.text_view_release_date);
+        movieRuntime = findViewById(R.id.text_view_runtime);
+        movieOverview = findViewById(R.id.text_view_overview_content_section);
+        movieGenres = findViewById(R.id.text_view_genres);
+
+        videoRecyclerView = findViewById(R.id.recycler_view_videos);
+        videoList = new ArrayList<>();
+        videoAdapter = new VideoAdapter(MovieDetailsActivity.this, videoList);
+        videoRecyclerView.setAdapter(videoAdapter);
+        videoRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
 
@@ -87,7 +136,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                 collapsingToolbarLayout.setTitle("");
                             }
                         } else {
-                            collapsingToolbarLayout.setTitle("");
+                            collapsingToolbarLayout.setTitle(response.body().getTitle());
                         }
                     }
                 });
@@ -100,6 +149,54 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .placeholder(R.drawable.ic_film)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(backdropImageView);
+
+                Glide.with(getApplicationContext())
+                        .load(IMAGE_LOADING_BASE_URL_1280 + response.body().getPosterPath())
+                        .asBitmap()
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_film)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(posterImageView);
+
+                // Get movie release date with simple date format
+                if (response.body().getReleaseDate() != null){
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                    try{
+                        Date releaseDate = sdf1.parse(response.body().getReleaseDate());
+                        movieReleaseDate.setText(sdf2.format(releaseDate));
+                    }catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    movieReleaseDate.setText("");
+                }
+
+                // Get movie runtime and format it to hrs and mins
+                Integer runtime = response.body().getRuntime();
+                String runtimeFormat;
+                if (runtime != null && runtime != 0){
+                    if (runtime < 60){
+                        runtimeFormat = runtime + " mins";
+                    }else {
+                        runtimeFormat = runtime /60 + " hr " + runtime % 60 + " mins";
+                    }
+                    movieRuntime.setText(runtimeFormat);
+                } else{
+                    movieRuntime.setText("");
+                }
+
+                // Get movie overview
+                if (response.body().getOverview() != null)
+                    movieOverview.setText(response.body().getOverview());
+                else
+                    movieOverview.setText("");
+
+                setGenres(response.body().getGenres());
+                setVideos();
+
+                movieDetailsLoaded = true;
+                checkMovieDetailsLoaded();
             }
 
             @Override
@@ -108,6 +205,59 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setVideos(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY);
+        videosResponseCall.enqueue(new Callback<VideosResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
+                if (!response.isSuccessful()) {
+                    videosResponseCall = call.clone();
+                    videosResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getVideos() == null) return;
+
+                for (Video video : response.body().getVideos()) {
+                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
+                            && video.getType() != null && video.getType().equals("Trailer"))
+                        videoList.add(video);
+                }
+                videoAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<VideosResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+
+    private void setGenres(List<MovieGenres> genresList) {
+        String genres = "";
+        if (genresList != null) {
+            for (int i = 0; i < genresList.size(); i++) {
+                if (genresList.get(i) == null) continue;
+                if (i == genresList.size() - 1) {
+                    genres = genres.concat(genresList.get(i).getGenreName());
+                } else {
+                    genres = genres.concat(genresList.get(i).getGenreName() + " | ");
+                }
+            }
+        }
+        movieGenres.setText(genres);
+    }
+
+    private void checkMovieDetailsLoaded(){
+        if (movieDetailsLoaded){
+            collapsingToolbarLayout.setVisibility(View.VISIBLE);
+            nestedScrollView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

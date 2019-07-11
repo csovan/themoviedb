@@ -1,7 +1,6 @@
 package com.csovan.themoviedb.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -62,11 +61,11 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
         TVShowViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cvTVShowCard = itemView.findViewById(R.id.card_view_size_small);
+            cvTVShowCard = itemView.findViewById(R.id.card_view_small);
             ivTVShowPoster = itemView.findViewById(R.id.image_view_poster);
 
             cvTVShowCard.getLayoutParams().width =
-                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.27);
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
             cvTVShowCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 

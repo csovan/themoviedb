@@ -16,6 +16,8 @@
     <!-- Content description strings-->
     <string name="iv_backdrop_desc">Image view backdrop desc</string>
     <string name="iv_poster_desc">Image view poster desc</string>
+    <string name="iv_thumbnail_desc">Image view thumbnail desc</string>
+    <string name="image_button_play_desc">Image Button Play Desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -35,5 +37,16 @@
     <string name="tv_shows_popular">TV Shows Popular</string>
     <string name="tv_shows_airing_today">TV Shows Airing Today</string>
     <string name="tv_shows_top_rated">TV Shows Top Rated</string>
+
+    <!-- Details Activity -->
+    <string name="release_date">Jun 1, 2019</string>
+    <string name="certification">PG-13</string>
+    <string name="runtime">2 hr 30 mins</string>
+    <string name="genres">Action | Sci-Fi | Fantasy</string>
+    <string name="space_dot">\u00b7</string>
+    <string name="overview_section_title">Overview</string>
+    <string name="overview_section_content">Once upon of time!</string>
+    <string name="videos_section_title">Videos</string>
+    <string name="video_title">Video Title</string>
 
 </resources>

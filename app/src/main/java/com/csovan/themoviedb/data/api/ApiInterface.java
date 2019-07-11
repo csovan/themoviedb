@@ -9,6 +9,7 @@ import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsPopularResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsTopRatedResponse;
+import com.csovan.themoviedb.data.model.video.VideosResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -44,6 +45,11 @@ public interface ApiInterface {
 
     @GET("movie/{id}")
     Call<Movie> getMovieDetails(
+            @Path("id") Integer movieId,
+            @Query("api_key") String apiKey);
+
+    @GET("movie/{id}/videos")
+    Call<VideosResponse> getMovieVideos(
             @Path("id") Integer movieId,
             @Query("api_key") String apiKey);
 

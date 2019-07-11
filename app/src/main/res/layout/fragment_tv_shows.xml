@@ -10,8 +10,7 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nested_scroll_view_tv_shows"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/linear_layout_tv_shows"
@@ -19,17 +18,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/tv_shows_airing_today_section" />
+            <include layout="@layout/tv_shows_airing_today_section" />
 
-            <include
-                layout="@layout/tv_shows_popular_section" />
+            <include layout="@layout/tv_shows_popular_section" />
 
-            <include
-                layout="@layout/tv_shows_on_the_air_section" />
+            <include layout="@layout/tv_shows_on_the_air_section" />
 
-            <include
-                layout="@layout/tv_shows_top_rated_section" />
+            <include layout="@layout/tv_shows_top_rated_section" />
 
         </LinearLayout>
 

@@ -2,6 +2,8 @@ package com.csovan.themoviedb.data.model.movie;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Movie {
 
     @SerializedName("id")
@@ -25,7 +27,11 @@ public class Movie {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-    public Movie(Integer id, String title, String releaseDate, Integer runtime, String overview, String posterPath, String backdropPath) {
+    @SerializedName("genres")
+    private List<MovieGenres> genres;
+
+    public Movie(Integer id, String title, String releaseDate, Integer runtime, String overview,
+                 String posterPath, String backdropPath, List<MovieGenres> genres) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -89,5 +95,13 @@ public class Movie {
 
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
+    }
+
+    public List<MovieGenres> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<MovieGenres> genres) {
+        this.genres = genres;
     }
 }
