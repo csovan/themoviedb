@@ -5,6 +5,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
+import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsPopularResponse;
@@ -78,5 +79,15 @@ public interface ApiInterface {
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
+
+    @GET("tv/{id}")
+    Call<TVShow> getTVShowDetails(
+            @Path("id") Integer tvshowId,
+            @Query("api_key") String apiKey);
+
+    @GET("tv/{id}/videos")
+    Call<VideosResponse> getTVShowVideos(
+            @Path("id") Integer tvshowId,
+            @Query("api_key") String apiKey);
 
 }

@@ -17,7 +17,8 @@
     <string name="iv_backdrop_desc">Image view backdrop desc</string>
     <string name="iv_poster_desc">Image view poster desc</string>
     <string name="iv_thumbnail_desc">Image view thumbnail desc</string>
-    <string name="image_button_play_desc">Image Button Play Desc</string>
+    <string name="image_button_play_desc">Image button play Desc</string>
+    <string name="image_view_rating_star_desc">Image view rating star desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -39,8 +40,10 @@
     <string name="tv_shows_top_rated">TV Shows Top Rated</string>
 
     <!-- Details Activity -->
+    <string name="title">Title</string>
     <string name="release_date">Jun 1, 2019</string>
     <string name="certification">PG-13</string>
+    <string name="rating">4.5</string>
     <string name="runtime">2 hr 30 mins</string>
     <string name="genres">Action | Sci-Fi | Fantasy</string>
     <string name="space_dot">\u00b7</string>

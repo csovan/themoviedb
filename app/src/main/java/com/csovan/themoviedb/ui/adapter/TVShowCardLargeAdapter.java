@@ -15,10 +15,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
+import com.csovan.themoviedb.ui.activity.TVShowDetailsActivity;
 
 import java.util.List;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_780;
+import static com.csovan.themoviedb.util.Constant.TV_SHOW_ID;
 
 public class TVShowCardLargeAdapter extends RecyclerView.Adapter<TVShowCardLargeAdapter.TVShowViewHolder> {
 
@@ -75,6 +77,15 @@ public class TVShowCardLargeAdapter extends RecyclerView.Adapter<TVShowCardLarge
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.85);
             cvTVShowCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.85) / 1.75);
+
+            cvTVShowCard.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Intent intent = new Intent(context, TVShowDetailsActivity.class);
+                    intent.putExtra(TV_SHOW_ID, tvshowList.get(getAdapterPosition()).getId());
+                    context.startActivity(intent);
+                }
+            });
 
         }
     }

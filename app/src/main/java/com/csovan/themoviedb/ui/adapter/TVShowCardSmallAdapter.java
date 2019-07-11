@@ -1,6 +1,7 @@
 package com.csovan.themoviedb.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
+import com.csovan.themoviedb.ui.activity.TVShowDetailsActivity;
 
 import java.util.List;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_780;
+import static com.csovan.themoviedb.util.Constant.TV_SHOW_ID;
 
 public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmallAdapter.TVShowViewHolder> {
 
@@ -68,6 +71,15 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
             cvTVShowCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
+
+            cvTVShowCard.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Intent intent = new Intent(context, TVShowDetailsActivity.class);
+                    intent.putExtra(TV_SHOW_ID, tvshowList.get(getAdapterPosition()).getId());
+                    context.startActivity(intent);
+                }
+            });
 
         }
     }

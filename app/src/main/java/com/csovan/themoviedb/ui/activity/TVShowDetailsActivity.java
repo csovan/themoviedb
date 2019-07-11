@@ -7,7 +7,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +21,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
-import com.csovan.themoviedb.data.model.movie.Movie;
-import com.csovan.themoviedb.data.model.movie.MovieGenres;
+import com.csovan.themoviedb.data.model.tvshow.TVShow;
+import com.csovan.themoviedb.data.model.tvshow.TVShowGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
@@ -42,12 +41,12 @@ import retrofit2.Response;
 
 import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_1280;
-import static com.csovan.themoviedb.util.Constant.MOVIE_ID;
+import static com.csovan.themoviedb.util.Constant.TV_SHOW_ID;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class TVShowDetailsActivity extends AppCompatActivity {
 
-    private int movieId;
-    private boolean movieDetailsLoaded;
+    private int tvshowId;
+    private boolean tvshowDetailsLoaded;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
@@ -57,91 +56,90 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView backdropImageView;
     private ImageView posterImageView;
 
-    private TextView movieTitle;
-    private TextView movieReleaseDate;
-    private TextView movieRuntime;
-    private TextView movieOverview;
-    private TextView movieGenres;
+    private TextView tvshowTitle;
+    private TextView firstAirDate;
+    private TextView tvshowRuntime;
+    private TextView tvshowOverview;
+    private TextView tvshowGenres;
 
     private RecyclerView videoRecyclerView;
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
-    private Call<Movie> movieDetailsCall;
+    private Call<TVShow> tvshowDetailCall;
     private Call<VideosResponse> videosResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_details);
+        setContentView(R.layout.activity_tv_show_details);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_movie_details);
+        Toolbar toolbar = findViewById(R.id.toolbar_tv_show_details);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         setTitle("");
-        movieDetailsLoaded = false;
+        tvshowDetailsLoaded = false;
 
         Intent receivedIntent = getIntent();
-        movieId = receivedIntent.getIntExtra(MOVIE_ID,-1);
+        tvshowId = receivedIntent.getIntExtra(TV_SHOW_ID, -1);
 
-        if (movieId == -1) finish();
+        if (tvshowId == -1) finish();
 
-        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
-        appBarLayout = findViewById(R.id.app_bar_movie_details);
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_tv_show_details);
+        appBarLayout = findViewById(R.id.app_bar_tv_show_details);
         progressBar = findViewById(R.id.progress_bar);
-        nestedScrollView = findViewById(R.id.nested_scroll_view_movie_details);
+        nestedScrollView = findViewById(R.id.nested_scroll_view_tv_show_details);
 
         backdropImageView = findViewById(R.id.image_view_backdrop);
         posterImageView = findViewById(R.id.image_view_poster);
 
-        movieTitle = findViewById(R.id.text_view_movie_title);
-        movieReleaseDate = findViewById(R.id.text_view_release_date);
-        movieRuntime = findViewById(R.id.text_view_runtime);
-        movieOverview = findViewById(R.id.text_view_overview_content_section);
-        movieGenres = findViewById(R.id.text_view_genres);
+        tvshowTitle = findViewById(R.id.text_view_tv_show_title);
+        firstAirDate = findViewById(R.id.text_view_release_date);
+        tvshowRuntime = findViewById(R.id.text_view_runtime);
+        tvshowOverview = findViewById(R.id.text_view_overview_content_section);
+        tvshowGenres = findViewById(R.id.text_view_genres);
 
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
         videoList = new ArrayList<>();
-        videoAdapter = new VideoAdapter(MovieDetailsActivity.this, videoList);
+        videoAdapter = new VideoAdapter(TVShowDetailsActivity.this, videoList);
         videoRecyclerView.setAdapter(videoAdapter);
-        videoRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+        videoRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
-
     }
 
     private void loadActivity(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        movieDetailsCall = apiService.getMovieDetails(movieId, TMDB_API_KEY);
-        movieDetailsCall.enqueue(new Callback<Movie>() {
+        tvshowDetailCall = apiService.getTVShowDetails(tvshowId, TMDB_API_KEY);
+        tvshowDetailCall.enqueue(new Callback<TVShow>() {
             @Override
-            public void onResponse(@NonNull Call<Movie> call, @NonNull final Response<Movie> response) {
+            public void onResponse(@NonNull Call<TVShow> call, @NonNull final Response<TVShow> response) {
                 if (!response.isSuccessful()) {
-                    movieDetailsCall = call.clone();
-                    movieDetailsCall.enqueue(this);
+                    tvshowDetailCall = call.clone();
+                    tvshowDetailCall.enqueue(this);
                     return;
                 }
 
                 if (response.body() == null) return;
 
-                // Get movie title
+                //Get tv show title
                 appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                        if (response.body().getTitle() != null) {
+                        if (response.body().getName() != null){
                             if (appBarLayout.getTotalScrollRange() + verticalOffset == 0){
-                                collapsingToolbarLayout.setTitle(response.body().getTitle());
-                                movieTitle.setText("");
-                            } else{
+                                collapsingToolbarLayout.setTitle(response.body().getName());
+                                tvshowTitle.setText("");
+                            }else {
                                 collapsingToolbarLayout.setTitle("");
-                                movieTitle.setText(response.body().getTitle());
+                                tvshowTitle.setText(response.body().getName());
                             }
-                        } else {
-                           movieTitle.setText("");
+                        }else {
+                            tvshowTitle.setText("");
                         }
                     }
                 });
@@ -163,49 +161,47 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(posterImageView);
 
-                // Get movie release date with simple date format
-                if (response.body().getReleaseDate() != null){
+                // Get tv show first air date and re-format
+                if (response.body().getFirstAirDate() != null){
                     SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     SimpleDateFormat sdf2 = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
-                    try{
-                        Date releaseDate = sdf1.parse(response.body().getReleaseDate());
-                        movieReleaseDate.setText(sdf2.format(releaseDate));
+                    try {
+                        Date releaseDate = sdf1.parse(response.body().getFirstAirDate());
+                        firstAirDate.setText(sdf2.format(releaseDate));
                     }catch (ParseException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    movieReleaseDate.setText("");
-                }
-
-                // Get movie runtime and format it to hrs and mins
-                Integer runtime = response.body().getRuntime();
-                String runtimeFormat;
-                if (runtime != null && runtime != 0){
-                    if (runtime < 60){
-                        runtimeFormat = runtime + " mins";
-                    }else {
-                        runtimeFormat = runtime /60 + " hr " + runtime % 60 + " mins";
-                    }
-                    movieRuntime.setText(runtimeFormat);
                 } else{
-                    movieRuntime.setText("");
+                    firstAirDate.setText("");
                 }
 
-                // Get movie overview
+                List<Integer> runtime = response.body().getEpisodeRunTime();
+                String runtimeFormat;
+                if (runtime != null && !runtime.isEmpty() && runtime.get(0) != 0){
+                    if (runtime.get(0) < 60){
+                        runtimeFormat = runtime.get(0) + " mins";
+                    }else{
+                        runtimeFormat = runtime.get(0) / 60 + " hr " + runtime.get(0) % 60 + " mins";
+                    }
+                    tvshowRuntime.setText(runtimeFormat);
+                } else{
+                    tvshowRuntime.setText("");
+                }
+
                 if (response.body().getOverview() != null)
-                    movieOverview.setText(response.body().getOverview());
+                    tvshowOverview.setText(response.body().getOverview());
                 else
-                    movieOverview.setText("");
+                    tvshowOverview.setText("");
 
-                setGenres(response.body().getGenres());
                 setVideos();
+                setGenres(response.body().getGenres());
 
-                movieDetailsLoaded = true;
-                checkMovieDetailsLoaded();
+                tvshowDetailsLoaded = true;
+                checkTVShowDetailsLoaded();
             }
 
             @Override
-            public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TVShow> call, @NonNull Throwable t) {
 
             }
         });
@@ -214,7 +210,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY);
+        videosResponseCall = apiService.getTVShowVideos(tvshowId, TMDB_API_KEY);
         videosResponseCall.enqueue(new Callback<VideosResponse>() {
             @Override
             public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
@@ -242,7 +238,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void setGenres(List<MovieGenres> genresList) {
+    private void setGenres(List<TVShowGenres> genresList) {
         String genres = "";
         if (genresList != null) {
             for (int i = 0; i < genresList.size(); i++) {
@@ -254,14 +250,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 }
             }
         }
-        movieGenres.setText(genres);
+        tvshowGenres.setText(genres);
     }
 
-    private void checkMovieDetailsLoaded(){
-        if (movieDetailsLoaded){
+    private void checkTVShowDetailsLoaded(){
+        if (tvshowDetailsLoaded){
+            progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
         }
     }
 
