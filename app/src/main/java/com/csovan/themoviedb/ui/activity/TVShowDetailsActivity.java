@@ -52,6 +52,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     private int tvshowId;
     private boolean tvshowDetailsLoaded;
+    private boolean videosSectionLoaded;
+    private boolean castsSectionLoaded;
+    private boolean crewSectionLoaded;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
@@ -99,12 +102,13 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         setTitle("");
-        tvshowDetailsLoaded = false;
 
         Intent receivedIntent = getIntent();
         tvshowId = receivedIntent.getIntExtra(TV_SHOW_ID, -1);
 
         if (tvshowId == -1) finish();
+
+        tvshowDetailsLoaded = false;
 
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_tv_show_details);
         appBarLayout = findViewById(R.id.app_bar_tv_show_details);
@@ -131,6 +135,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         videoRecyclerView.setAdapter(videoAdapter);
         videoRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        videosSectionLoaded = false;
 
         // Cast
         tvshowCastRecyclerView = findViewById(R.id.recycler_view_cast);
@@ -139,6 +144,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowCastRecyclerView.setAdapter(tvshowCastAdapter);
         tvshowCastRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        castsSectionLoaded = false;
 
         // Crew
         tvshowCrewRecyclerView = findViewById(R.id.recycler_view_crew);
@@ -147,6 +153,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowCrewRecyclerView.setAdapter(tvshowCrewAdapter);
         tvshowCrewRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        crewSectionLoaded = false;
 
         loadActivity();
     }
@@ -272,6 +279,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getVideos() == null) return;
 
+                videosSectionLoaded = true;
+                checkTVShowDetailsLoaded();
+
                 for (Video video : response.body().getVideos()) {
                     if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
                             && video.getType() != null && video.getType().equals("Trailer"))
@@ -317,6 +327,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getCasts() == null) return;
 
+                castsSectionLoaded = true;
+                checkTVShowDetailsLoaded();
+
                 for (TVShowCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
                         tvshowCastBriefList.add(castBrief);
@@ -349,6 +362,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getCrews() == null) return;
 
+                crewSectionLoaded = true;
+                checkTVShowDetailsLoaded();
+
                 for (TVShowCrewBrief crewBrief : response.body().getCrews()) {
                     if (crewBrief != null && crewBrief.getName() != null)
                         tvshowCrewBriefList.add(crewBrief);
@@ -367,7 +383,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     }
 
     private void checkTVShowDetailsLoaded(){
-        if (tvshowDetailsLoaded){
+        if (tvshowDetailsLoaded && videosSectionLoaded && castsSectionLoaded && crewSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);
