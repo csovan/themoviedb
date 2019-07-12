@@ -24,10 +24,12 @@ import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCastBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCrewBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.ui.adapter.TVShowCastAdapter;
+import com.csovan.themoviedb.ui.adapter.TVShowCrewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
 import java.text.ParseException;
@@ -56,9 +58,11 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
 
+    // ImageView
     private ImageView backdropImageView;
     private ImageView posterImageView;
 
+    // TextView
     private TextView tvshowTitle;
     private TextView tvshowRating;
     private TextView firstAirDate;
@@ -66,13 +70,20 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private TextView tvshowOverview;
     private TextView tvshowGenres;
 
+    // Videos
     private RecyclerView videoRecyclerView;
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
+    // Cast
     private List<TVShowCastBrief> tvshowCastBriefList;
     private RecyclerView tvshowCastRecyclerView;
     private TVShowCastAdapter tvshowCastAdapter;
+
+    // Crew
+    private List<TVShowCrewBrief> tvshowCrewBriefList;
+    private RecyclerView tvshowCrewRecyclerView;
+    private TVShowCrewAdapter tvshowCrewAdapter;
 
     private Call<TVShow> tvshowDetailCall;
     private Call<VideosResponse> videosResponseCall;
@@ -113,6 +124,15 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowOverview = findViewById(R.id.text_view_overview_content_section);
         tvshowGenres = findViewById(R.id.text_view_genres);
 
+        // Videos
+        videoRecyclerView = findViewById(R.id.recycler_view_videos);
+        videoList = new ArrayList<>();
+        videoAdapter = new VideoAdapter(TVShowDetailsActivity.this, videoList);
+        videoRecyclerView.setAdapter(videoAdapter);
+        videoRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
+
+        // Cast
         tvshowCastRecyclerView = findViewById(R.id.recycler_view_cast);
         tvshowCastBriefList = new ArrayList<>();
         tvshowCastAdapter = new TVShowCastAdapter(TVShowDetailsActivity.this, tvshowCastBriefList);
@@ -120,11 +140,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowCastRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
-        videoRecyclerView = findViewById(R.id.recycler_view_videos);
-        videoList = new ArrayList<>();
-        videoAdapter = new VideoAdapter(TVShowDetailsActivity.this, videoList);
-        videoRecyclerView.setAdapter(videoAdapter);
-        videoRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
+        // Crew
+        tvshowCrewRecyclerView = findViewById(R.id.recycler_view_crew);
+        tvshowCrewBriefList = new ArrayList<>();
+        tvshowCrewAdapter = new TVShowCrewAdapter(TVShowDetailsActivity.this, tvshowCrewBriefList);
+        tvshowCrewRecyclerView.setAdapter(tvshowCrewAdapter);
+        tvshowCrewRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
@@ -222,6 +243,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 setGenres(response.body().getGenres());
                 setVideos();
                 setCasts();
+                setCrews();
 
                 tvshowDetailsLoaded = true;
                 checkTVShowDetailsLoaded();
@@ -310,7 +332,38 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void setCrews(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        tvshowCreditsResponseCall = apiService.getTVShowCredits(tvshowId, TMDB_API_KEY);
+        tvshowCreditsResponseCall.enqueue(new Callback<TVShowCreditsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TVShowCreditsResponse> call, @NonNull Response<TVShowCreditsResponse> response) {
+                if (!response.isSuccessful()){
+                    tvshowCreditsResponseCall = call.clone();
+                    tvshowCreditsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getCrews() == null) return;
+
+                for (TVShowCrewBrief crewBrief : response.body().getCrews()) {
+                    if (crewBrief != null && crewBrief.getName() != null)
+                        tvshowCrewBriefList.add(crewBrief);
+                }
+
+                if (!tvshowCrewBriefList.isEmpty()){
+                    tvshowCrewAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TVShowCreditsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
     }
 
     private void checkTVShowDetailsLoaded(){
