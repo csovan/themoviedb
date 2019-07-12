@@ -19,6 +19,7 @@
     <string name="iv_thumbnail_desc">Image view thumbnail desc</string>
     <string name="image_button_play_desc">Image button play Desc</string>
     <string name="image_view_rating_star_desc">Image view rating star desc</string>
+    <string name="cast_poster_desc">Cast poster desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -51,5 +52,6 @@
     <string name="overview_section_content">Once upon of time!</string>
     <string name="videos_section_title">Videos</string>
     <string name="video_title">Video Title</string>
+    <string name="cast_section_title">Cast</string>
 
 </resources>

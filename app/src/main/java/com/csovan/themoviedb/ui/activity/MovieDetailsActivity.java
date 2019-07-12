@@ -23,9 +23,12 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.Movie;
+import com.csovan.themoviedb.data.model.movie.MovieCastBrief;
+import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
 import com.csovan.themoviedb.data.model.movie.MovieGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
+import com.csovan.themoviedb.ui.adapter.MovieCastAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
 import java.text.ParseException;
@@ -68,14 +71,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
+    private List<MovieCastBrief> movieCastBriefList;
+    private RecyclerView movieCastRecyclerView;
+    private MovieCastAdapter movieCastAdapter;
+
     private Call<Movie> movieDetailsCall;
     private Call<VideosResponse> videosResponseCall;
+    private Call<MovieCreditsResponse> movieCreditsResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        // Set up toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_movie_details);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -83,15 +92,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setTitle("");
         movieDetailsLoaded = false;
 
+        // Receive intent movie id
         Intent receivedIntent = getIntent();
         movieId = receivedIntent.getIntExtra(MOVIE_ID,-1);
 
         if (movieId == -1) finish();
 
+        // Set find view by id
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
         appBarLayout = findViewById(R.id.app_bar_movie_details);
         progressBar = findViewById(R.id.progress_bar);
         nestedScrollView = findViewById(R.id.nested_scroll_view_movie_details);
+
+        collapsingToolbarLayout.setVisibility(View.INVISIBLE);
+        nestedScrollView.setVisibility(View.INVISIBLE);
 
         backdropImageView = findViewById(R.id.image_view_backdrop);
         posterImageView = findViewById(R.id.image_view_poster);
@@ -102,6 +116,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieOverview = findViewById(R.id.text_view_overview_content_section);
         movieGenres = findViewById(R.id.text_view_genres);
         movieRating = findViewById(R.id.text_view_rating);
+
+        // Set recycler view
+        movieCastRecyclerView = findViewById(R.id.recycler_view_cast);
+        movieCastBriefList = new ArrayList<>();
+        movieCastAdapter = new MovieCastAdapter(MovieDetailsActivity.this, movieCastBriefList);
+        movieCastRecyclerView.setAdapter(movieCastAdapter);
+        movieCastRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
         videoList = new ArrayList<>();
@@ -206,6 +228,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 setGenres(response.body().getGenres());
                 setVideos();
+                setCasts();
 
                 movieDetailsLoaded = true;
                 checkMovieDetailsLoaded();
@@ -262,6 +285,39 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
         movieGenres.setText(genres);
+    }
+
+    private void setCasts(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        movieCreditsResponseCall = apiService.getMovieCredits(movieId, TMDB_API_KEY);
+        movieCreditsResponseCall.enqueue(new Callback<MovieCreditsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieCreditsResponse> call, @NonNull Response<MovieCreditsResponse> response) {
+                if (!response.isSuccessful()){
+                    movieCreditsResponseCall = call.clone();
+                    movieCreditsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getCasts() == null) return;
+
+                for (MovieCastBrief castBrief : response.body().getCasts()) {
+                    if (castBrief != null && castBrief.getName() != null)
+                        movieCastBriefList.add(castBrief);
+                }
+
+                if (!movieCastBriefList.isEmpty()){
+                    movieCastAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieCreditsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
     }
 
     private void checkMovieDetailsLoaded(){

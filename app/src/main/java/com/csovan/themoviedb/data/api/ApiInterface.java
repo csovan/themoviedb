@@ -1,6 +1,7 @@
 package com.csovan.themoviedb.data.api;
 
 import com.csovan.themoviedb.data.model.movie.Movie;
+import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
@@ -55,6 +56,11 @@ public interface ApiInterface {
             @Path("id") Integer movieId,
             @Query("api_key") String apiKey,
             @Query("region") String region);
+
+    @GET("movie/{id}/credits")
+    Call<MovieCreditsResponse> getMovieCredits(
+            @Path("id") Integer movieId,
+            @Query("api_key") String apiKey);
 
 
     // TV Show services

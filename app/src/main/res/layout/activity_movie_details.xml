@@ -73,6 +73,8 @@
 
             <include layout="@layout/videos_section" />
 
+            <include layout="@layout/cast_section" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
