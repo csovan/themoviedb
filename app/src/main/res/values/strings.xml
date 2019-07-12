@@ -49,13 +49,23 @@
     <string name="runtime">2 hr 30 mins</string>
     <string name="genres">Action | Sci-Fi | Fantasy</string>
     <string name="space_dot">\u00b7</string>
+
+    <!-- Overview section -->
     <string name="overview_section_title">Overview</string>
     <string name="overview_section_content">Once upon of time!</string>
+
+    <!-- Videos section-->
     <string name="videos_section_title">Videos</string>
     <string name="video_title">Video Title</string>
-    <string name="cast_section_title">Cast</string>
-    <string name="crew_section_title">Crew</string>
+
+    <!-- Cast section -->
     <string name="cast_name">Cast Name</string>
+    <string name="cast_as">Cast Character</string>
+    <string name="cast_section_title">Cast</string>
+    <string name="as">as</string>
+
+    <!-- Crew section-->
     <string name="crew_name">Crew Name</string>
+    <string name="crew_section_title">Crew</string>
 
 </resources>

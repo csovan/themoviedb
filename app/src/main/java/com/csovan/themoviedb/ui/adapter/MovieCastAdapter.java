@@ -50,6 +50,10 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
             holder.castName.setText(castBriefList.get(position).getName());
         else
             holder.castName.setText("");
+
+        if (castBriefList.get(position).getCharacter() != null)
+            holder.castCharacter.setText(castBriefList.get(position).getCharacter());
+        else holder.castCharacter.setText("");
     }
 
     @Override
@@ -60,12 +64,14 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
     class CastViewHolder extends RecyclerView.ViewHolder {
         ImageView castImageView;
         TextView castName;
+        TextView castCharacter;
 
         CastViewHolder(@NonNull View itemView) {
             super(itemView);
 
             castImageView = itemView.findViewById(R.id.image_view_cast_profile_pic);
             castName = itemView.findViewById(R.id.text_view_cast_name);
+            castCharacter = itemView.findViewById(R.id.text_view_cast_as);
         }
     }
 }
