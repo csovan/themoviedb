@@ -30,7 +30,7 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
 
     @NonNull
     @Override
-    public MovieCastAdapter.CastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new CastViewHolder(LayoutInflater.from(context)
                 .inflate(R.layout.item_cast, parent, false));
     }

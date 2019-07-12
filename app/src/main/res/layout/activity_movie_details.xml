@@ -75,6 +75,8 @@
 
             <include layout="@layout/cast_section" />
 
+            <include layout="@layout/crew_section" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

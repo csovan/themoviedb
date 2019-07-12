@@ -20,6 +20,7 @@
     <string name="image_button_play_desc">Image button play Desc</string>
     <string name="image_view_rating_star_desc">Image view rating star desc</string>
     <string name="cast_poster_desc">Cast poster desc</string>
+    <string name="crew_poster_desc">Crew poster desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -53,6 +54,8 @@
     <string name="videos_section_title">Videos</string>
     <string name="video_title">Video Title</string>
     <string name="cast_section_title">Cast</string>
-    <string name="cast_name">Name</string>
+    <string name="crew_section_title">Crew</string>
+    <string name="cast_name">Cast Name</string>
+    <string name="crew_name">Crew Name</string>
 
 </resources>

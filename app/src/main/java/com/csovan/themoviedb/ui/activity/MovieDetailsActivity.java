@@ -25,10 +25,12 @@ import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.Movie;
 import com.csovan.themoviedb.data.model.movie.MovieCastBrief;
 import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
+import com.csovan.themoviedb.data.model.movie.MovieCrewBrief;
 import com.csovan.themoviedb.data.model.movie.MovieGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.ui.adapter.MovieCastAdapter;
+import com.csovan.themoviedb.ui.adapter.MovieCrewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
 import java.text.ParseException;
@@ -57,9 +59,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
 
+    // ImageView
     private ImageView backdropImageView;
     private ImageView posterImageView;
 
+    // TextView
     private TextView movieTitle;
     private TextView movieReleaseDate;
     private TextView movieRuntime;
@@ -67,14 +71,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView movieGenres;
     private TextView movieRating;
 
+    // Videos
     private RecyclerView videoRecyclerView;
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
+    // Cast
     private List<MovieCastBrief> movieCastBriefList;
     private RecyclerView movieCastRecyclerView;
     private MovieCastAdapter movieCastAdapter;
 
+    // Crew
+    private List<MovieCrewBrief> movieCrewBriefList;
+    private RecyclerView movieCrewRecyclerView;
+    private MovieCrewAdapter movieCrewAdapter;
+
+    // Calls
     private Call<Movie> movieDetailsCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
@@ -98,7 +110,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         if (movieId == -1) finish();
 
-        // Set find view by id
+        // Set findViewById
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
         appBarLayout = findViewById(R.id.app_bar_movie_details);
         progressBar = findViewById(R.id.progress_bar);
@@ -117,7 +129,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieGenres = findViewById(R.id.text_view_genres);
         movieRating = findViewById(R.id.text_view_rating);
 
-        // Set recycler view
+        // Set adapter videos
+        videoRecyclerView = findViewById(R.id.recycler_view_videos);
+        videoList = new ArrayList<>();
+        videoAdapter = new VideoAdapter(MovieDetailsActivity.this, videoList);
+        videoRecyclerView.setAdapter(videoAdapter);
+        videoRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
+
+        // Set adapter cast
         movieCastRecyclerView = findViewById(R.id.recycler_view_cast);
         movieCastBriefList = new ArrayList<>();
         movieCastAdapter = new MovieCastAdapter(MovieDetailsActivity.this, movieCastBriefList);
@@ -125,11 +145,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieCastRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
-        videoRecyclerView = findViewById(R.id.recycler_view_videos);
-        videoList = new ArrayList<>();
-        videoAdapter = new VideoAdapter(MovieDetailsActivity.this, videoList);
-        videoRecyclerView.setAdapter(videoAdapter);
-        videoRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+        // Set adapter crew
+        movieCrewRecyclerView = findViewById(R.id.recycler_view_crew);
+        movieCrewBriefList = new ArrayList<>();
+        movieCrewAdapter = new MovieCrewAdapter(MovieDetailsActivity.this, movieCrewBriefList);
+        movieCrewRecyclerView.setAdapter(movieCrewAdapter);
+        movieCrewRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
@@ -229,6 +250,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 setGenres(response.body().getGenres());
                 setVideos();
                 setCasts();
+                setCrews();
 
                 movieDetailsLoaded = true;
                 checkMovieDetailsLoaded();
@@ -309,6 +331,39 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 if (!movieCastBriefList.isEmpty()){
                     movieCastAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieCreditsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void setCrews(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        movieCreditsResponseCall = apiService.getMovieCredits(movieId, TMDB_API_KEY);
+        movieCreditsResponseCall.enqueue(new Callback<MovieCreditsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieCreditsResponse> call, @NonNull Response<MovieCreditsResponse> response) {
+                if (!response.isSuccessful()){
+                    movieCreditsResponseCall = call.clone();
+                    movieCreditsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getCrews() == null) return;
+
+                for (MovieCrewBrief crewBrief : response.body().getCrews()) {
+                    if (crewBrief != null && crewBrief.getName() != null)
+                        movieCrewBriefList.add(crewBrief);
+                }
+
+                if (!movieCrewBriefList.isEmpty()){
+                    movieCrewAdapter.notifyDataSetChanged();
                 }
             }
 
