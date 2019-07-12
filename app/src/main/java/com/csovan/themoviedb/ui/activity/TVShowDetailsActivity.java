@@ -22,9 +22,12 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastBrief;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
+import com.csovan.themoviedb.ui.adapter.TVShowCastAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
 import java.text.ParseException;
@@ -67,8 +70,13 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
+    private List<TVShowCastBrief> tvshowCastBriefList;
+    private RecyclerView tvshowCastRecyclerView;
+    private TVShowCastAdapter tvshowCastAdapter;
+
     private Call<TVShow> tvshowDetailCall;
     private Call<VideosResponse> videosResponseCall;
+    private Call<TVShowCreditsResponse> tvshowCreditsResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +100,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         nestedScrollView = findViewById(R.id.nested_scroll_view_tv_show_details);
 
+        collapsingToolbarLayout.setVisibility(View.INVISIBLE);
+        nestedScrollView.setVisibility(View.INVISIBLE);
+
         backdropImageView = findViewById(R.id.image_view_backdrop);
         posterImageView = findViewById(R.id.image_view_poster);
 
@@ -101,6 +112,13 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowRuntime = findViewById(R.id.text_view_runtime);
         tvshowOverview = findViewById(R.id.text_view_overview_content_section);
         tvshowGenres = findViewById(R.id.text_view_genres);
+
+        tvshowCastRecyclerView = findViewById(R.id.recycler_view_cast);
+        tvshowCastBriefList = new ArrayList<>();
+        tvshowCastAdapter = new TVShowCastAdapter(TVShowDetailsActivity.this, tvshowCastBriefList);
+        tvshowCastRecyclerView.setAdapter(tvshowCastAdapter);
+        tvshowCastRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
         videoList = new ArrayList<>();
@@ -201,8 +219,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 else
                     tvshowOverview.setText("");
 
-                setVideos();
                 setGenres(response.body().getGenres());
+                setVideos();
+                setCasts();
 
                 tvshowDetailsLoaded = true;
                 checkTVShowDetailsLoaded();
@@ -259,6 +278,39 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             }
         }
         tvshowGenres.setText(genres);
+    }
+
+    private void setCasts(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        tvshowCreditsResponseCall = apiService.getTVShowCredits(tvshowId, TMDB_API_KEY);
+        tvshowCreditsResponseCall.enqueue(new Callback<TVShowCreditsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TVShowCreditsResponse> call, @NonNull Response<TVShowCreditsResponse> response) {
+                if (!response.isSuccessful()){
+                    tvshowCreditsResponseCall = call.clone();
+                    tvshowCreditsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getCasts() == null) return;
+
+                for (TVShowCastBrief castBrief : response.body().getCasts()) {
+                    if (castBrief != null && castBrief.getName() != null)
+                        tvshowCastBriefList.add(castBrief);
+                }
+
+                if (!tvshowCastBriefList.isEmpty()){
+                    tvshowCastAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TVShowCreditsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
     }
 
     private void checkTVShowDetailsLoaded(){

@@ -12,27 +12,27 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
-import com.csovan.themoviedb.data.model.movie.MovieCastBrief;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastBrief;
 
 import java.util.List;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_342;
 
-public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.CastViewHolder> {
+public class TVShowCastAdapter extends RecyclerView.Adapter<TVShowCastAdapter.CastViewHolder> {
 
     private Context context;
-    private List<MovieCastBrief> castBriefList;
+    private List<TVShowCastBrief> castBriefList;
 
-    public MovieCastAdapter(Context context, List<MovieCastBrief> castBriefList) {
+    public TVShowCastAdapter(Context context, List<TVShowCastBrief> castBriefList) {
         this.context = context;
         this.castBriefList = castBriefList;
     }
 
     @NonNull
     @Override
-    public MovieCastAdapter.CastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new CastViewHolder(LayoutInflater.from(context)
-                .inflate(R.layout.item_cast, parent, false));
+        .inflate(R.layout.item_cast, parent, false));
     }
 
     @Override
@@ -58,6 +58,7 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
     }
 
     class CastViewHolder extends RecyclerView.ViewHolder {
+
         ImageView castImageView;
         TextView castName;
 
