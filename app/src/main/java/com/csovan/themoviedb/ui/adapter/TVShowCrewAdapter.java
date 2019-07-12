@@ -51,6 +51,11 @@ public class TVShowCrewAdapter extends RecyclerView.Adapter<TVShowCrewAdapter.Cr
         else
             holder.crewName.setText("");
 
+        if (crewBriefList.get(position).getJob() != null)
+            holder.crewJob.setText(crewBriefList.get(position).getJob());
+        else
+            holder.crewJob.setText("");
+
     }
 
     @Override
@@ -62,12 +67,14 @@ public class TVShowCrewAdapter extends RecyclerView.Adapter<TVShowCrewAdapter.Cr
 
         ImageView crewImageView;
         TextView crewName;
+        TextView crewJob;
 
         CrewViewHolder(@NonNull View itemView) {
             super(itemView);
 
             crewImageView = itemView.findViewById(R.id.image_view_crew_profile_pic);
             crewName = itemView.findViewById(R.id.text_view_crew_name);
+            crewJob = itemView.findViewById(R.id.text_view_crew_job);
         }
     }
 }

@@ -40,4 +40,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_view_crew" />
 
+    <TextView
+        android:id="@+id/text_view_as"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/as"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_crew_name" />
+
+    <TextView
+        android:id="@+id/text_view_crew_job"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@string/crew_job_title"
+        android:textAlignment="center"
+        android:textColor="@android:color/secondary_text_dark"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_as" />
+
 </android.support.constraint.ConstraintLayout>

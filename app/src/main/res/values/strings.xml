@@ -67,5 +67,6 @@
     <!-- Crew section-->
     <string name="crew_name">Crew Name</string>
     <string name="crew_section_title">Crew</string>
+    <string name="crew_job_title">Job Title</string>
 
 </resources>

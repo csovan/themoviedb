@@ -49,6 +49,11 @@ public class MovieCrewAdapter extends RecyclerView.Adapter<MovieCrewAdapter.Crew
             holder.crewName.setText(crewBriefList.get(position).getName());
         else
             holder.crewName.setText("");
+
+        if (crewBriefList.get(position).getJob() != null)
+            holder.crewJob.setText(crewBriefList.get(position).getJob());
+        else
+            holder.crewJob.setText("");
     }
 
     @Override
@@ -60,12 +65,14 @@ public class MovieCrewAdapter extends RecyclerView.Adapter<MovieCrewAdapter.Crew
 
         ImageView crewImageView;
         TextView crewName;
+        TextView crewJob;
 
         CrewViewHolder(@NonNull View itemView) {
             super(itemView);
 
             crewImageView = itemView.findViewById(R.id.image_view_crew_profile_pic);
             crewName = itemView.findViewById(R.id.text_view_crew_name);
+            crewJob = itemView.findViewById(R.id.text_view_crew_job);
         }
     }
 }
