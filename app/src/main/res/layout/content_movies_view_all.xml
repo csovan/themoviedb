@@ -11,6 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/small"
-        android:layout_marginEnd="@dimen/small"/>
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/small"
+        android:paddingEnd="@dimen/small"
+        android:paddingStart="@dimen/small"/>
 
 </FrameLayout>

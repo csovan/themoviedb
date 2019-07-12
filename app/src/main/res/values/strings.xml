@@ -53,5 +53,6 @@
     <string name="videos_section_title">Videos</string>
     <string name="video_title">Video Title</string>
     <string name="cast_section_title">Cast</string>
+    <string name="cast_name">Name</string>
 
 </resources>

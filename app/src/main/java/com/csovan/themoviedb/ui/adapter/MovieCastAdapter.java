@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -40,8 +41,14 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
                 .load(IMAGE_LOADING_BASE_URL_342 + castBriefList.get(position).getProfilePath())
                 .asBitmap()
                 .centerCrop()
+                .placeholder(R.drawable.ic_person)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.castImageView);
+
+        if (castBriefList.get(position).getName() != null)
+            holder.castName.setText(castBriefList.get(position).getName());
+        else
+            holder.castName.setText("");
     }
 
     @Override
@@ -51,11 +58,13 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
 
     class CastViewHolder extends RecyclerView.ViewHolder {
         ImageView castImageView;
+        TextView castName;
 
         CastViewHolder(@NonNull View itemView) {
             super(itemView);
 
             castImageView = itemView.findViewById(R.id.image_view_cast_profile_pic);
+            castName = itemView.findViewById(R.id.text_view_cast_name);
         }
     }
 }
