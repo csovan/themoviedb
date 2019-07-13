@@ -7,7 +7,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -74,6 +73,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView movieGenres;
     private TextView movieRating;
 
+    private TextView noDataAvailableCast;
+    private TextView noDataAvailableCrew;
+
     // Videos
     private RecyclerView videoRecyclerView;
     private List<Video> videoList;
@@ -132,6 +134,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieOverview = findViewById(R.id.text_view_overview_content_section);
         movieGenres = findViewById(R.id.text_view_genres);
         movieRating = findViewById(R.id.text_view_rating);
+
+        noDataAvailableCast = findViewById(R.id.text_view_no_data_available_cast);
+        noDataAvailableCrew = findViewById(R.id.text_view_no_data_available_crew);
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -340,6 +345,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 for (MovieCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
+                        noDataAvailableCast.setVisibility(View.GONE);
                         movieCastBriefList.add(castBrief);
                 }
 
@@ -376,6 +382,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 for (MovieCrewBrief crewBrief : response.body().getCrews()) {
                     if (crewBrief != null && crewBrief.getName() != null)
+                        noDataAvailableCrew.setVisibility(View.GONE);
                         movieCrewBriefList.add(crewBrief);
                 }
 

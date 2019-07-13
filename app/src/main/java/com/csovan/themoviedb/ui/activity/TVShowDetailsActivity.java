@@ -72,6 +72,8 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private TextView tvshowRuntime;
     private TextView tvshowOverview;
     private TextView tvshowGenres;
+    private TextView noDataAvailableCast;
+    private TextView noDataAvailableCrew;
 
     // Videos
     private RecyclerView videoRecyclerView;
@@ -127,6 +129,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowRuntime = findViewById(R.id.text_view_runtime);
         tvshowOverview = findViewById(R.id.text_view_overview_content_section);
         tvshowGenres = findViewById(R.id.text_view_genres);
+
+        noDataAvailableCast = findViewById(R.id.text_view_no_data_available_cast);
+        noDataAvailableCrew = findViewById(R.id.text_view_no_data_available_crew);
 
         // Videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -332,6 +337,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
                 for (TVShowCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
+                        noDataAvailableCast.setVisibility(View.GONE);
                         tvshowCastBriefList.add(castBrief);
                 }
 
@@ -371,6 +377,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 }
 
                 if (!tvshowCrewBriefList.isEmpty()){
+                    noDataAvailableCrew.setVisibility(View.GONE);
                     tvshowCrewAdapter.notifyDataSetChanged();
                 }
             }
