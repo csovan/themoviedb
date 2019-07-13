@@ -1,6 +1,7 @@
 package com.csovan.themoviedb.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,10 +30,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        setTitle(String.format(
-                "%s & %s",
-                getString(R.string.menu_movies),
-                getString(R.string.menu_tv_shows)));
+        setTitle(getString(R.string.menu_home));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         NavigationView navigationView = findViewById(R.id.nav_view_main);
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
@@ -91,10 +89,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 setFragment(new HomeFragment());
-                setTitle(String.format(
-                        "%s & %s",
-                        getString(R.string.menu_movies),
-                        getString(R.string.menu_tv_shows)));
+                setTitle(getString(R.string.menu_home));
                 return true;
             case R.id.nav_movies:
                 setFragment(new MoviesFragment());

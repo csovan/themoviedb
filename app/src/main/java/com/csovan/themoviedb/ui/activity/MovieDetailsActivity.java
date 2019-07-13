@@ -73,8 +73,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView movieGenres;
     private TextView movieRating;
 
+    // No data available
     private TextView noDataAvailableCast;
     private TextView noDataAvailableCrew;
+    private TextView noDataAvailableVideo;
+    private TextView noDataAvailableOverview;
 
     // Videos
     private RecyclerView videoRecyclerView;
@@ -137,6 +140,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         noDataAvailableCast = findViewById(R.id.text_view_no_data_available_cast);
         noDataAvailableCrew = findViewById(R.id.text_view_no_data_available_crew);
+        noDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
+        noDataAvailableVideo = findViewById(R.id.text_view_video_no_data);
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -250,14 +255,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
                     movieRuntime.setText(runtimeFormat);
                 } else{
-                    movieRuntime.setText("");
+                    movieRuntime.setText("N/A");
                 }
 
                 // Get movie overview
-                if (response.body().getOverview() != null)
+                if (response.body().getOverview() != null){
+                    noDataAvailableOverview.setVisibility(View.GONE);
                     movieOverview.setText(response.body().getOverview());
-                else
+                }
+                else {
                     movieOverview.setText("");
+                }
 
                 setGenres(response.body().getGenres());
                 setVideos();
@@ -297,6 +305,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 for (Video video : response.body().getVideos()) {
                     if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
                             && video.getType() != null && video.getType().equals("Trailer"))
+                        noDataAvailableVideo.setVisibility(View.GONE);
                         videoList.add(video);
                 }
 
