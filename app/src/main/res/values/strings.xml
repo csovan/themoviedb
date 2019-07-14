@@ -52,6 +52,7 @@
     <string name="runtime">2 hr 30 mins</string>
     <string name="genres">Action | Sci-Fi | Fantasy</string>
     <string name="space_dot">\u00b7</string>
+    <string name="movies_similar_section_title">Similar Movies</string>
 
     <!-- Overview section -->
     <string name="overview_section_title">Overview</string>

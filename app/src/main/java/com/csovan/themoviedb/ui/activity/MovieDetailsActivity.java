@@ -22,12 +22,15 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.Movie;
+import com.csovan.themoviedb.data.model.movie.MovieBrief;
 import com.csovan.themoviedb.data.model.movie.MovieCastBrief;
 import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
 import com.csovan.themoviedb.data.model.movie.MovieCrewBrief;
 import com.csovan.themoviedb.data.model.movie.MovieGenres;
+import com.csovan.themoviedb.data.model.movie.SimilarMoviesResponse;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
+import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCastAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCrewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
@@ -78,6 +81,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView noDataAvailableCrew;
     private TextView noDataAvailableVideo;
     private TextView noDataAvailableOverview;
+    private TextView noDataAvailableSimilarMovies;
 
     // Videos
     private RecyclerView videoRecyclerView;
@@ -94,10 +98,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private RecyclerView movieCrewRecyclerView;
     private MovieCrewAdapter movieCrewAdapter;
 
+    // Similar movies
+    private List<MovieBrief> movieSimilarList;
+    private RecyclerView movieSimilarRecyclerView;
+    private MovieCardSmallAdapter moviesSimilarAdapter;
+
     // Calls
     private Call<Movie> movieDetailsCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
+    private Call<SimilarMoviesResponse> similarMoviesResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +152,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         noDataAvailableCrew = findViewById(R.id.text_view_no_data_available_crew);
         noDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         noDataAvailableVideo = findViewById(R.id.text_view_video_no_data);
+        noDataAvailableSimilarMovies = findViewById(R.id.text_view_similar_movies_no_data);
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -169,6 +180,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieCrewRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
         crewSectionLoaded = false;
+
+        // Set adapter similar movies
+        movieSimilarRecyclerView = findViewById(R.id.recycler_view_similar_movies);
+        movieSimilarList = new ArrayList<>();
+        moviesSimilarAdapter = new MovieCardSmallAdapter(MovieDetailsActivity.this, movieSimilarList);
+        movieSimilarRecyclerView.setAdapter(moviesSimilarAdapter);
+        movieSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
 
@@ -271,6 +290,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 setVideos();
                 setCasts();
                 setCrews();
+                setSimilarMovies();
 
                 movieDetailsLoaded = true;
                 checkMovieDetailsLoaded();
@@ -406,6 +426,40 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setSimilarMovies(){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        similarMoviesResponseCall = apiService.getSimilarMovies(movieId, TMDB_API_KEY, 1);
+        similarMoviesResponseCall.enqueue(new Callback<SimilarMoviesResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SimilarMoviesResponse> call, @NonNull Response<SimilarMoviesResponse> response) {
+                if (!response.isSuccessful()){
+                    similarMoviesResponseCall = call.clone();
+                    similarMoviesResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getResults() == null) return;
+
+                for (MovieBrief movieBrief : response.body().getResults()) {
+                    if (movieBrief != null)
+                        noDataAvailableSimilarMovies.setVisibility(View.GONE);
+                        movieSimilarList.add(movieBrief);
+                }
+
+                if (!movieSimilarList.isEmpty()){
+                    moviesSimilarAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SimilarMoviesResponse> call, @NonNull Throwable t) {
+
+            }
+        });
     }
 
     private void checkMovieDetailsLoaded(){

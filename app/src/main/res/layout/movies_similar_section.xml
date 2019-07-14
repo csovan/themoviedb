@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_view_title_movies_similar_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium"
+        android:layout_marginTop="@dimen/small"
+        android:text="@string/movies_similar_section_title"
+        android:textSize="@dimen/text_size_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_similar_movies_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/no_data_available"
+        android:textColor="@android:color/secondary_text_dark_nodisable"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_title_movies_similar_section"
+        app:layout_constraintStart_toEndOf="@+id/text_view_title_movies_similar_section"
+        app:layout_constraintTop_toTopOf="@+id/text_view_title_movies_similar_section" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_similar_movies"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small"
+        android:paddingEnd="@dimen/medium"
+        android:paddingStart="0dp"
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_title_movies_similar_section" />
+
+</android.support.constraint.ConstraintLayout>
