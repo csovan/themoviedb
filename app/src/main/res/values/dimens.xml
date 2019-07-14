@@ -12,6 +12,7 @@
 
     <!-- Text sizes -->
     <dimen name="text_size_title">18sp</dimen>
+    <dimen name="text_size_view_all">16sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
 
 </resources>

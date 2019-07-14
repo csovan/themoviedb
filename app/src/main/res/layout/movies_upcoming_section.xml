@@ -26,7 +26,7 @@
         android:focusable="true"
         android:text="@string/more"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/text_size_small"
+        android:textSize="@dimen/text_size_view_all"
         app:layout_constraintBottom_toBottomOf="@+id/text_view_section_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_view_section_title" />
