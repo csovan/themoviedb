@@ -28,6 +28,8 @@
         android:text="@string/title_card"
         android:background="@drawable/card_large_scrim"
         android:textAlignment="center"
+        android:paddingStart="@dimen/small"
+        android:paddingEnd="@dimen/small"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="@dimen/text_size_title" />
