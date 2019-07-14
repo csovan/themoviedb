@@ -11,7 +11,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_movie_details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="256dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="4dp">
@@ -19,10 +19,8 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_movie_details"
             android:layout_width="match_parent"
-            android:layout_height="256dp"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
             app:contentScrim="@android:color/transparent"
             app:statusBarScrim="@drawable/details_status_bar_scrim"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
