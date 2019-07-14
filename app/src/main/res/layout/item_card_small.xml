@@ -10,6 +10,7 @@
     android:elevation="100dp"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="@dimen/x_small">
 
     <ImageView

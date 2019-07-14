@@ -278,7 +278,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 }
 
                 // Get movie overview
-                if (response.body().getOverview() != null){
+                if (response.body().getOverview() != null && !response.body().getOverview().isEmpty()){
                     noDataAvailableOverview.setVisibility(View.GONE);
                     movieOverview.setText(response.body().getOverview());
                 }
