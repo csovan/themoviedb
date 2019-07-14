@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="@android:color/transparent"
             app:statusBarScrim="@drawable/details_status_bar_scrim"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
