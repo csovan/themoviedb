@@ -53,6 +53,7 @@
     <string name="genres">Action | Sci-Fi | Fantasy</string>
     <string name="space_dot">\u00b7</string>
     <string name="movies_similar_section_title">Similar Movies</string>
+    <string name="tv_shows_similar_section_title">Similar TV Shows</string>
 
     <!-- Overview section -->
     <string name="overview_section_title">Overview</string>

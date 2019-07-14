@@ -7,6 +7,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
 import com.csovan.themoviedb.data.model.movie.SimilarMoviesResponse;
+import com.csovan.themoviedb.data.model.tvshow.SimilarTVShowsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
@@ -113,4 +114,9 @@ public interface ApiInterface {
             @Path("id") Integer tvshowId,
             @Query("api_key") String apiKey);
 
+    @GET("tv/{id}/similar")
+    Call<SimilarTVShowsResponse> getSimilarTVShows(
+            @Path("id") Integer movieId,
+            @Query("api_key") String apiKey,
+            @Query("page") Integer page);
 }

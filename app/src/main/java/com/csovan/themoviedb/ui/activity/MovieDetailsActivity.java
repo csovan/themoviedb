@@ -100,7 +100,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     // Similar movies
     private List<MovieBrief> movieSimilarList;
-    private RecyclerView movieSimilarRecyclerView;
+    private RecyclerView moviesSimilarRecyclerView;
     private MovieCardSmallAdapter moviesSimilarAdapter;
 
     // Calls
@@ -182,11 +182,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         crewSectionLoaded = false;
 
         // Set adapter similar movies
-        movieSimilarRecyclerView = findViewById(R.id.recycler_view_similar_movies);
+        moviesSimilarRecyclerView = findViewById(R.id.recycler_view_similar_movies);
         movieSimilarList = new ArrayList<>();
         moviesSimilarAdapter = new MovieCardSmallAdapter(MovieDetailsActivity.this, movieSimilarList);
-        movieSimilarRecyclerView.setAdapter(moviesSimilarAdapter);
-        movieSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+        moviesSimilarRecyclerView.setAdapter(moviesSimilarAdapter);
+        moviesSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
@@ -445,9 +445,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body().getResults() == null) return;
 
                 for (MovieBrief movieBrief : response.body().getResults()) {
-                    if (movieBrief != null)
+                    if (movieBrief != null){
                         noDataAvailableSimilarMovies.setVisibility(View.GONE);
                         movieSimilarList.add(movieBrief);
+                    }
                 }
 
                 if (!movieSimilarList.isEmpty()){

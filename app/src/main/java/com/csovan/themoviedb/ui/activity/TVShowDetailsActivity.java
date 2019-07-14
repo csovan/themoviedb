@@ -21,13 +21,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
+import com.csovan.themoviedb.data.model.tvshow.SimilarTVShowsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
+import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCastBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCrewBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
+import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCastAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCrewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
@@ -78,6 +81,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private TextView noDataAvailableCrew;
     private TextView noDataAvailableVideo;
     private TextView noDataAvailableOverview;
+    private TextView noDataAvailableSimilarTVShows;
 
     // Videos
     private RecyclerView videoRecyclerView;
@@ -94,9 +98,16 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private RecyclerView tvshowCrewRecyclerView;
     private TVShowCrewAdapter tvshowCrewAdapter;
 
+    // Similar TV Shows
+    private List<TVShowBrief> tvshowSimilarList;
+    private RecyclerView tvshowsSimilarRecyclerView;
+    private TVShowCardSmallAdapter tvshowsSimilarAdapter;
+
+    // Calls
     private Call<TVShow> tvshowDetailCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<TVShowCreditsResponse> tvshowCreditsResponseCall;
+    private Call<SimilarTVShowsResponse> similarTVShowsResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +150,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         noDataAvailableCrew = findViewById(R.id.text_view_no_data_available_crew);
         noDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         noDataAvailableVideo = findViewById(R.id.text_view_video_no_data);
+        noDataAvailableSimilarTVShows = findViewById(R.id.text_view_similar_tv_shows_no_data);
 
         // Videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -166,6 +178,14 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowCrewRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
         crewSectionLoaded = false;
+
+        // Similar TV Shows
+        tvshowsSimilarRecyclerView = findViewById(R.id.recycler_view_similar_tv_shows);
+        tvshowSimilarList = new ArrayList<>();
+        tvshowsSimilarAdapter = new TVShowCardSmallAdapter(TVShowDetailsActivity.this,tvshowSimilarList);
+        tvshowsSimilarRecyclerView.setAdapter(tvshowsSimilarAdapter);
+        tvshowsSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
     }
@@ -266,6 +286,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 setVideos();
                 setCasts();
                 setCrews();
+                setSimilarTVShows();
 
                 tvshowDetailsLoaded = true;
                 checkTVShowDetailsLoaded();
@@ -395,6 +416,41 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<TVShowCreditsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+
+    private void setSimilarTVShows(){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        similarTVShowsResponseCall = apiService.getSimilarTVShows(tvshowId, TMDB_API_KEY, 1);
+        similarTVShowsResponseCall.enqueue(new Callback<SimilarTVShowsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SimilarTVShowsResponse> call, @NonNull Response<SimilarTVShowsResponse> response) {
+                if (!response.isSuccessful()){
+                    similarTVShowsResponseCall = call.clone();
+                    similarTVShowsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getResults() == null) return;
+
+                for (TVShowBrief tvshowBrief : response.body().getResults()) {
+                    if (tvshowBrief != null){
+                        noDataAvailableSimilarTVShows.setVisibility(View.GONE);
+                        tvshowSimilarList.add(tvshowBrief);
+                    }
+                }
+
+                if (!tvshowSimilarList.isEmpty()){
+                    tvshowsSimilarAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SimilarTVShowsResponse> call, @NonNull Throwable t) {
 
             }
         });
