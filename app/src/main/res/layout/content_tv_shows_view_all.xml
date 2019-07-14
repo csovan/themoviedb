@@ -10,10 +10,10 @@
         android:id="@+id/recycler_view_tv_shows_view_all"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/small"
-        android:clipToPadding="false"
-        android:paddingTop="@dimen/small"
+        android:paddingStart="14dp"
         android:paddingEnd="@dimen/small"
-        android:paddingStart="@dimen/small"/>
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:clipToPadding="false"/>
 
 </FrameLayout>
