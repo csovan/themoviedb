@@ -51,9 +51,9 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
                 .into(holder.ivTVShowPoster);
 
         if (tvshowList.get(position).getName() != null){
-            holder.tvTitle.setText(tvshowList.get(position).getName());
+            holder.tvTVShowTitle.setText(tvshowList.get(position).getName());
         }else {
-            holder.tvTitle.setText("N/A");
+            holder.tvTVShowTitle.setText("N/A");
         }
 
     }
@@ -67,14 +67,14 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
 
         CardView cvTVShowCard;
         ImageView ivTVShowPoster;
-        TextView tvTitle;
+        TextView tvTVShowTitle;
 
         TVShowViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cvTVShowCard = itemView.findViewById(R.id.card_view_small);
             ivTVShowPoster = itemView.findViewById(R.id.image_view_poster);
-            tvTitle = itemView.findViewById(R.id.text_view_title);
+            tvTVShowTitle = itemView.findViewById(R.id.text_view_title);
 
             cvTVShowCard.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
