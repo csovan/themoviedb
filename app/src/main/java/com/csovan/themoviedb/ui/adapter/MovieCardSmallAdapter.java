@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -49,6 +50,12 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivMoviePoster);
 
+        if (movieList.get(position).getTitle() != null){
+            holder.tvTitle.setText(movieList.get(position).getTitle());
+        }else {
+            holder.tvTitle.setText("N/A");
+        }
+
     }
 
     @Override
@@ -60,12 +67,14 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
 
         CardView cvMovieCard;
         ImageView ivMoviePoster;
+        TextView tvTitle;
 
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cvMovieCard = itemView.findViewById(R.id.card_view_small);
             ivMoviePoster = itemView.findViewById(R.id.image_view_poster);
+            tvTitle = itemView.findViewById(R.id.text_view_title);
 
             cvMovieCard.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -49,6 +50,12 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivTVShowPoster);
 
+        if (tvshowList.get(position).getName() != null){
+            holder.tvTitle.setText(tvshowList.get(position).getName());
+        }else {
+            holder.tvTitle.setText("N/A");
+        }
+
     }
 
     @Override
@@ -60,12 +67,14 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
 
         CardView cvTVShowCard;
         ImageView ivTVShowPoster;
+        TextView tvTitle;
 
         TVShowViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cvTVShowCard = itemView.findViewById(R.id.card_view_small);
             ivTVShowPoster = itemView.findViewById(R.id.image_view_poster);
+            tvTitle = itemView.findViewById(R.id.text_view_title);
 
             cvTVShowCard.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
