@@ -14,7 +14,6 @@
     <string name="nav_header_title">The Movie Database</string>
     <string name="nav_header_subtitle">https://www.themoviedb.org</string>
     <string name="nav_header_desc">Navigation header desc</string>
-    <string name="action_search">Search</string>
 
     <!-- Content description strings-->
     <string name="iv_backdrop_desc">Image view backdrop desc</string>
@@ -31,6 +30,8 @@
     <string name="menu_tv_shows">TV Shows</string>
     <string name="menu_favorites">Favorites</string>
     <string name="menu_help_feedback">Help &amp; feedback</string>
+    <string name="action_search">Search</string>
+    <string name="action_favorite">Favorite</string>
 
     <!-- Movies -->
     <string name="movies_now_playing">Movies Now Playing</string>
