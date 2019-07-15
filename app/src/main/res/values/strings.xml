@@ -75,4 +75,7 @@
     <string name="crew_section_title">Crew</string>
     <string name="crew_job_title">Job Title</string>
 
+    <!-- Search -->
+    <string name="media_type_search">Media Type</string>
+
 </resources>
