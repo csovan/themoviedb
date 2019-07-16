@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.SearchActivity"></activity>
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.TVShowDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />

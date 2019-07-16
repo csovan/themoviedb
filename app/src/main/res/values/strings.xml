@@ -5,6 +5,10 @@
     <string name="title_activity_view_all_movies">ViewAllMoviesActivity</string>
     <string name="title_activity_view_all_tv_shows">ViewAllTVShowsActivity</string>
 
+    <string name="movie">Movie</string>
+    <string name="tv_show">TV Show</string>
+    <string name="person">Person</string>
+
     <!-- Error No Data -->
     <string name="no_data_available">(No data available)</string>
 

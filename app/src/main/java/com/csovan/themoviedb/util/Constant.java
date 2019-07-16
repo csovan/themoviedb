@@ -26,4 +26,6 @@ public final class Constant {
     public static final int POPULAR_TV_SHOWS_TYPE = 3;
     public static final int TOP_RATED_TV_SHOWS_TYPE = 4;
 
+    public static final String QUERY = "query";
+
 }
