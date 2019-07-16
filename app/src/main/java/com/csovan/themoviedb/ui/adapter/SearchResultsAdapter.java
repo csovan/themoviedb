@@ -1,7 +1,9 @@
 package com.csovan.themoviedb.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.search.SearchResult;
+import com.csovan.themoviedb.ui.activity.MovieDetailsActivity;
+import com.csovan.themoviedb.ui.activity.TVShowDetailsActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_342;
+import static com.csovan.themoviedb.util.Constant.MOVIE_ID;
+import static com.csovan.themoviedb.util.Constant.TV_SHOW_ID;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ResultViewHolder> {
 
@@ -92,6 +98,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     class ResultViewHolder extends RecyclerView.ViewHolder {
 
+        ConstraintLayout constraintLayoutSearchResults;
+
         CardView cardViewPoster;
         ImageView posterImageView;
         TextView nameTextView;
@@ -101,6 +109,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         ResultViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            constraintLayoutSearchResults = itemView.findViewById(R.id.constraint_layout_search_result);
 
             cardViewPoster = itemView.findViewById(R.id.card_view_poster);
             posterImageView = itemView.findViewById(R.id.image_view_poster_search);
@@ -114,6 +124,20 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             cardViewPoster.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
+            constraintLayoutSearchResults.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (searchResults.get(getAdapterPosition()).getMediaType().equals("movie")) {
+                        Intent intent = new Intent(context, MovieDetailsActivity.class);
+                        intent.putExtra(MOVIE_ID, searchResults.get(getAdapterPosition()).getId());
+                        context.startActivity(intent);
+                    } else if (searchResults.get(getAdapterPosition()).getMediaType().equals("tv")) {
+                        Intent intent = new Intent(context, TVShowDetailsActivity.class);
+                        intent.putExtra(TV_SHOW_ID, searchResults.get(getAdapterPosition()).getId());
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }
