@@ -1,7 +1,9 @@
 package com.csovan.themoviedb.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +15,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCrewBrief;
+import com.csovan.themoviedb.ui.activity.PersonDetailsActivity;
 
 import java.util.List;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_342;
+import static com.csovan.themoviedb.util.Constant.PERSON_ID;
 
 public class TVShowCrewAdapter extends RecyclerView.Adapter<TVShowCrewAdapter.CrewViewHolder> {
 
@@ -69,12 +73,25 @@ public class TVShowCrewAdapter extends RecyclerView.Adapter<TVShowCrewAdapter.Cr
         TextView crewName;
         TextView crewJob;
 
+        ConstraintLayout constraintLayoutItemCrew;
+
         CrewViewHolder(@NonNull View itemView) {
             super(itemView);
 
             crewImageView = itemView.findViewById(R.id.image_view_crew_profile_pic);
             crewName = itemView.findViewById(R.id.text_view_crew_name);
             crewJob = itemView.findViewById(R.id.text_view_crew_job);
+
+            constraintLayoutItemCrew = itemView.findViewById(R.id.constraint_layout_item_crew);
+
+            constraintLayoutItemCrew.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Intent intent = new Intent(context, PersonDetailsActivity.class);
+                    intent.putExtra(PERSON_ID, crewBriefList.get(getAdapterPosition()).getId());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

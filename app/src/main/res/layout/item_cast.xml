@@ -14,7 +14,6 @@
         android:id="@+id/card_view_cast"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:elevation="100dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"

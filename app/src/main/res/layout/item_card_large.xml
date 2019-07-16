@@ -5,7 +5,6 @@
     android:id="@+id/card_view_large"
     android:layout_width="320dp"
     android:layout_height="200dp"
-    android:elevation="100dp"
     android:clickable="true"
     android:focusable="true"
     android:layout_margin="@dimen/small"

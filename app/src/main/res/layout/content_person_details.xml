@@ -14,7 +14,6 @@
         android:layout_marginStart="16dp"
         android:layout_gravity="center_horizontal"
         app:cardBackgroundColor="@android:color/transparent"
-        app:cardElevation="16dp"
         app:cardCornerRadius="4dp"
         app:layout_constraintDimensionRatio="w,2:3"
         app:layout_constraintStart_toStartOf="parent"
