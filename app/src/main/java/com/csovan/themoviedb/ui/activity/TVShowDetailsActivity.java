@@ -275,7 +275,8 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     tvshowRuntime.setText("N/A");
                 }
 
-                if (response.body().getOverview() != null && !response.body().getOverview().isEmpty()) {
+                if (response.body().getOverview() != null
+                        && !response.body().getOverview().trim().isEmpty()) {
                     noDataAvailableOverview.setVisibility(View.GONE);
                     tvshowOverview.setText(response.body().getOverview());
                 }

@@ -2,11 +2,12 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint_layout_item_cast"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:id="@+id/constraint_layout_item_cast"
+    android:foreground="?android:attr/selectableItemBackground"
     android:layout_marginStart="16dp"
     android:layout_marginTop="8dp">
 

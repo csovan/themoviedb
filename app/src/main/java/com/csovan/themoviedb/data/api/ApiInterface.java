@@ -7,6 +7,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
 import com.csovan.themoviedb.data.model.movie.SimilarMoviesResponse;
+import com.csovan.themoviedb.data.model.people.Person;
 import com.csovan.themoviedb.data.model.tvshow.SimilarTVShowsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
@@ -119,4 +120,10 @@ public interface ApiInterface {
             @Path("id") Integer movieId,
             @Query("api_key") String apiKey,
             @Query("page") Integer page);
+
+    // Person services
+    @GET("person/{id}")
+    Call<Person> getPersonDetails(
+            @Path("id") Integer personId,
+            @Query("api_key") String apiKey);
 }

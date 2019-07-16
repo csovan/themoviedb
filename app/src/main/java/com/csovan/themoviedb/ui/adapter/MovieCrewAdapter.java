@@ -1,6 +1,7 @@
 package com.csovan.themoviedb.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,10 +14,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.movie.MovieCrewBrief;
+import com.csovan.themoviedb.ui.activity.PersonDetailsActivity;
 
 import java.util.List;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_342;
+import static com.csovan.themoviedb.util.Constant.PERSON_ID;
 
 public class MovieCrewAdapter extends RecyclerView.Adapter<MovieCrewAdapter.CrewViewHolder> {
 
@@ -73,6 +76,16 @@ public class MovieCrewAdapter extends RecyclerView.Adapter<MovieCrewAdapter.Crew
             crewImageView = itemView.findViewById(R.id.image_view_crew_profile_pic);
             crewName = itemView.findViewById(R.id.text_view_crew_name);
             crewJob = itemView.findViewById(R.id.text_view_crew_job);
+
+            crewImageView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Intent intent = new Intent(context, PersonDetailsActivity.class);
+                    intent.putExtra(PERSON_ID, crewBriefList.get(getAdapterPosition()).getId());
+                    context.startActivity(intent);
+                }
+            });
         }
+
     }
 }

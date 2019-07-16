@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.search.SearchResult;
 import com.csovan.themoviedb.ui.activity.MovieDetailsActivity;
+import com.csovan.themoviedb.ui.activity.PersonDetailsActivity;
 import com.csovan.themoviedb.ui.activity.TVShowDetailsActivity;
 
 import java.text.ParseException;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_342;
 import static com.csovan.themoviedb.util.Constant.MOVIE_ID;
+import static com.csovan.themoviedb.util.Constant.PERSON_ID;
 import static com.csovan.themoviedb.util.Constant.TV_SHOW_ID;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ResultViewHolder> {
@@ -127,14 +129,25 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             constraintLayoutSearchResults.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (searchResults.get(getAdapterPosition()).getMediaType().equals("movie")) {
-                        Intent intent = new Intent(context, MovieDetailsActivity.class);
-                        intent.putExtra(MOVIE_ID, searchResults.get(getAdapterPosition()).getId());
-                        context.startActivity(intent);
-                    } else if (searchResults.get(getAdapterPosition()).getMediaType().equals("tv")) {
-                        Intent intent = new Intent(context, TVShowDetailsActivity.class);
-                        intent.putExtra(TV_SHOW_ID, searchResults.get(getAdapterPosition()).getId());
-                        context.startActivity(intent);
+                    switch (searchResults.get(getAdapterPosition()).getMediaType()) {
+                        case "movie": {
+                            Intent intent = new Intent(context, MovieDetailsActivity.class);
+                            intent.putExtra(MOVIE_ID, searchResults.get(getAdapterPosition()).getId());
+                            context.startActivity(intent);
+                            break;
+                        }
+                        case "tv": {
+                            Intent intent = new Intent(context, TVShowDetailsActivity.class);
+                            intent.putExtra(TV_SHOW_ID, searchResults.get(getAdapterPosition()).getId());
+                            context.startActivity(intent);
+                            break;
+                        }
+                        case "person": {
+                            Intent intent = new Intent(context, PersonDetailsActivity.class);
+                            intent.putExtra(PERSON_ID, searchResults.get(getAdapterPosition()).getId());
+                            context.startActivity(intent);
+                            break;
+                        }
                     }
                 }
             });
