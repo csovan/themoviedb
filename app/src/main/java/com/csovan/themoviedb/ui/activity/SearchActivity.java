@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.search.SearchAsyncTaskLoader;
@@ -37,6 +39,8 @@ public class SearchActivity extends AppCompatActivity {
     private int previousTotal = 0;
     private int visibleThreshold = 5;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,8 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        progressBar = findViewById(R.id.progress_bar);
+
         Intent receivedIntent = getIntent();
         query = receivedIntent.getStringExtra(QUERY);
 
@@ -54,6 +60,8 @@ public class SearchActivity extends AppCompatActivity {
         setTitle(query);
 
         searchResultsRecyclerView = findViewById(R.id.recycler_view_search);
+        searchResultsRecyclerView.setVisibility(View.INVISIBLE);
+
         searchResultList = new ArrayList<>();
         searchResultsAdapter = new SearchResultsAdapter(SearchActivity.this, searchResultList);
 
@@ -101,6 +109,9 @@ public class SearchActivity extends AppCompatActivity {
 
                 if (searchResponse == null) return;
                 if (searchResponse.getResults() == null) return;
+
+                progressBar.setVisibility(View.GONE);
+                searchResultsRecyclerView.setVisibility(View.VISIBLE);
 
                 for (SearchResult searchResult : searchResponse.getResults()) {
                     if (searchResult != null)
