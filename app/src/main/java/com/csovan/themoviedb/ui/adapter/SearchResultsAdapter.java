@@ -90,7 +90,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         } else {
             holder.yearTextView.setText("");
         }
-
     }
 
     @Override
@@ -129,6 +128,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             constraintLayoutSearchResults.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     switch (searchResults.get(getAdapterPosition()).getMediaType()) {
                         case "movie": {
                             Intent intent = new Intent(context, MovieDetailsActivity.class);

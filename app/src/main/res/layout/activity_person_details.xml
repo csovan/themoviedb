@@ -69,6 +69,8 @@
             <include layout="@layout/biography_section" />
 
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
+
+    <include layout="@layout/progress_bar" />
+
 </android.support.design.widget.CoordinatorLayout>

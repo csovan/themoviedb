@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,8 +35,12 @@ public class PersonDetailsActivity extends AppCompatActivity {
 
     private int personId;
 
+    private boolean personDetailsLoaded;
+
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
+    private NestedScrollView nestedScrollView;
+    private ProgressBar progressBar;
 
     // ImageView
     private ImageView backdropImageView;
@@ -64,8 +71,15 @@ public class PersonDetailsActivity extends AppCompatActivity {
 
         if (personId == -1) finish();
 
+        personDetailsLoaded = false;
+
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_person_details);
         appBarLayout = findViewById(R.id.app_bar_person_details);
+        nestedScrollView = findViewById(R.id.nested_scroll_view_person_details);
+        progressBar = findViewById(R.id.progress_bar);
+
+        collapsingToolbarLayout.setVisibility(View.INVISIBLE);
+        nestedScrollView.setVisibility(View.INVISIBLE);
 
         backdropImageView = findViewById(R.id.image_view_backdrop);
         posterImageView = findViewById(R.id.image_view_poster);
@@ -143,6 +157,9 @@ public class PersonDetailsActivity extends AppCompatActivity {
                 else {
                     textViewBiography.setText("");
                 }
+
+                personDetailsLoaded = true;
+                checkPersonDetailsLoaded();
             }
 
             @Override
@@ -150,6 +167,14 @@ public class PersonDetailsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void checkPersonDetailsLoaded(){
+        if (personDetailsLoaded ){
+            progressBar.setVisibility(View.GONE);
+            collapsingToolbarLayout.setVisibility(View.VISIBLE);
+            nestedScrollView.setVisibility(View.VISIBLE);
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
