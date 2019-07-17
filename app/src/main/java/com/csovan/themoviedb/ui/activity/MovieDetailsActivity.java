@@ -247,8 +247,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 // Get movie release date with simple date format
                 if (response.body().getReleaseDate() != null){
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat(
+                            "yyyy-MM-dd", Locale.getDefault());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat(
+                            "MMM d, yyyy", Locale.getDefault());
                     try{
                         Date releaseDate = sdf1.parse(response.body().getReleaseDate());
                         movieReleaseDate.setText(sdf2.format(releaseDate));

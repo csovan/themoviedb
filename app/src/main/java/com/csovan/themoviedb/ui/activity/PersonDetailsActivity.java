@@ -21,6 +21,11 @@ import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.people.Person;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -49,6 +54,8 @@ public class PersonDetailsActivity extends AppCompatActivity {
     // TextView
     private TextView textViewPersonName;
     private TextView textViewBirthPlace;
+    private TextView textViewBirthDate;
+    private TextView textViewPersonAge;
     private TextView textViewBiography;
 
     // Calls
@@ -85,6 +92,8 @@ public class PersonDetailsActivity extends AppCompatActivity {
         posterImageView = findViewById(R.id.image_view_poster);
 
         textViewPersonName = findViewById(R.id.text_view_person_name);
+        textViewBirthDate = findViewById(R.id.text_view_birth_date);
+        textViewPersonAge = findViewById(R.id.text_view_age);
         textViewBirthPlace = findViewById(R.id.text_view_birth_place);
         textViewBiography = findViewById(R.id.text_view_biography_content);
 
@@ -142,6 +151,8 @@ public class PersonDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(posterImageView);
 
+                setDateOfBirthAndAge(response.body().getDateOfBirth());
+
                 if (response.body().getPlaceOfBirth() != null
                         && !response.body().getPlaceOfBirth().trim().isEmpty()){
                     textViewBirthPlace.setText(response.body().getPlaceOfBirth());
@@ -167,6 +178,26 @@ public class PersonDetailsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setDateOfBirthAndAge(String dateOfBirthString){
+        if (dateOfBirthString != null && !dateOfBirthString.trim().isEmpty()){
+            SimpleDateFormat sdf1 = new SimpleDateFormat(
+                    "yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat sdf2 = new SimpleDateFormat(
+                    "MMM d, yyyy", Locale.getDefault());
+            SimpleDateFormat sdf3 = new SimpleDateFormat(
+                    "yyyy", Locale.getDefault());
+            try {
+                Date dateOfBirth = sdf1.parse(dateOfBirthString);
+                textViewBirthDate.setText(sdf2.format(dateOfBirth));
+                Integer personAge = (Calendar.getInstance()
+                        .get(Calendar.YEAR) - Integer.parseInt(sdf3.format(dateOfBirth)));
+                textViewPersonAge.setText(String.valueOf(personAge));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private void checkPersonDetailsLoaded(){
