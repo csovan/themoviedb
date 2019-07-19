@@ -7,6 +7,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +21,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
+import com.csovan.themoviedb.data.model.movie.MovieCastOfPerson;
+import com.csovan.themoviedb.data.model.movie.MovieCastsOfPersonResponse;
 import com.csovan.themoviedb.data.model.people.Person;
+import com.csovan.themoviedb.ui.adapter.MovieCastOfPersonAdapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -42,6 +49,8 @@ public class PersonDetailsActivity extends AppCompatActivity {
 
     private boolean personDetailsLoaded;
 
+    private Call<Person> personDetailsCall;
+
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private NestedScrollView nestedScrollView;
@@ -58,8 +67,11 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private TextView textViewPersonAge;
     private TextView textViewBiography;
 
-    // Calls
-    private Call<Person> personDetailsCall;
+    // Movies cast in
+    private RecyclerView recyclerViewMoviesCastIn;
+    private MovieCastOfPersonAdapter movieCastOfPersonAdapter;
+    private List<MovieCastOfPerson> movieCastOfPersonList;
+    private Call<MovieCastsOfPersonResponse> movieCastOfPersonCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +108,15 @@ public class PersonDetailsActivity extends AppCompatActivity {
         textViewPersonAge = findViewById(R.id.text_view_age);
         textViewBirthPlace = findViewById(R.id.text_view_birth_place);
         textViewBiography = findViewById(R.id.text_view_biography_content);
+
+        // Set adapter movies cast in
+        recyclerViewMoviesCastIn = findViewById(R.id.recycler_view_movies_cast_of_person);
+        movieCastOfPersonList = new ArrayList<>();
+        movieCastOfPersonAdapter = new MovieCastOfPersonAdapter(PersonDetailsActivity.this, movieCastOfPersonList);
+        recyclerViewMoviesCastIn.setAdapter(movieCastOfPersonAdapter);
+        recyclerViewMoviesCastIn.setLayoutManager(new LinearLayoutManager(PersonDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
+
 
         loadActivity();
     }
@@ -169,6 +190,8 @@ public class PersonDetailsActivity extends AppCompatActivity {
                     textViewBiography.setText("");
                 }
 
+                setMovieCastIn(response.body().getId());
+
                 personDetailsLoaded = true;
                 checkPersonDetailsLoaded();
             }
@@ -198,6 +221,39 @@ public class PersonDetailsActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setMovieCastIn(Integer personId){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        movieCastOfPersonCall = apiService.getMovieCastsOfPerson(personId, TMDB_API_KEY);
+        movieCastOfPersonCall.enqueue(new Callback<MovieCastsOfPersonResponse>() {
+            @Override
+            public void onResponse(Call<MovieCastsOfPersonResponse> call, Response<MovieCastsOfPersonResponse> response) {
+                if (!response.isSuccessful()){
+                    movieCastOfPersonCall = call.clone();
+                    movieCastOfPersonCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getCasts() == null) return;
+
+                for (MovieCastOfPerson movieCastOfPerson : response.body().getCasts()){
+                    if (movieCastOfPerson == null) return;
+                    if (movieCastOfPerson.getTitle() != null && movieCastOfPerson.getPosterPath() != null){
+                        movieCastOfPersonList.add(movieCastOfPerson);
+                    }
+                }
+                movieCastOfPersonAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<MovieCastsOfPersonResponse> call, Throwable t) {
+
+            }
+        });
+
     }
 
     private void checkPersonDetailsLoaded(){

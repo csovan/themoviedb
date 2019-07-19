@@ -68,6 +68,8 @@
 
             <include layout="@layout/biography_section" />
 
+            <include layout="@layout/movies_cast_of_person_section" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

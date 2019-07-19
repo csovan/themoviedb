@@ -1,6 +1,7 @@
 package com.csovan.themoviedb.data.api;
 
 import com.csovan.themoviedb.data.model.movie.Movie;
+import com.csovan.themoviedb.data.model.movie.MovieCastsOfPersonResponse;
 import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
@@ -124,6 +125,11 @@ public interface ApiInterface {
     // Person services
     @GET("person/{id}")
     Call<Person> getPersonDetails(
+            @Path("id") Integer personId,
+            @Query("api_key") String apiKey);
+
+    @GET("person/{id}/movie_credits")
+    Call<MovieCastsOfPersonResponse> getMovieCastsOfPerson(
             @Path("id") Integer personId,
             @Query("api_key") String apiKey);
 }

@@ -59,12 +59,15 @@
     <string name="space_dot">\u00b7</string>
     <string name="movies_similar_section_title">Similar Movies</string>
     <string name="tv_shows_similar_section_title">Similar TV Shows</string>
+
+    <!-- Person details -->
     <string name="person_name">Name</string>
     <string name="birth_date">July 4, 1999</string>
     <string name="person_age">24</string>
     <string name="birth_place">Queens, New York, USA</string>
     <string name="biography_label">Biography</string>
     <string name="biography_content">John was born on…</string>
+    <string name="movies_cast_in">Movies Cast In</string>
 
     <!-- Overview section -->
     <string name="overview_section_title">Overview</string>
@@ -87,5 +90,4 @@
 
     <!-- Search -->
     <string name="media_type_search">Media Type</string>
-
 </resources>
