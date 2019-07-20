@@ -68,7 +68,7 @@
     <string name="biography_label">Biography</string>
     <string name="biography_content">John was born on…</string>
     <string name="movies_cast_in">Movies Cast In</string>
-
+    <string name="tv_shows_cast_in">TV Shows Cast In</string>
     <!-- Overview section -->
     <string name="overview_section_title">Overview</string>
     <string name="overview_section_content">Once upon of time!</string>

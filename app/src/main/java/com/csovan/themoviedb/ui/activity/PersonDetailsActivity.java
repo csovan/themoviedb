@@ -24,7 +24,10 @@ import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.movie.MovieCastOfPerson;
 import com.csovan.themoviedb.data.model.movie.MovieCastsOfPersonResponse;
 import com.csovan.themoviedb.data.model.people.Person;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastOfPerson;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastOfPersonResponse;
 import com.csovan.themoviedb.ui.adapter.MovieCastOfPersonAdapter;
+import com.csovan.themoviedb.ui.adapter.TVShowCastOfPersonAdapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,6 +76,12 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private List<MovieCastOfPerson> movieCastOfPersonList;
     private Call<MovieCastsOfPersonResponse> movieCastOfPersonCall;
 
+    // TVShows cast in
+    private RecyclerView recyclerViewTVShowsCastIn;
+    private TVShowCastOfPersonAdapter tvshowCastOfPersonAdapter;
+    private List<TVShowCastOfPerson> tvshowCastOfPersonList;
+    private Call<TVShowCastOfPersonResponse> tvshowCastOfPersonCall;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +126,13 @@ public class PersonDetailsActivity extends AppCompatActivity {
         recyclerViewMoviesCastIn.setLayoutManager(new LinearLayoutManager(PersonDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
+        // Set adapter tvshows cast in
+        recyclerViewTVShowsCastIn = findViewById(R.id.recycler_view_tv_shows_cast_of_person);
+        tvshowCastOfPersonList = new ArrayList<>();
+        tvshowCastOfPersonAdapter = new TVShowCastOfPersonAdapter(PersonDetailsActivity.this, tvshowCastOfPersonList);
+        recyclerViewTVShowsCastIn.setAdapter(tvshowCastOfPersonAdapter);
+        recyclerViewTVShowsCastIn.setLayoutManager(new LinearLayoutManager(PersonDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         loadActivity();
     }
@@ -191,6 +207,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
                 }
 
                 setMovieCastIn(response.body().getId());
+                setTVShowCastIn(response.body().getId());
 
                 personDetailsLoaded = true;
                 checkPersonDetailsLoaded();
@@ -229,7 +246,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
         movieCastOfPersonCall = apiService.getMovieCastsOfPerson(personId, TMDB_API_KEY);
         movieCastOfPersonCall.enqueue(new Callback<MovieCastsOfPersonResponse>() {
             @Override
-            public void onResponse(Call<MovieCastsOfPersonResponse> call, Response<MovieCastsOfPersonResponse> response) {
+            public void onResponse(@NonNull Call<MovieCastsOfPersonResponse> call, @NonNull Response<MovieCastsOfPersonResponse> response) {
                 if (!response.isSuccessful()){
                     movieCastOfPersonCall = call.clone();
                     movieCastOfPersonCall.enqueue(this);
@@ -249,11 +266,44 @@ public class PersonDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<MovieCastsOfPersonResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<MovieCastsOfPersonResponse> call, @NonNull Throwable t) {
 
             }
         });
 
+    }
+
+    private void setTVShowCastIn(Integer personId){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        tvshowCastOfPersonCall = apiService.getTVCastsOfPerson(personId, TMDB_API_KEY);
+        tvshowCastOfPersonCall.enqueue(new Callback<TVShowCastOfPersonResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TVShowCastOfPersonResponse> call, @NonNull Response<TVShowCastOfPersonResponse> response) {
+                if (!response.isSuccessful()){
+                    tvshowCastOfPersonCall = call.clone();
+                    tvshowCastOfPersonCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getCasts() == null) return;
+
+                for (TVShowCastOfPerson tvshowCastOfPerson : response.body().getCasts()){
+                    if (tvshowCastOfPerson == null) return;
+                    if (tvshowCastOfPerson.getName() != null && tvshowCastOfPerson.getPosterPath() != null){
+                        tvshowCastOfPersonList.add(tvshowCastOfPerson);
+                    }
+                }
+
+                tvshowCastOfPersonAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TVShowCastOfPersonResponse> call, @NonNull Throwable t) {
+
+            }
+        });
     }
 
     private void checkPersonDetailsLoaded(){

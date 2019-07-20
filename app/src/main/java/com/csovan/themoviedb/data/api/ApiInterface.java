@@ -11,6 +11,7 @@ import com.csovan.themoviedb.data.model.movie.SimilarMoviesResponse;
 import com.csovan.themoviedb.data.model.people.Person;
 import com.csovan.themoviedb.data.model.tvshow.SimilarTVShowsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastOfPersonResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
@@ -130,6 +131,11 @@ public interface ApiInterface {
 
     @GET("person/{id}/movie_credits")
     Call<MovieCastsOfPersonResponse> getMovieCastsOfPerson(
+            @Path("id") Integer personId,
+            @Query("api_key") String apiKey);
+
+    @GET("person/{id}/tv_credits")
+    Call<TVShowCastOfPersonResponse> getTVCastsOfPerson(
             @Path("id") Integer personId,
             @Query("api_key") String apiKey);
 }
