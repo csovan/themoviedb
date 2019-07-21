@@ -77,7 +77,7 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
             tvMovieTitle = itemView.findViewById(R.id.text_view_title);
 
             cvMovieCard.getLayoutParams().width =
-                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
             cvMovieCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
