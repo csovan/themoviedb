@@ -135,7 +135,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
 
         switch (tvshowsTypeList){
             case ON_THE_AIR_TV_SHOWS_TYPE:
-                tvShowsOnTheAirResponseCall = apiService.getOnTheAirTVShows(TMDB_API_KEY, presentPage,"US");
+                tvShowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY, presentPage,"US");
                 tvShowsOnTheAirResponseCall.enqueue(new Callback<TVShowsOnTheAirResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsOnTheAirResponse> call, @NonNull Response<TVShowsOnTheAirResponse> response) {
@@ -170,7 +170,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
 
             case POPULAR_TV_SHOWS_TYPE:
-                tvShowsPopularResponseCall = apiService.getPopularTVShows(TMDB_API_KEY, presentPage,"US");
+                tvShowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY, presentPage,"US");
                 tvShowsPopularResponseCall.enqueue(new Callback<TVShowsPopularResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsPopularResponse> call, @NonNull Response<TVShowsPopularResponse> response) {
@@ -205,7 +205,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
 
             case AIRING_TODAY_TV_SHOWS_TYPE:
-                tvShowsAiringTodayResponseCall = apiService.getAiringTodayTVShows(TMDB_API_KEY, presentPage,"US");
+                tvShowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY, presentPage,"US");
                 tvShowsAiringTodayResponseCall.enqueue(new Callback<TVShowsAiringTodayResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsAiringTodayResponse> call, @NonNull Response<TVShowsAiringTodayResponse> response) {
@@ -242,7 +242,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
 
             case TOP_RATED_TV_SHOWS_TYPE:
-                tvShowsTopRatedResponseCall = apiService.getTopRatedTVShows(TMDB_API_KEY, presentPage,"US");
+                tvShowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY, presentPage,"US");
                 tvShowsTopRatedResponseCall.enqueue(new Callback<TVShowsTopRatedResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsTopRatedResponse> call, @NonNull Response<TVShowsTopRatedResponse> response) {

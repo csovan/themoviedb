@@ -134,7 +134,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
 
         switch (movieListType){
             case NOW_PLAYING_MOVIES_TYPE:
-                moviesNowPlayingResponseCall = apiService.getNowPlayingMovies(TMDB_API_KEY, presentPage,"US");
+                moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, presentPage,"US");
                 moviesNowPlayingResponseCall.enqueue(new Callback<MoviesNowPlayingResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesNowPlayingResponse> call, @NonNull Response<MoviesNowPlayingResponse> response) {
@@ -170,7 +170,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
 
             case POPULAR_MOVIES_TYPE:
-                moviesPopularResponseCall = apiService.getPopularMovies(TMDB_API_KEY, presentPage,"US");
+                moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, presentPage,"US");
                 moviesPopularResponseCall.enqueue(new Callback<MoviesPopularResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesPopularResponse> call, @NonNull Response<MoviesPopularResponse> response) {
@@ -205,7 +205,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
 
             case UPCOMING_MOVIES_TYPE:
-                moviesUpcomingResponseCall = apiService.getUpcomingMovies(TMDB_API_KEY, presentPage,"US");
+                moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, presentPage,"US");
                 moviesUpcomingResponseCall.enqueue(new Callback<MoviesUpcomingResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Response<MoviesUpcomingResponse> response) {
@@ -240,7 +240,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
 
             case TOP_RATED_MOVIES_TYPE:
-                moviesTopRatedResponseCall = apiService.getTopRatedMovies(TMDB_API_KEY, presentPage,"US");
+                moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, presentPage,"US");
                 moviesTopRatedResponseCall.enqueue(new Callback<MoviesTopRatedResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Response<MoviesTopRatedResponse> response) {

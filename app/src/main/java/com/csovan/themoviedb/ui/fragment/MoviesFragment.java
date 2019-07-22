@@ -190,7 +190,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesNowPlaying() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesNowPlayingResponseCall = apiService.getNowPlayingMovies(TMDB_API_KEY, 1, "US");
+        moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, 1, "US");
         moviesNowPlayingResponseCall.enqueue(new Callback<MoviesNowPlayingResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesNowPlayingResponse> call, @NonNull Response<MoviesNowPlayingResponse> response) {
@@ -224,7 +224,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesPopular() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesPopularResponseCall = apiService.getPopularMovies(TMDB_API_KEY, 1, "US");
+        moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, 1, "US");
         moviesPopularResponseCall.enqueue(new Callback<MoviesPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesPopularResponse> call, @NonNull Response<MoviesPopularResponse> response) {
@@ -259,7 +259,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesUpcoming(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesUpcomingResponseCall = apiService.getUpcomingMovies(TMDB_API_KEY, 1, "US");
+        moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, 1, "US");
         moviesUpcomingResponseCall.enqueue(new Callback<MoviesUpcomingResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Response<MoviesUpcomingResponse> response) {
@@ -294,7 +294,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesTopRated(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesTopRatedResponseCall = apiService.getTopRatedMovies(TMDB_API_KEY, 1, "US");
+        moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, 1, "US");
         moviesTopRatedResponseCall.enqueue(new Callback<MoviesTopRatedResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Response<MoviesTopRatedResponse> response) {

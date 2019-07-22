@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class TVShowCastOfPersonResponse {
+public class TVShowCastsOfPersonResponse {
 
     @SerializedName("cast")
     private List<TVShowCastOfPerson> casts;
     @SerializedName("id")
     private Integer id;
 
-    public TVShowCastOfPersonResponse(List<TVShowCastOfPerson> casts, Integer id) {
+    public TVShowCastsOfPersonResponse(List<TVShowCastOfPerson> casts, Integer id) {
         this.casts = casts;
         this.id = id;
     }

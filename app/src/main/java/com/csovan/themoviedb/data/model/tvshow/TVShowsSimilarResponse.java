@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SimilarTVShowsResponse {
+public class TVShowsSimilarResponse {
 
     @SerializedName("page")
     private Integer page;
@@ -15,7 +15,7 @@ public class SimilarTVShowsResponse {
     @SerializedName("total_results")
     private Integer totalResults;
 
-    public SimilarTVShowsResponse(Integer page, List<TVShowBrief> results, Integer totalPages, Integer totalResults) {
+    public TVShowsSimilarResponse(Integer page, List<TVShowBrief> results, Integer totalPages, Integer totalResults) {
         this.page = page;
         this.results = results;
         this.totalPages = totalPages;

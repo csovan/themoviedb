@@ -7,11 +7,11 @@ import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
-import com.csovan.themoviedb.data.model.movie.SimilarMoviesResponse;
+import com.csovan.themoviedb.data.model.movie.MoviesSimilarResponse;
 import com.csovan.themoviedb.data.model.people.Person;
-import com.csovan.themoviedb.data.model.tvshow.SimilarTVShowsResponse;
+import com.csovan.themoviedb.data.model.tvshow.TVShowsSimilarResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
-import com.csovan.themoviedb.data.model.tvshow.TVShowCastOfPersonResponse;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastsOfPersonResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
@@ -28,25 +28,25 @@ public interface ApiInterface {
 
     // Movie services
     @GET("movie/now_playing")
-    Call<MoviesNowPlayingResponse> getNowPlayingMovies(
+    Call<MoviesNowPlayingResponse> getMoviesNowPlaying(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
 
     @GET("movie/popular")
-    Call<MoviesPopularResponse> getPopularMovies(
+    Call<MoviesPopularResponse> getMoviesPopular(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
 
     @GET("movie/upcoming")
-    Call<MoviesUpcomingResponse> getUpcomingMovies(
+    Call<MoviesUpcomingResponse> getMoviesUpcoming(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
 
     @GET("movie/top_rated")
-    Call<MoviesTopRatedResponse> getTopRatedMovies(
+    Call<MoviesTopRatedResponse> getMoviesTopRated(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
@@ -69,7 +69,7 @@ public interface ApiInterface {
             @Query("api_key") String apiKey);
 
     @GET("movie/{id}/similar")
-    Call<SimilarMoviesResponse> getSimilarMovies(
+    Call<MoviesSimilarResponse> getMoviesSimilar(
             @Path("id") Integer movieId,
             @Query("api_key") String apiKey,
             @Query("page") Integer page);
@@ -77,25 +77,25 @@ public interface ApiInterface {
 
     // TV Show services
     @GET("tv/on_the_air")
-    Call<TVShowsOnTheAirResponse> getOnTheAirTVShows(
+    Call<TVShowsOnTheAirResponse> getTVShowsOnTheAir(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
 
     @GET("tv/popular")
-    Call<TVShowsPopularResponse> getPopularTVShows(
+    Call<TVShowsPopularResponse> getTVShowsPopular(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
 
     @GET("tv/airing_today")
-    Call<TVShowsAiringTodayResponse> getAiringTodayTVShows(
+    Call<TVShowsAiringTodayResponse> getTVShowsAiringToday(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
 
     @GET("tv/top_rated")
-    Call<TVShowsTopRatedResponse> getTopRatedTVShows(
+    Call<TVShowsTopRatedResponse> getTVShowsTopRated(
             @Query("api_key") String apiKey,
             @Query("page") Integer page,
             @Query("region") String region);
@@ -118,7 +118,7 @@ public interface ApiInterface {
             @Query("api_key") String apiKey);
 
     @GET("tv/{id}/similar")
-    Call<SimilarTVShowsResponse> getSimilarTVShows(
+    Call<TVShowsSimilarResponse> getTVShowsSimilar(
             @Path("id") Integer movieId,
             @Query("api_key") String apiKey,
             @Query("page") Integer page);
@@ -135,7 +135,7 @@ public interface ApiInterface {
             @Query("api_key") String apiKey);
 
     @GET("person/{id}/tv_credits")
-    Call<TVShowCastOfPersonResponse> getTVCastsOfPerson(
+    Call<TVShowCastsOfPersonResponse> getTVShowCastsOfPerson(
             @Path("id") Integer personId,
             @Query("api_key") String apiKey);
 }

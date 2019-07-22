@@ -1,8 +1,6 @@
 package com.csovan.themoviedb.ui.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -323,7 +321,7 @@ public class HomeFragment extends Fragment {
     private void loadMoviesNowPlaying() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesNowPlayingResponseCall = apiService.getNowPlayingMovies(TMDB_API_KEY, 1, "US");
+        moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, 1, "US");
         moviesNowPlayingResponseCall.enqueue(new Callback<MoviesNowPlayingResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesNowPlayingResponse> call, @NonNull Response<MoviesNowPlayingResponse> response) {
@@ -357,7 +355,7 @@ public class HomeFragment extends Fragment {
     private void loadTVShowsOnTheAir() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsOnTheAirResponseCall = apiService.getOnTheAirTVShows(TMDB_API_KEY, 1, "US");
+        tvShowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY, 1, "US");
         tvShowsOnTheAirResponseCall.enqueue(new Callback<TVShowsOnTheAirResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsOnTheAirResponse> call, @NonNull Response<TVShowsOnTheAirResponse> response) {
@@ -391,7 +389,7 @@ public class HomeFragment extends Fragment {
     private void loadMoviesPopular() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesPopularResponseCall = apiService.getPopularMovies(TMDB_API_KEY, 1, "US");
+        moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, 1, "US");
         moviesPopularResponseCall.enqueue(new Callback<MoviesPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesPopularResponse> call, @NonNull Response<MoviesPopularResponse> response) {
@@ -426,7 +424,7 @@ public class HomeFragment extends Fragment {
     private void loadTVShowsPopular() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsPopularResponseCall = apiService.getPopularTVShows(TMDB_API_KEY, 1, "US");
+        tvShowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY, 1, "US");
         tvShowsPopularResponseCall.enqueue(new Callback<TVShowsPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsPopularResponse> call, @NonNull Response<TVShowsPopularResponse> response) {
@@ -460,7 +458,7 @@ public class HomeFragment extends Fragment {
     private void loadMoviesUpcoming() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesUpcomingResponseCall = apiService.getUpcomingMovies(TMDB_API_KEY, 1, "US");
+        moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, 1, "US");
         moviesUpcomingResponseCall.enqueue(new Callback<MoviesUpcomingResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Response<MoviesUpcomingResponse> response) {
@@ -495,7 +493,7 @@ public class HomeFragment extends Fragment {
     private void loadTVShowsAiringToday() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsAiringTodayResponseCall = apiService.getAiringTodayTVShows(TMDB_API_KEY, 1, "US");
+        tvShowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY, 1, "US");
         tvShowsAiringTodayResponseCall.enqueue(new Callback<TVShowsAiringTodayResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsAiringTodayResponse> call, @NonNull Response<TVShowsAiringTodayResponse> response) {
@@ -529,7 +527,7 @@ public class HomeFragment extends Fragment {
     private void loadMoviesTopRated() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesTopRatedResponseCall = apiService.getTopRatedMovies(TMDB_API_KEY, 1, "US");
+        moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, 1, "US");
         moviesTopRatedResponseCall.enqueue(new Callback<MoviesTopRatedResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Response<MoviesTopRatedResponse> response) {
@@ -564,7 +562,7 @@ public class HomeFragment extends Fragment {
     private void loadTVShowsTopRated() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsTopRatedResponseCall = apiService.getTopRatedTVShows(TMDB_API_KEY, 1, "US");
+        tvShowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY, 1, "US");
         tvShowsTopRatedResponseCall.enqueue(new Callback<TVShowsTopRatedResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsTopRatedResponse> call, @NonNull Response<TVShowsTopRatedResponse> response) {

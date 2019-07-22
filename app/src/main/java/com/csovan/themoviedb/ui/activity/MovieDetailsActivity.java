@@ -28,7 +28,7 @@ import com.csovan.themoviedb.data.model.movie.MovieCastBrief;
 import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
 import com.csovan.themoviedb.data.model.movie.MovieCrewBrief;
 import com.csovan.themoviedb.data.model.movie.MovieGenres;
-import com.csovan.themoviedb.data.model.movie.SimilarMoviesResponse;
+import com.csovan.themoviedb.data.model.movie.MoviesSimilarResponse;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
@@ -108,7 +108,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private Call<Movie> movieDetailsCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
-    private Call<SimilarMoviesResponse> similarMoviesResponseCall;
+    private Call<MoviesSimilarResponse> similarMoviesResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -435,10 +435,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void setSimilarMovies(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        similarMoviesResponseCall = apiService.getSimilarMovies(movieId, TMDB_API_KEY, 1);
-        similarMoviesResponseCall.enqueue(new Callback<SimilarMoviesResponse>() {
+        similarMoviesResponseCall = apiService.getMoviesSimilar(movieId, TMDB_API_KEY, 1);
+        similarMoviesResponseCall.enqueue(new Callback<MoviesSimilarResponse>() {
             @Override
-            public void onResponse(@NonNull Call<SimilarMoviesResponse> call, @NonNull Response<SimilarMoviesResponse> response) {
+            public void onResponse(@NonNull Call<MoviesSimilarResponse> call, @NonNull Response<MoviesSimilarResponse> response) {
                 if (!response.isSuccessful()){
                     similarMoviesResponseCall = call.clone();
                     similarMoviesResponseCall.enqueue(this);
@@ -461,7 +461,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<SimilarMoviesResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<MoviesSimilarResponse> call, @NonNull Throwable t) {
 
             }
         });

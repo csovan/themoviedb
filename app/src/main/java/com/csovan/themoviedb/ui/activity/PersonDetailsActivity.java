@@ -25,7 +25,7 @@ import com.csovan.themoviedb.data.model.movie.MovieCastOfPerson;
 import com.csovan.themoviedb.data.model.movie.MovieCastsOfPersonResponse;
 import com.csovan.themoviedb.data.model.people.Person;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCastOfPerson;
-import com.csovan.themoviedb.data.model.tvshow.TVShowCastOfPersonResponse;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCastsOfPersonResponse;
 import com.csovan.themoviedb.ui.adapter.MovieCastOfPersonAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCastOfPersonAdapter;
 
@@ -80,7 +80,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewTVShowsCastIn;
     private TVShowCastOfPersonAdapter tvshowCastOfPersonAdapter;
     private List<TVShowCastOfPerson> tvshowCastOfPersonList;
-    private Call<TVShowCastOfPersonResponse> tvshowCastOfPersonCall;
+    private Call<TVShowCastsOfPersonResponse> tvshowCastOfPersonCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,10 +276,10 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private void setTVShowCastIn(Integer personId){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvshowCastOfPersonCall = apiService.getTVCastsOfPerson(personId, TMDB_API_KEY);
-        tvshowCastOfPersonCall.enqueue(new Callback<TVShowCastOfPersonResponse>() {
+        tvshowCastOfPersonCall = apiService.getTVShowCastsOfPerson(personId, TMDB_API_KEY);
+        tvshowCastOfPersonCall.enqueue(new Callback<TVShowCastsOfPersonResponse>() {
             @Override
-            public void onResponse(@NonNull Call<TVShowCastOfPersonResponse> call, @NonNull Response<TVShowCastOfPersonResponse> response) {
+            public void onResponse(@NonNull Call<TVShowCastsOfPersonResponse> call, @NonNull Response<TVShowCastsOfPersonResponse> response) {
                 if (!response.isSuccessful()){
                     tvshowCastOfPersonCall = call.clone();
                     tvshowCastOfPersonCall.enqueue(this);
@@ -300,7 +300,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<TVShowCastOfPersonResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TVShowCastsOfPersonResponse> call, @NonNull Throwable t) {
 
             }
         });

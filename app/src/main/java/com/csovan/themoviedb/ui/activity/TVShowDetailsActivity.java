@@ -22,7 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
-import com.csovan.themoviedb.data.model.tvshow.SimilarTVShowsResponse;
+import com.csovan.themoviedb.data.model.tvshow.TVShowsSimilarResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCastBrief;
@@ -108,7 +108,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private Call<TVShow> tvshowDetailCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<TVShowCreditsResponse> tvshowCreditsResponseCall;
-    private Call<SimilarTVShowsResponse> similarTVShowsResponseCall;
+    private Call<TVShowsSimilarResponse> similarTVShowsResponseCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -426,10 +426,10 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private void setSimilarTVShows(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        similarTVShowsResponseCall = apiService.getSimilarTVShows(tvshowId, TMDB_API_KEY, 1);
-        similarTVShowsResponseCall.enqueue(new Callback<SimilarTVShowsResponse>() {
+        similarTVShowsResponseCall = apiService.getTVShowsSimilar(tvshowId, TMDB_API_KEY, 1);
+        similarTVShowsResponseCall.enqueue(new Callback<TVShowsSimilarResponse>() {
             @Override
-            public void onResponse(@NonNull Call<SimilarTVShowsResponse> call, @NonNull Response<SimilarTVShowsResponse> response) {
+            public void onResponse(@NonNull Call<TVShowsSimilarResponse> call, @NonNull Response<TVShowsSimilarResponse> response) {
                 if (!response.isSuccessful()){
                     similarTVShowsResponseCall = call.clone();
                     similarTVShowsResponseCall.enqueue(this);
@@ -452,7 +452,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<SimilarTVShowsResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TVShowsSimilarResponse> call, @NonNull Throwable t) {
 
             }
         });

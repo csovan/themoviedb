@@ -189,7 +189,7 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsAiringToday(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsAiringTodayResponseCall = apiService.getAiringTodayTVShows(TMDB_API_KEY,1,"US");
+        tvShowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY,1,"US");
         tvShowsAiringTodayResponseCall.enqueue(new Callback<TVShowsAiringTodayResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsAiringTodayResponse> call, @NonNull Response<TVShowsAiringTodayResponse> response) {
@@ -223,7 +223,7 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsPopular(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsPopularResponseCall = apiService.getPopularTVShows(TMDB_API_KEY,1,"US");
+        tvShowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY,1,"US");
         tvShowsPopularResponseCall.enqueue(new Callback<TVShowsPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsPopularResponse> call, @NonNull Response<TVShowsPopularResponse> response) {
@@ -257,7 +257,7 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsOnTheAir(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsOnTheAirResponseCall = apiService.getOnTheAirTVShows(TMDB_API_KEY,1,"US");
+        tvShowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY,1,"US");
         tvShowsOnTheAirResponseCall.enqueue(new Callback<TVShowsOnTheAirResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsOnTheAirResponse> call, @NonNull Response<TVShowsOnTheAirResponse> response) {
@@ -291,7 +291,7 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsTopRated(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsTopRatedResponseCall = apiService.getTopRatedTVShows(TMDB_API_KEY,1,"US");
+        tvShowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY,1,"US");
         tvShowsTopRatedResponseCall.enqueue(new Callback<TVShowsTopRatedResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsTopRatedResponse> call, @NonNull Response<TVShowsTopRatedResponse> response) {
