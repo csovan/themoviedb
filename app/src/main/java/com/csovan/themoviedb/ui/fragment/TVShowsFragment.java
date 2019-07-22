@@ -26,9 +26,11 @@ import com.csovan.themoviedb.data.model.tvshow.TVShowsTopRatedResponse;
 import com.csovan.themoviedb.ui.activity.TVShowsViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.TVShowCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
+import com.csovan.themoviedb.util.NetworkConnection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -174,7 +176,9 @@ public class TVShowsFragment extends Fragment {
             }
         });
 
-        loadTVShowsFragment();
+        if (NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+            loadTVShowsFragment();
+        }
 
         return view;
     }

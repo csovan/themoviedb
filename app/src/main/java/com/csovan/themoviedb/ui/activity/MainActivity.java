@@ -22,6 +22,7 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.ui.fragment.HomeFragment;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
 import com.csovan.themoviedb.ui.fragment.TVShowsFragment;
+import com.csovan.themoviedb.util.NetworkConnection;
 
 import static com.csovan.themoviedb.util.Constant.QUERY;
 
@@ -72,6 +73,11 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (!NetworkConnection.isConnected(MainActivity.this)) {
+                    Toast.makeText(MainActivity.this, R.string.no_network_connection,
+                            Toast.LENGTH_LONG).show();
+                    return true;
+                }
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra(QUERY, query);
                 startActivity(intent);

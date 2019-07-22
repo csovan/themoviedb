@@ -17,6 +17,7 @@
 
     <!-- Error No Data -->
     <string name="no_data_available">(No data available)</string>
+    <string name="no_network_connection">No internet connection!</string>
 
     <!-- Navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

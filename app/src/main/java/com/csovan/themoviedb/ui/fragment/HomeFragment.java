@@ -33,9 +33,11 @@ import com.csovan.themoviedb.ui.activity.TVShowsViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.MovieCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
+import com.csovan.themoviedb.util.NetworkConnection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -302,7 +304,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        loadHomeFragment();
+        if (NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+            loadHomeFragment();
+        }
 
         return view;
     }
