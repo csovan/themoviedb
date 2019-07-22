@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">themoviedb</string>
+    <string name="app_name">TMDB</string>
     <string name="more">More</string>
     <string name="title_card">Card Title</string>
     <string name="title_activity_view_all_movies">ViewAllMoviesActivity</string>
