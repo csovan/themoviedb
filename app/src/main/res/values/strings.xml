@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">TMDB</string>
-    <string name="more">More</string>
+    <string name="text_more">More</string>
     <string name="title_card">Card Title</string>
-    <string name="title_activity_view_all_movies">ViewAllMoviesActivity</string>
-    <string name="title_activity_view_all_tv_shows">ViewAllTVShowsActivity</string>
+
+    <!-- Activity Labels -->
+    <string name="label_activity_movies_view_all">MoviesViewAllActivity</string>
+    <string name="label_activity_tv_shows_view_all">TVShowsViewAllActivity</string>
+    <string name="label_activity_movie_details">MovieDetailsActivity</string>
+    <string name="label_activity_tv_show_details">TVShowDetailsActivity</string>
+    <string name="label_activity_person_details">PersonDetailsActivity</string>
+    <string name="label_activity_search">SearchActivity</string>
 
     <string name="movie">Movie</string>
     <string name="tv_show">TV Show</string>
