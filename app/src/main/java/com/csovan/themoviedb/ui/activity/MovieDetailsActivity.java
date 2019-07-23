@@ -1,9 +1,11 @@
 package com.csovan.themoviedb.ui.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +33,8 @@ import com.csovan.themoviedb.data.model.movie.MovieGenres;
 import com.csovan.themoviedb.data.model.movie.MoviesSimilarResponse;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
+import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
+import com.csovan.themoviedb.data.network.NetworkConnection;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCastAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCrewAdapter;
@@ -60,30 +64,34 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private boolean videosSectionLoaded;
     private boolean castsSectionLoaded;
     private boolean crewSectionLoaded;
+    private boolean isActivityLoaded;
+    private boolean isBroadcastReceiverRegistered;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
+    private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
+    private Snackbar connectivitySnackbar;
 
     // ImageView
-    private ImageView backdropImageView;
-    private ImageView posterImageView;
+    private ImageView imageViewBackdrop;
+    private ImageView imageViewPoster;
 
     // TextView
-    private TextView movieTitle;
-    private TextView movieReleaseDate;
-    private TextView movieRuntime;
-    private TextView movieOverview;
-    private TextView movieGenres;
-    private TextView movieRating;
+    private TextView textViewMovieTitle;
+    private TextView textViewMovieReleaseDate;
+    private TextView textViewMovieRuntime;
+    private TextView textViewMovieOverview;
+    private TextView textViewMovieGenres;
+    private TextView textViewMovieRating;
 
     // No data available
-    private TextView noDataAvailableCast;
-    private TextView noDataAvailableCrew;
-    private TextView noDataAvailableVideo;
-    private TextView noDataAvailableOverview;
-    private TextView noDataAvailableSimilarMovies;
+    private TextView textViewNoDataAvailableCasts;
+    private TextView textViewNoDataAvailableCrews;
+    private TextView textViewNoDataAvailableVideos;
+    private TextView textViewNoDataAvailableOverview;
+    private TextView textViewNoDataAvailableSimilarMovies;
 
     // Videos
     private RecyclerView videoRecyclerView;
@@ -105,7 +113,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private RecyclerView moviesSimilarRecyclerView;
     private MovieCardSmallAdapter moviesSimilarAdapter;
 
-    // Calls
+    // Retrofit network calls
     private Call<Movie> movieDetailsCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
@@ -116,7 +124,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        // Set up toolbar
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_movie_details);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -140,21 +148,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         collapsingToolbarLayout.setVisibility(View.INVISIBLE);
         nestedScrollView.setVisibility(View.INVISIBLE);
 
-        backdropImageView = findViewById(R.id.image_view_backdrop);
-        posterImageView = findViewById(R.id.image_view_poster);
+        imageViewBackdrop = findViewById(R.id.image_view_backdrop);
+        imageViewPoster = findViewById(R.id.image_view_poster);
 
-        movieTitle = findViewById(R.id.text_view_movie_title);
-        movieReleaseDate = findViewById(R.id.text_view_release_date);
-        movieRuntime = findViewById(R.id.text_view_runtime);
-        movieOverview = findViewById(R.id.text_view_overview_content_section);
-        movieGenres = findViewById(R.id.text_view_genres);
-        movieRating = findViewById(R.id.text_view_rating);
+        textViewMovieTitle = findViewById(R.id.text_view_movie_title);
+        textViewMovieReleaseDate = findViewById(R.id.text_view_release_date);
+        textViewMovieRuntime = findViewById(R.id.text_view_runtime);
+        textViewMovieOverview = findViewById(R.id.text_view_overview_content_section);
+        textViewMovieGenres = findViewById(R.id.text_view_genres);
+        textViewMovieRating = findViewById(R.id.text_view_rating);
 
-        noDataAvailableCast = findViewById(R.id.text_view_no_data_available_cast);
-        noDataAvailableCrew = findViewById(R.id.text_view_no_data_available_crew);
-        noDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
-        noDataAvailableVideo = findViewById(R.id.text_view_video_no_data);
-        noDataAvailableSimilarMovies = findViewById(R.id.text_view_similar_movies_no_data);
+        textViewNoDataAvailableCasts = findViewById(R.id.text_view_no_data_available_cast);
+        textViewNoDataAvailableCrews = findViewById(R.id.text_view_no_data_available_crew);
+        textViewNoDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
+        textViewNoDataAvailableVideos = findViewById(R.id.text_view_video_no_data);
+        textViewNoDataAvailableSimilarMovies = findViewById(R.id.text_view_similar_movies_no_data);
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -191,8 +199,67 @@ public class MovieDetailsActivity extends AppCompatActivity {
         moviesSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
-        loadActivity();
+        if (NetworkConnection.isConnected(MovieDetailsActivity.this)) {
+            isActivityLoaded = true;
+            loadActivity();
+        }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        moviesSimilarAdapter.notifyDataSetChanged();
+        videoAdapter.notifyDataSetChanged();
+        movieCastAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!isActivityLoaded && !NetworkConnection.isConnected(MovieDetailsActivity.this)) {
+            connectivitySnackbar = Snackbar.make(textViewMovieTitle, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isActivityLoaded = true;
+                    loadActivity();
+                    isBroadcastReceiverRegistered = false;
+                    unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        } else if (!isActivityLoaded && NetworkConnection.isConnected(MovieDetailsActivity.this)) {
+            isActivityLoaded = true;
+            loadActivity();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (movieDetailsCall != null) movieDetailsCall.cancel();
+        if (videosResponseCall != null) videosResponseCall.cancel();
+        if (movieCreditsResponseCall != null) movieCreditsResponseCall.cancel();
+        if (similarMoviesResponseCall != null) similarMoviesResponseCall.cancel();
     }
 
     private void loadActivity(){
@@ -218,13 +285,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         if (response.body().getTitle() != null) {
                             if (appBarLayout.getTotalScrollRange() + verticalOffset == 0){
                                 collapsingToolbarLayout.setTitle(response.body().getTitle());
-                                movieTitle.setText("");
+                                textViewMovieTitle.setText("");
                             } else{
                                 collapsingToolbarLayout.setTitle("");
-                                movieTitle.setText(response.body().getTitle());
+                                textViewMovieTitle.setText(response.body().getTitle());
                             }
                         } else {
-                           movieTitle.setText("");
+                           textViewMovieTitle.setText("");
                         }
                     }
                 });
@@ -236,7 +303,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .centerCrop()
                         .placeholder(R.drawable.ic_film)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(backdropImageView);
+                        .into(imageViewBackdrop);
 
                 Glide.with(getApplicationContext())
                         .load(IMAGE_LOADING_BASE_URL_1280 + response.body().getPosterPath())
@@ -244,7 +311,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .centerCrop()
                         .placeholder(R.drawable.ic_film)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(posterImageView);
+                        .into(imageViewPoster);
 
                 // Get movie release date with simple date format
                 if (response.body().getReleaseDate() != null){
@@ -254,17 +321,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             "MMM d, yyyy", Locale.getDefault());
                     try{
                         Date releaseDate = sdf1.parse(response.body().getReleaseDate());
-                        movieReleaseDate.setText(sdf2.format(releaseDate));
+                        textViewMovieReleaseDate.setText(sdf2.format(releaseDate));
                     }catch (ParseException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    movieReleaseDate.setText("");
+                    textViewMovieReleaseDate.setText("");
                 }
 
                 if (response.body().getVoteAverage() != null
                         && response.body().getVoteAverage() != 0){
-                    movieRating.setText(String.valueOf(response.body().getVoteAverage()));
+                    textViewMovieRating.setText(String.valueOf(response.body().getVoteAverage()));
                 }
 
                 // Get movie runtime and format it to hrs and mins
@@ -276,19 +343,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }else {
                         runtimeFormat = runtime /60 + " hr " + runtime % 60 + " mins";
                     }
-                    movieRuntime.setText(runtimeFormat);
+                    textViewMovieRuntime.setText(runtimeFormat);
                 } else{
-                    movieRuntime.setText("N/A");
+                    textViewMovieRuntime.setText("N/A");
                 }
 
                 // Get movie overview
                 if (response.body().getOverview() != null
                         && !response.body().getOverview().trim().isEmpty()){
-                    noDataAvailableOverview.setVisibility(View.GONE);
-                    movieOverview.setText(response.body().getOverview());
+                    textViewNoDataAvailableOverview.setVisibility(View.GONE);
+                    textViewMovieOverview.setText(response.body().getOverview());
                 }
                 else {
-                    movieOverview.setText("");
+                    textViewMovieOverview.setText("");
                 }
 
                 setGenres(response.body().getGenres());
@@ -330,7 +397,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 for (Video video : response.body().getVideos()) {
                     if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
                             && video.getType() != null && video.getType().equals("Trailer"))
-                        noDataAvailableVideo.setVisibility(View.GONE);
+                        textViewNoDataAvailableVideos.setVisibility(View.GONE);
                         videoList.add(video);
                 }
 
@@ -356,7 +423,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 }
             }
         }
-        movieGenres.setText(genres);
+        textViewMovieGenres.setText(genres);
     }
 
     private void setCasts(){
@@ -379,7 +446,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 for (MovieCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
-                        noDataAvailableCast.setVisibility(View.GONE);
+                        textViewNoDataAvailableCasts.setVisibility(View.GONE);
                         movieCastBriefList.add(castBrief);
                 }
 
@@ -416,7 +483,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 for (MovieCrewBrief crewBrief : response.body().getCrews()) {
                     if (crewBrief != null && crewBrief.getName() != null)
-                        noDataAvailableCrew.setVisibility(View.GONE);
+                        textViewNoDataAvailableCrews.setVisibility(View.GONE);
                         movieCrewBriefList.add(crewBrief);
                 }
 
@@ -451,7 +518,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 for (MovieBrief movieBrief : response.body().getResults()) {
                     if (movieBrief != null){
-                        noDataAvailableSimilarMovies.setVisibility(View.GONE);
+                        textViewNoDataAvailableSimilarMovies.setVisibility(View.GONE);
                         movieSimilarList.add(movieBrief);
                     }
                 }

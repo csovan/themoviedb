@@ -6,16 +6,16 @@ import android.content.Intent;
 
 public class ConnectivityBroadcastReceiver extends BroadcastReceiver {
 
-    private ConnectivityReceiverListener mConnectivityReceiverListener;
+    private ConnectivityReceiverListener connectivityReceiverListener;
 
-    public ConnectivityBroadcastReceiver(ConnectivityReceiverListener mConnectivityReceiverListener) {
-        this.mConnectivityReceiverListener = mConnectivityReceiverListener;
+    public ConnectivityBroadcastReceiver(ConnectivityReceiverListener connectivityReceiverListener) {
+        this.connectivityReceiverListener = connectivityReceiverListener;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (mConnectivityReceiverListener != null && NetworkConnection.isConnected(context))
-            mConnectivityReceiverListener.onNetworkConnectionConnected();
+        if (connectivityReceiverListener != null && NetworkConnection.isConnected(context))
+            connectivityReceiverListener.onNetworkConnectionConnected();
     }
 
 
