@@ -30,12 +30,18 @@ public class Movie {
     @SerializedName("backdrop_path")
     private String backdropPath;
 
+    @SerializedName("budget")
+    private Integer budget;
+
+    @SerializedName("revenue")
+    private Integer revenue;
+
     @SerializedName("genres")
     private List<MovieGenres> genres;
 
-    public Movie(Integer id, String title, String releaseDate, Integer runtime,
-                 Double voteAverage, String overview, String posterPath, String backdropPath,
-                 List<MovieGenres> genres) {
+    public Movie(Integer id, String title, String releaseDate, Integer runtime, Double voteAverage,
+                 String overview, String posterPath, String backdropPath, Integer budget,
+                 Integer revenue, List<MovieGenres> genres) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -44,6 +50,8 @@ public class Movie {
         this.overview = overview;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
+        this.budget = budget;
+        this.revenue = revenue;
         this.genres = genres;
     }
 
@@ -109,6 +117,22 @@ public class Movie {
 
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
+    }
+
+    public Integer getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Integer budget) {
+        this.budget = budget;
+    }
+
+    public Integer getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(Integer revenue) {
+        this.revenue = revenue;
     }
 
     public List<MovieGenres> getGenres() {

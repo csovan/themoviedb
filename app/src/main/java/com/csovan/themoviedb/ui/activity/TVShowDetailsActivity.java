@@ -142,7 +142,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
         tvshowTitle = findViewById(R.id.text_view_tv_show_title);
         tvshowRating = findViewById(R.id.text_view_rating);
-        firstAirDate = findViewById(R.id.text_view_release_date);
+        firstAirDate = findViewById(R.id.text_view_release_date_label);
         tvshowRuntime = findViewById(R.id.text_view_runtime);
         tvshowOverview = findViewById(R.id.text_view_overview_content_section);
         tvshowGenres = findViewById(R.id.text_view_genres);

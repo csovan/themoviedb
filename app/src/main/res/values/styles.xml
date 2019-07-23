@@ -27,4 +27,9 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

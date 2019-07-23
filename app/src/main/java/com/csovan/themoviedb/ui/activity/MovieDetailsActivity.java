@@ -40,6 +40,7 @@ import com.csovan.themoviedb.ui.adapter.MovieCastAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCrewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ import static com.csovan.themoviedb.util.Constant.REGION;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private int movieId;
+
     private boolean movieDetailsLoaded;
     private boolean videosSectionLoaded;
     private boolean castsSectionLoaded;
@@ -79,12 +81,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ImageView imageViewPoster;
 
     // TextView
-    private TextView textViewMovieTitle;
+    private TextView textViewMovieDirectorName;
     private TextView textViewMovieReleaseDate;
     private TextView textViewMovieRuntime;
-    private TextView textViewMovieOverview;
-    private TextView textViewMovieGenres;
     private TextView textViewMovieRating;
+    private TextView textViewMovieBudget;
+    private TextView textViewMovieRevenue;
+    private TextView textViewMovieGenres;
+    private TextView textViewMovieOverview;
 
     // No data available
     private TextView textViewNoDataAvailableCasts;
@@ -151,12 +155,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         imageViewBackdrop = findViewById(R.id.image_view_backdrop);
         imageViewPoster = findViewById(R.id.image_view_poster);
 
-        textViewMovieTitle = findViewById(R.id.text_view_movie_title);
+        textViewMovieDirectorName = findViewById(R.id.text_view_director_name);
         textViewMovieReleaseDate = findViewById(R.id.text_view_release_date);
         textViewMovieRuntime = findViewById(R.id.text_view_runtime);
-        textViewMovieOverview = findViewById(R.id.text_view_overview_content_section);
-        textViewMovieGenres = findViewById(R.id.text_view_genres);
         textViewMovieRating = findViewById(R.id.text_view_rating);
+        textViewMovieBudget = findViewById(R.id.text_view_budget);
+        textViewMovieRevenue = findViewById(R.id.text_view_revenue);
+        textViewMovieGenres = findViewById(R.id.text_view_genres);
+        textViewMovieOverview = findViewById(R.id.text_view_overview_content_section);
 
         textViewNoDataAvailableCasts = findViewById(R.id.text_view_no_data_available_cast);
         textViewNoDataAvailableCrews = findViewById(R.id.text_view_no_data_available_crew);
@@ -220,7 +226,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onResume();
 
         if (!isActivityLoaded && !NetworkConnection.isConnected(MovieDetailsActivity.this)) {
-            connectivitySnackbar = Snackbar.make(textViewMovieTitle, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar = Snackbar.make(collapsingToolbarLayout, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
             connectivitySnackbar.show();
             connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
                 @Override
@@ -279,24 +285,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
 
                 // Get movie title
-                appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                    @Override
-                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                        if (response.body().getTitle() != null) {
-                            if (appBarLayout.getTotalScrollRange() + verticalOffset == 0){
-                                collapsingToolbarLayout.setTitle(response.body().getTitle());
-                                textViewMovieTitle.setText("");
-                            } else{
-                                collapsingToolbarLayout.setTitle("");
-                                textViewMovieTitle.setText(response.body().getTitle());
-                            }
-                        } else {
-                           textViewMovieTitle.setText("");
-                        }
-                    }
-                });
+                if (response.body().getTitle() != null) {
+                    collapsingToolbarLayout.setTitle(response.body().getTitle());
+                }else {
+                    collapsingToolbarLayout.setTitle(getString(R.string.no_title_available));
+                }
 
-                assert response.body() != null;
+                // Get movie backdrop
                 Glide.with(getApplicationContext())
                         .load(IMAGE_LOADING_BASE_URL_1280 + response.body().getBackdropPath())
                         .asBitmap()
@@ -305,6 +300,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageViewBackdrop);
 
+                // Get movie poster
                 Glide.with(getApplicationContext())
                         .load(IMAGE_LOADING_BASE_URL_1280 + response.body().getPosterPath())
                         .asBitmap()
@@ -318,7 +314,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     SimpleDateFormat sdf1 = new SimpleDateFormat(
                             "yyyy-MM-dd", Locale.getDefault());
                     SimpleDateFormat sdf2 = new SimpleDateFormat(
-                            "MMM d, yyyy", Locale.getDefault());
+                            "MMMM d, yyyy", Locale.getDefault());
                     try{
                         Date releaseDate = sdf1.parse(response.body().getReleaseDate());
                         textViewMovieReleaseDate.setText(sdf2.format(releaseDate));
@@ -326,12 +322,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-                    textViewMovieReleaseDate.setText("");
-                }
-
-                if (response.body().getVoteAverage() != null
-                        && response.body().getVoteAverage() != 0){
-                    textViewMovieRating.setText(String.valueOf(response.body().getVoteAverage()));
+                    textViewMovieReleaseDate.setText("N/A");
                 }
 
                 // Get movie runtime and format it to hrs and mins
@@ -346,6 +337,38 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     textViewMovieRuntime.setText(runtimeFormat);
                 } else{
                     textViewMovieRuntime.setText("N/A");
+                }
+
+                // Get movie rating
+                Double rating = response.body().getVoteAverage();
+                String ratingFormat;
+                if (response.body().getVoteAverage() != null
+                        && response.body().getVoteAverage() != 0){
+                    ratingFormat = rating + "/10";
+                    textViewMovieRating.setText(ratingFormat);
+                }else {
+                    textViewMovieRating.setText("N/A");
+                }
+
+                // Get movie budget
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+                currencyFormat.setMinimumFractionDigits(0);
+
+                Integer budget = response.body().getBudget();
+                String budgetFormat = currencyFormat.format(budget) + " USD";
+                if (response.body().getBudget() != null){
+                    textViewMovieBudget.setText(budgetFormat);
+                }else {
+                    textViewMovieBudget.setText("N/A");
+                }
+
+                //Get movie revenue
+                Integer revenue = response.body().getRevenue();
+                String revenueFormat = currencyFormat.format(revenue) + " USD";
+                if (response.body().getRevenue() != null){
+                    textViewMovieRevenue.setText(revenueFormat);
+                }else {
+                    textViewMovieRevenue.setText("N/A");
                 }
 
                 // Get movie overview
@@ -376,6 +399,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     }
 
+    // Get videos
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY, REGION);
@@ -419,7 +443,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (i == genresList.size() - 1) {
                     genres = genres.concat(genresList.get(i).getGenreName());
                 } else {
-                    genres = genres.concat(genresList.get(i).getGenreName() + " | ");
+                    genres = genres.concat(genresList.get(i).getGenreName() + " \u00b7 ");
                 }
             }
         }
@@ -482,9 +506,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 checkMovieDetailsLoaded();
 
                 for (MovieCrewBrief crewBrief : response.body().getCrews()) {
-                    if (crewBrief != null && crewBrief.getName() != null)
+                    if (crewBrief != null && crewBrief.getName() != null) {
                         textViewNoDataAvailableCrews.setVisibility(View.GONE);
                         movieCrewBriefList.add(crewBrief);
+                    }
+                    assert crewBrief != null;
+                    if (crewBrief.getJob().equals("Director")){
+                        textViewMovieDirectorName.setText(crewBrief.getName());
+                    }
                 }
 
                 if (!movieCrewBriefList.isEmpty()){
