@@ -1,9 +1,11 @@
 package com.csovan.themoviedb.ui.fragment;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -24,6 +26,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
+import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
 import com.csovan.themoviedb.ui.activity.MoviesViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.MovieCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
@@ -48,37 +51,41 @@ import static com.csovan.themoviedb.util.Constant.VIEW_ALL_MOVIES_TYPE;
 public class MoviesFragment extends Fragment {
 
     private ProgressBar progressBar;
-    private LinearLayout moviesLayout;
+    private LinearLayout linearLayoutMovies;
+    private boolean isBroadcastReceiverRegistered;
+    private boolean isMoviesFragmentLoaded;
+    private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
+    private Snackbar connectivitySnackbar;
 
     // Movies now playing
     private List<MovieBrief> movieNowPlayingList;
     private Call<MoviesNowPlayingResponse> moviesNowPlayingResponseCall;
-    private TextView tvMoviesNowPlayingViewAll;
-    private RecyclerView rvMoviesNowPlaying;
+    private TextView textViewMoviesNowPlayingViewAll;
+    private RecyclerView recyclerViewMoviesNowPlaying;
     private MovieCardLargeAdapter moviesNowPlayingAdapter;
     private boolean moviesNowPlayingSectionLoaded;
 
     // Movies popular
     private List<MovieBrief> moviePopularList;
     private Call<MoviesPopularResponse> moviesPopularResponseCall;
-    private TextView tvMoviesPopularViewAll;
-    private RecyclerView rvMoviesPopular;
+    private TextView textViewMoviesPopularViewAll;
+    private RecyclerView recyclerViewMoviesPopular;
     private MovieCardSmallAdapter moviesPopularAdapter;
     private boolean moviesPopularSectionLoaded;
 
     // Movies upcoming
     private List<MovieBrief> movieUpcomingList;
     private Call<MoviesUpcomingResponse> moviesUpcomingResponseCall;
-    private TextView tvMoviesUpcomingViewAll;
-    private RecyclerView rvMoviesUpcoming;
+    private TextView textViewMoviesUpcomingViewAll;
+    private RecyclerView recyclerViewMoviesUpcoming;
     private MovieCardSmallAdapter moviesUpcomingAdapter;
     private boolean moviesUpcomingSectionLoaded;
 
     // Movies top rated
     private List<MovieBrief> movieTopRatedList;
     private Call<MoviesTopRatedResponse> moviesTopRatedResponseCall;
-    private TextView tvMoviesTopRatedViewAll;
-    private RecyclerView rvMoviesTopRated;
+    private TextView textViewMoviesTopRatedViewAll;
+    private RecyclerView recyclerViewMoviesTopRated;
     private MovieCardSmallAdapter moviesTopRatedAdapter;
     private boolean moviesTopRatedSectionLoaded;
 
@@ -90,60 +97,60 @@ public class MoviesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
 
         progressBar = view.findViewById(R.id.progress_bar);
-        moviesLayout = view.findViewById(R.id.linear_layout_movies);
-        moviesLayout.setVisibility(View.GONE);
+        linearLayoutMovies = view.findViewById(R.id.linear_layout_movies);
+        linearLayoutMovies.setVisibility(View.GONE);
 
         // Movies now playing section
-        tvMoviesNowPlayingViewAll = view.findViewById(R.id.text_view_movies_now_playing_view_all);
-        rvMoviesNowPlaying = view.findViewById(R.id.recycler_view_movies_now_playing);
+        textViewMoviesNowPlayingViewAll = view.findViewById(R.id.text_view_movies_now_playing_view_all);
+        recyclerViewMoviesNowPlaying = view.findViewById(R.id.recycler_view_movies_now_playing);
 
         movieNowPlayingList = new ArrayList<>();
         moviesNowPlayingAdapter = new MovieCardLargeAdapter(getContext(), movieNowPlayingList);
-        rvMoviesNowPlaying.setAdapter(moviesNowPlayingAdapter);
-        rvMoviesNowPlaying.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewMoviesNowPlaying.setAdapter(moviesNowPlayingAdapter);
+        recyclerViewMoviesNowPlaying.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
-        (new LinearSnapHelper()).attachToRecyclerView(rvMoviesNowPlaying);
+        (new LinearSnapHelper()).attachToRecyclerView(recyclerViewMoviesNowPlaying);
 
         moviesNowPlayingSectionLoaded = false;
 
         // Movies popular section
-        tvMoviesPopularViewAll = view.findViewById(R.id.text_view_movies_popular_view_all);
-        rvMoviesPopular = view.findViewById(R.id.recycler_view_movies_popular);
+        textViewMoviesPopularViewAll = view.findViewById(R.id.text_view_movies_popular_view_all);
+        recyclerViewMoviesPopular = view.findViewById(R.id.recycler_view_movies_popular);
 
         moviePopularList = new ArrayList<>();
         moviesPopularAdapter = new MovieCardSmallAdapter(getContext(), moviePopularList);
-        rvMoviesPopular.setAdapter(moviesPopularAdapter);
-        rvMoviesPopular.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewMoviesPopular.setAdapter(moviesPopularAdapter);
+        recyclerViewMoviesPopular.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         moviesPopularSectionLoaded = false;
 
         // Movies upcoming section
-        tvMoviesUpcomingViewAll = view.findViewById(R.id.text_view_movies_upcoming_view_all);
-        rvMoviesUpcoming = view.findViewById(R.id.recycler_view_movies_upcoming);
+        textViewMoviesUpcomingViewAll = view.findViewById(R.id.text_view_movies_upcoming_view_all);
+        recyclerViewMoviesUpcoming = view.findViewById(R.id.recycler_view_movies_upcoming);
 
         movieUpcomingList = new ArrayList<>();
         moviesUpcomingAdapter = new MovieCardSmallAdapter(getContext(), movieUpcomingList);
-        rvMoviesUpcoming.setAdapter(moviesUpcomingAdapter);
-        rvMoviesUpcoming.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewMoviesUpcoming.setAdapter(moviesUpcomingAdapter);
+        recyclerViewMoviesUpcoming.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         moviesUpcomingSectionLoaded = false;
 
         // Movies top rated section
-        tvMoviesTopRatedViewAll = view.findViewById(R.id.text_view_movies_top_rated_view_all);
-        rvMoviesTopRated = view.findViewById(R.id.recycler_view_movies_top_rated);
+        textViewMoviesTopRatedViewAll = view.findViewById(R.id.text_view_movies_top_rated_view_all);
+        recyclerViewMoviesTopRated = view.findViewById(R.id.recycler_view_movies_top_rated);
 
         movieTopRatedList = new ArrayList<>();
         moviesTopRatedAdapter = new MovieCardSmallAdapter(getContext(), movieTopRatedList);
-        rvMoviesTopRated.setAdapter(moviesTopRatedAdapter);
-        rvMoviesTopRated.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewMoviesTopRated.setAdapter(moviesTopRatedAdapter);
+        recyclerViewMoviesTopRated.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         moviesTopRatedSectionLoaded = false;
 
         // Set on click listener for view all
-        tvMoviesNowPlayingViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewMoviesNowPlayingViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
@@ -156,7 +163,7 @@ public class MoviesFragment extends Fragment {
             }
         });
 
-        tvMoviesPopularViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewMoviesPopularViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
@@ -169,7 +176,7 @@ public class MoviesFragment extends Fragment {
             }
         });
 
-        tvMoviesUpcomingViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewMoviesUpcomingViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
@@ -182,7 +189,7 @@ public class MoviesFragment extends Fragment {
             }
         });
 
-        tvMoviesTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewMoviesTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
@@ -196,13 +203,72 @@ public class MoviesFragment extends Fragment {
         });
 
         if (NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+            isMoviesFragmentLoaded = true;
             loadMoviesFragment();
         }
 
         return view;
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        moviesNowPlayingAdapter.notifyDataSetChanged();
+        moviesPopularAdapter.notifyDataSetChanged();
+        moviesUpcomingAdapter.notifyDataSetChanged();
+        moviesTopRatedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (!isMoviesFragmentLoaded && !NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+            connectivitySnackbar = Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(R.id.fragment_container_main),
+                    R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isMoviesFragmentLoaded = true;
+                    loadMoviesFragment();
+                    isBroadcastReceiverRegistered = false;
+                    Objects.requireNonNull(getActivity()).unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            getActivity().registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }else if (!isMoviesFragmentLoaded && NetworkConnection.isConnected(getContext())){
+            isMoviesFragmentLoaded = true;
+            loadMoviesFragment();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            Objects.requireNonNull(getActivity()).unregisterReceiver(connectivityBroadcastReceiver);
+        }
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+
+        if (moviesNowPlayingResponseCall != null) moviesNowPlayingResponseCall.cancel();
+        if (moviesPopularResponseCall != null) moviesPopularResponseCall.cancel();
+        if (moviesUpcomingResponseCall != null) moviesUpcomingResponseCall.cancel();
+        if (moviesTopRatedResponseCall != null) moviesTopRatedResponseCall.cancel();
+    }
+
     private void loadMoviesFragment() {
+
         loadMoviesNowPlaying();
         loadMoviesPopular();
         loadMoviesUpcoming();
@@ -226,7 +292,7 @@ public class MoviesFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 moviesNowPlayingSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getBackdropPath() != null)
@@ -260,7 +326,7 @@ public class MoviesFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 moviesPopularSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getPosterPath() != null)
@@ -295,7 +361,7 @@ public class MoviesFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 moviesUpcomingSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getPosterPath() != null)
@@ -330,7 +396,7 @@ public class MoviesFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 moviesTopRatedSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (MovieBrief movie : response.body().getResults()) {
                     if (movie != null && movie.getPosterPath() != null)
@@ -348,12 +414,12 @@ public class MoviesFragment extends Fragment {
 
     }
 
-    private void checkAllSectionLoaded() {
+    private void checkAllSectionsLoaded() {
         if (moviesNowPlayingSectionLoaded && moviesPopularSectionLoaded
                 && moviesUpcomingSectionLoaded && moviesTopRatedSectionLoaded){
 
             progressBar.setVisibility(View.GONE);
-            moviesLayout.setVisibility(View.VISIBLE);
+            linearLayoutMovies.setVisibility(View.VISIBLE);
         }
     }
 }
