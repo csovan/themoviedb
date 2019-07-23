@@ -22,7 +22,7 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.ui.fragment.HomeFragment;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
 import com.csovan.themoviedb.ui.fragment.TVShowsFragment;
-import com.csovan.themoviedb.util.NetworkConnection;
+import com.csovan.themoviedb.data.network.NetworkConnection;
 
 import static com.csovan.themoviedb.util.Constant.QUERY;
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 if (!NetworkConnection.isConnected(MainActivity.this)) {
                     Toast.makeText(MainActivity.this, R.string.no_network_connection,
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);

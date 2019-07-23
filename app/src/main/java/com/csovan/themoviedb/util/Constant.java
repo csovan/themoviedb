@@ -5,6 +5,7 @@ public final class Constant {
     public static final String MOVIE_ID = "movie_id";
     public static final String TV_SHOW_ID = "tv_show_id";
     public static final String PERSON_ID = "person_id";
+    public static final String REGION = "US";
 
 
     public static final String BASE_URL = "https://api.themoviedb.org/3/";

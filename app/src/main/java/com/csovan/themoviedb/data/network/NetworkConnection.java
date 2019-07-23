@@ -1,4 +1,4 @@
-package com.csovan.themoviedb.util;
+package com.csovan.themoviedb.data.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

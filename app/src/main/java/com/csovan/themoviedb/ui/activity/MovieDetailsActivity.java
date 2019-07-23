@@ -51,6 +51,7 @@ import retrofit2.Response;
 import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
 import static com.csovan.themoviedb.util.Constant.IMAGE_LOADING_BASE_URL_1280;
 import static com.csovan.themoviedb.util.Constant.MOVIE_ID;
+import static com.csovan.themoviedb.util.Constant.REGION;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -198,7 +199,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        movieDetailsCall = apiService.getMovieDetails(movieId, TMDB_API_KEY, "US");
+        movieDetailsCall = apiService.getMovieDetails(movieId, TMDB_API_KEY, REGION);
         movieDetailsCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(@NonNull Call<Movie> call, @NonNull final Response<Movie> response) {
@@ -310,7 +311,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY, "US");
+        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY, REGION);
         videosResponseCall.enqueue(new Callback<VideosResponse>() {
             @Override
             public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {

@@ -33,6 +33,7 @@ import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
 import static com.csovan.themoviedb.util.Constant.AIRING_TODAY_TV_SHOWS_TYPE;
 import static com.csovan.themoviedb.util.Constant.ON_THE_AIR_TV_SHOWS_TYPE;
 import static com.csovan.themoviedb.util.Constant.POPULAR_TV_SHOWS_TYPE;
+import static com.csovan.themoviedb.util.Constant.REGION;
 import static com.csovan.themoviedb.util.Constant.TOP_RATED_TV_SHOWS_TYPE;
 import static com.csovan.themoviedb.util.Constant.VIEW_ALL_TV_SHOWS_TYPE;
 
@@ -135,7 +136,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
 
         switch (tvshowsTypeList){
             case ON_THE_AIR_TV_SHOWS_TYPE:
-                tvShowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY, presentPage,"US");
+                tvShowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY, presentPage,REGION);
                 tvShowsOnTheAirResponseCall.enqueue(new Callback<TVShowsOnTheAirResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsOnTheAirResponse> call, @NonNull Response<TVShowsOnTheAirResponse> response) {
@@ -170,7 +171,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
 
             case POPULAR_TV_SHOWS_TYPE:
-                tvShowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY, presentPage,"US");
+                tvShowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY, presentPage,REGION);
                 tvShowsPopularResponseCall.enqueue(new Callback<TVShowsPopularResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsPopularResponse> call, @NonNull Response<TVShowsPopularResponse> response) {
@@ -205,7 +206,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
 
             case AIRING_TODAY_TV_SHOWS_TYPE:
-                tvShowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY, presentPage,"US");
+                tvShowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY, presentPage,REGION);
                 tvShowsAiringTodayResponseCall.enqueue(new Callback<TVShowsAiringTodayResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsAiringTodayResponse> call, @NonNull Response<TVShowsAiringTodayResponse> response) {
@@ -242,7 +243,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
 
             case TOP_RATED_TV_SHOWS_TYPE:
-                tvShowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY, presentPage,"US");
+                tvShowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY, presentPage,REGION);
                 tvShowsTopRatedResponseCall.enqueue(new Callback<TVShowsTopRatedResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<TVShowsTopRatedResponse> call, @NonNull Response<TVShowsTopRatedResponse> response) {

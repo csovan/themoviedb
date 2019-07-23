@@ -32,6 +32,7 @@ import retrofit2.Response;
 import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
 import static com.csovan.themoviedb.util.Constant.NOW_PLAYING_MOVIES_TYPE;
 import static com.csovan.themoviedb.util.Constant.POPULAR_MOVIES_TYPE;
+import static com.csovan.themoviedb.util.Constant.REGION;
 import static com.csovan.themoviedb.util.Constant.TOP_RATED_MOVIES_TYPE;
 import static com.csovan.themoviedb.util.Constant.UPCOMING_MOVIES_TYPE;
 import static com.csovan.themoviedb.util.Constant.VIEW_ALL_MOVIES_TYPE;
@@ -134,7 +135,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
 
         switch (movieListType){
             case NOW_PLAYING_MOVIES_TYPE:
-                moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, presentPage,"US");
+                moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, presentPage,REGION);
                 moviesNowPlayingResponseCall.enqueue(new Callback<MoviesNowPlayingResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesNowPlayingResponse> call, @NonNull Response<MoviesNowPlayingResponse> response) {
@@ -170,7 +171,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
 
             case POPULAR_MOVIES_TYPE:
-                moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, presentPage,"US");
+                moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, presentPage,REGION);
                 moviesPopularResponseCall.enqueue(new Callback<MoviesPopularResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesPopularResponse> call, @NonNull Response<MoviesPopularResponse> response) {
@@ -205,7 +206,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
 
             case UPCOMING_MOVIES_TYPE:
-                moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, presentPage,"US");
+                moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, presentPage,REGION);
                 moviesUpcomingResponseCall.enqueue(new Callback<MoviesUpcomingResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Response<MoviesUpcomingResponse> response) {
@@ -240,7 +241,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
 
             case TOP_RATED_MOVIES_TYPE:
-                moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, presentPage,"US");
+                moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, presentPage,REGION);
                 moviesTopRatedResponseCall.enqueue(new Callback<MoviesTopRatedResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Response<MoviesTopRatedResponse> response) {

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
@@ -26,7 +27,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
 import com.csovan.themoviedb.ui.activity.MoviesViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.MovieCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
-import com.csovan.themoviedb.util.NetworkConnection;
+import com.csovan.themoviedb.data.network.NetworkConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ import retrofit2.Response;
 import static com.csovan.themoviedb.BuildConfig.TMDB_API_KEY;
 import static com.csovan.themoviedb.util.Constant.NOW_PLAYING_MOVIES_TYPE;
 import static com.csovan.themoviedb.util.Constant.POPULAR_MOVIES_TYPE;
+import static com.csovan.themoviedb.util.Constant.REGION;
 import static com.csovan.themoviedb.util.Constant.TOP_RATED_MOVIES_TYPE;
 import static com.csovan.themoviedb.util.Constant.UPCOMING_MOVIES_TYPE;
 import static com.csovan.themoviedb.util.Constant.VIEW_ALL_MOVIES_TYPE;
@@ -144,6 +146,10 @@ public class MoviesFragment extends Fragment {
         tvMoviesNowPlayingViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, NOW_PLAYING_MOVIES_TYPE);
                 startActivity(intent);
@@ -153,6 +159,10 @@ public class MoviesFragment extends Fragment {
         tvMoviesPopularViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, POPULAR_MOVIES_TYPE);
                 startActivity(intent);
@@ -162,6 +172,10 @@ public class MoviesFragment extends Fragment {
         tvMoviesUpcomingViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, UPCOMING_MOVIES_TYPE);
                 startActivity(intent);
@@ -171,6 +185,10 @@ public class MoviesFragment extends Fragment {
         tvMoviesTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, TOP_RATED_MOVIES_TYPE);
                 startActivity(intent);
@@ -194,7 +212,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesNowPlaying() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, 1, "US");
+        moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, 1, REGION);
         moviesNowPlayingResponseCall.enqueue(new Callback<MoviesNowPlayingResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesNowPlayingResponse> call, @NonNull Response<MoviesNowPlayingResponse> response) {
@@ -228,7 +246,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesPopular() {
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, 1, "US");
+        moviesPopularResponseCall = apiService.getMoviesPopular(TMDB_API_KEY, 1, REGION);
         moviesPopularResponseCall.enqueue(new Callback<MoviesPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesPopularResponse> call, @NonNull Response<MoviesPopularResponse> response) {
@@ -263,7 +281,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesUpcoming(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, 1, "US");
+        moviesUpcomingResponseCall = apiService.getMoviesUpcoming(TMDB_API_KEY, 1, REGION);
         moviesUpcomingResponseCall.enqueue(new Callback<MoviesUpcomingResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesUpcomingResponse> call, @NonNull Response<MoviesUpcomingResponse> response) {
@@ -298,7 +316,7 @@ public class MoviesFragment extends Fragment {
     private void loadMoviesTopRated(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, 1, "US");
+        moviesTopRatedResponseCall = apiService.getMoviesTopRated(TMDB_API_KEY, 1, REGION);
         moviesTopRatedResponseCall.enqueue(new Callback<MoviesTopRatedResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesTopRatedResponse> call, @NonNull Response<MoviesTopRatedResponse> response) {
