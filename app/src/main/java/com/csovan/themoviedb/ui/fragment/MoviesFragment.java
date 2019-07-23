@@ -52,10 +52,10 @@ public class MoviesFragment extends Fragment {
 
     private ProgressBar progressBar;
     private LinearLayout linearLayoutMovies;
-    private boolean isBroadcastReceiverRegistered;
-    private boolean isMoviesFragmentLoaded;
     private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
     private Snackbar connectivitySnackbar;
+    private boolean isBroadcastReceiverRegistered;
+    private boolean isMoviesFragmentLoaded;
 
     // Movies now playing
     private List<MovieBrief> movieNowPlayingList;
@@ -100,7 +100,7 @@ public class MoviesFragment extends Fragment {
         linearLayoutMovies = view.findViewById(R.id.linear_layout_movies);
         linearLayoutMovies.setVisibility(View.GONE);
 
-        // Movies now playing section
+        // Set Movies now playing section adapter
         textViewMoviesNowPlayingViewAll = view.findViewById(R.id.text_view_movies_now_playing_view_all);
         recyclerViewMoviesNowPlaying = view.findViewById(R.id.recycler_view_movies_now_playing);
 
@@ -113,7 +113,7 @@ public class MoviesFragment extends Fragment {
 
         moviesNowPlayingSectionLoaded = false;
 
-        // Movies popular section
+        // Set Movies popular section adapter
         textViewMoviesPopularViewAll = view.findViewById(R.id.text_view_movies_popular_view_all);
         recyclerViewMoviesPopular = view.findViewById(R.id.recycler_view_movies_popular);
 
@@ -125,7 +125,7 @@ public class MoviesFragment extends Fragment {
 
         moviesPopularSectionLoaded = false;
 
-        // Movies upcoming section
+        // Set Movies upcoming section adapter
         textViewMoviesUpcomingViewAll = view.findViewById(R.id.text_view_movies_upcoming_view_all);
         recyclerViewMoviesUpcoming = view.findViewById(R.id.recycler_view_movies_upcoming);
 
@@ -137,7 +137,7 @@ public class MoviesFragment extends Fragment {
 
         moviesUpcomingSectionLoaded = false;
 
-        // Movies top rated section
+        // Set Movies top rated section adapter
         textViewMoviesTopRatedViewAll = view.findViewById(R.id.text_view_movies_top_rated_view_all);
         recyclerViewMoviesTopRated = view.findViewById(R.id.recycler_view_movies_top_rated);
 
@@ -224,10 +224,12 @@ public class MoviesFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if (!isMoviesFragmentLoaded && !NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-            connectivitySnackbar = Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(R.id.fragment_container_main),
+            connectivitySnackbar = Snackbar.make(Objects.requireNonNull(getActivity())
+                            .findViewById(R.id.fragment_container_main),
                     R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
             connectivitySnackbar.show();
-            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(
+                    new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
                 @Override
                 public void onNetworkConnectionConnected() {
                     connectivitySnackbar.dismiss();

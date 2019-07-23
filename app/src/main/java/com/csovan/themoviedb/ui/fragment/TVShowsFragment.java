@@ -1,9 +1,11 @@
 package com.csovan.themoviedb.ui.fragment;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
@@ -23,6 +26,7 @@ import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsPopularResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsTopRatedResponse;
+import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
 import com.csovan.themoviedb.ui.activity.TVShowsViewAllActivity;
 import com.csovan.themoviedb.ui.adapter.TVShowCardLargeAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
@@ -45,38 +49,43 @@ import static com.csovan.themoviedb.util.Constant.TOP_RATED_TV_SHOWS_TYPE;
 import static com.csovan.themoviedb.util.Constant.VIEW_ALL_TV_SHOWS_TYPE;
 
 public class TVShowsFragment extends Fragment {
+
     private ProgressBar progressBar;
-    private LinearLayout tvshowsLayout;
+    private LinearLayout linearLayoutTVShows;
+    private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
+    private Snackbar connectivitySnackbar;
+    private boolean isTVShowsFragmentLoaded;
+    private boolean isBroadcastReceiverRegistered;
 
     // TV shows airing today
     private List<TVShowBrief> tvshowAiringTodayList;
-    private Call<TVShowsAiringTodayResponse> tvShowsAiringTodayResponseCall;
-    private TextView tvTVShowsAiringTodayViewAll;
-    private RecyclerView rvTVShowsAiringToday;
+    private Call<TVShowsAiringTodayResponse> tvshowsAiringTodayResponseCall;
+    private TextView textViewTVShowsAiringTodayViewAll;
+    private RecyclerView recyclerViewTVShowsAiringToday;
     private TVShowCardLargeAdapter tvshowsAiringTodayAdapter;
     private boolean tvshowsAiringTodaySectionLoaded;
 
     // TV shows popular
     private List<TVShowBrief> tvshowPopularList;
-    private Call<TVShowsPopularResponse> tvShowsPopularResponseCall;
-    private TextView tvTVShowsPopularViewAll;
-    private RecyclerView rvTVShowsPopular;
+    private Call<TVShowsPopularResponse> tvshowsPopularResponseCall;
+    private TextView textViewTVShowsPopularViewAll;
+    private RecyclerView recyclerViewTVShowsPopular;
     private TVShowCardSmallAdapter tvshowsPopularAdapter;
     private boolean tvshowsPopularSectionLoaded;
 
     // TV shows on the air
     private List<TVShowBrief> tvshowOnTheAirList;
-    private Call<TVShowsOnTheAirResponse> tvShowsOnTheAirResponseCall;
-    private TextView tvTVShowsOnTheAirViewAll;
-    private RecyclerView rvTVShowsOnTheAir;
+    private Call<TVShowsOnTheAirResponse> tvshowsOnTheAirResponseCall;
+    private TextView textViewTVShowsOnTheAirViewAll;
+    private RecyclerView recyclerViewTVShowsOnTheAir;
     private TVShowCardSmallAdapter tvshowsOnTheAirAdapter;
     private boolean tvshowsOnTheAirSectionLoaded;
 
     // TV shows top rated
     private List<TVShowBrief> tvshowTopRatedList;
-    private Call<TVShowsTopRatedResponse> tvShowsTopRatedResponseCall;
-    private TextView tvTVShowsTopRatedViewAll;
-    private RecyclerView rvTVShowsTopRated;
+    private Call<TVShowsTopRatedResponse> tvshowsTopRatedResponseCall;
+    private TextView textViewTVShowsTopRatedViewAll;
+    private RecyclerView recyclerViewTVShowsTopRated;
     private TVShowCardSmallAdapter tvshowsTopRatedAdapter;
     private boolean tvshowsTopRatedSectionLoaded;
 
@@ -88,89 +97,109 @@ public class TVShowsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tv_shows, container, false);
 
         progressBar = view.findViewById(R.id.progress_bar);
-        tvshowsLayout = view.findViewById(R.id.linear_layout_tv_shows);
-        tvshowsLayout.setVisibility(View.GONE);
+        linearLayoutTVShows = view.findViewById(R.id.linear_layout_tv_shows);
+        linearLayoutTVShows.setVisibility(View.GONE);
 
-        // TV shows airing today section
-        tvTVShowsAiringTodayViewAll = view.findViewById(R.id.text_view_tv_shows_airing_today_view_all);
-        rvTVShowsAiringToday = view.findViewById(R.id.recycler_view_tv_shows_airing_today);
+        // Setup TV shows airing today section adapter
+        textViewTVShowsAiringTodayViewAll = view.findViewById(R.id.text_view_tv_shows_airing_today_view_all);
+        recyclerViewTVShowsAiringToday = view.findViewById(R.id.recycler_view_tv_shows_airing_today);
 
         tvshowAiringTodayList = new ArrayList<>();
         tvshowsAiringTodayAdapter = new TVShowCardLargeAdapter(getContext(), tvshowAiringTodayList);
-        rvTVShowsAiringToday.setAdapter(tvshowsAiringTodayAdapter);
-        rvTVShowsAiringToday.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewTVShowsAiringToday.setAdapter(tvshowsAiringTodayAdapter);
+        recyclerViewTVShowsAiringToday.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
-        (new LinearSnapHelper()).attachToRecyclerView(rvTVShowsAiringToday);
+        (new LinearSnapHelper()).attachToRecyclerView(recyclerViewTVShowsAiringToday);
 
         tvshowsAiringTodaySectionLoaded = false;
 
-        // TV shows popular section
-        tvTVShowsPopularViewAll = view.findViewById(R.id.text_view_tv_shows_popular_view_all);
-        rvTVShowsPopular = view.findViewById(R.id.recycler_view_tv_shows_popular);
+        // Set up TV shows popular section adapter
+        textViewTVShowsPopularViewAll = view.findViewById(R.id.text_view_tv_shows_popular_view_all);
+        recyclerViewTVShowsPopular = view.findViewById(R.id.recycler_view_tv_shows_popular);
 
         tvshowPopularList = new ArrayList<>();
         tvshowsPopularAdapter = new TVShowCardSmallAdapter(getContext(), tvshowPopularList);
-        rvTVShowsPopular.setAdapter(tvshowsPopularAdapter);
-        rvTVShowsPopular.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewTVShowsPopular.setAdapter(tvshowsPopularAdapter);
+        recyclerViewTVShowsPopular.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         tvshowsPopularSectionLoaded = false;
 
-        // TV shows on the air section
-        tvTVShowsOnTheAirViewAll = view.findViewById(R.id.text_view_tv_shows_on_the_air_view_all);
-        rvTVShowsOnTheAir = view.findViewById(R.id.recycler_view_tv_shows_on_the_air);
+        // Setup TV shows on the air section adapter
+        textViewTVShowsOnTheAirViewAll = view.findViewById(R.id.text_view_tv_shows_on_the_air_view_all);
+        recyclerViewTVShowsOnTheAir = view.findViewById(R.id.recycler_view_tv_shows_on_the_air);
 
         tvshowOnTheAirList = new ArrayList<>();
         tvshowsOnTheAirAdapter = new TVShowCardSmallAdapter(getContext(), tvshowOnTheAirList);
-        rvTVShowsOnTheAir.setAdapter(tvshowsOnTheAirAdapter);
-        rvTVShowsOnTheAir.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewTVShowsOnTheAir.setAdapter(tvshowsOnTheAirAdapter);
+        recyclerViewTVShowsOnTheAir.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         tvshowsOnTheAirSectionLoaded = false;
 
-        // TV shows top rated section
-        tvTVShowsTopRatedViewAll = view.findViewById(R.id.text_view_tv_shows_top_rated_view_all);
-        rvTVShowsTopRated = view.findViewById(R.id.recycler_view_tv_shows_top_rated);
+        // Setup TV shows top rated section adapter
+        textViewTVShowsTopRatedViewAll = view.findViewById(R.id.text_view_tv_shows_top_rated_view_all);
+        recyclerViewTVShowsTopRated = view.findViewById(R.id.recycler_view_tv_shows_top_rated);
 
         tvshowTopRatedList = new ArrayList<>();
         tvshowsTopRatedAdapter = new TVShowCardSmallAdapter(getContext(), tvshowTopRatedList);
-        rvTVShowsTopRated.setAdapter(tvshowsTopRatedAdapter);
-        rvTVShowsTopRated.setLayoutManager(new LinearLayoutManager(getContext(),
+        recyclerViewTVShowsTopRated.setAdapter(tvshowsTopRatedAdapter);
+        recyclerViewTVShowsTopRated.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         tvshowsTopRatedSectionLoaded = false;
 
         // Set on click listener for view all
-        tvTVShowsOnTheAirViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewTVShowsOnTheAirViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, ON_THE_AIR_TV_SHOWS_TYPE);
                 startActivity(intent);
             }
         });
 
-        tvTVShowsPopularViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewTVShowsPopularViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, POPULAR_TV_SHOWS_TYPE);
                 startActivity(intent);
             }
         });
 
-        tvTVShowsAiringTodayViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewTVShowsAiringTodayViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, AIRING_TODAY_TV_SHOWS_TYPE);
                 startActivity(intent);
             }
         });
 
-        tvTVShowsTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
+        textViewTVShowsTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+
+                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, TOP_RATED_TV_SHOWS_TYPE);
                 startActivity(intent);
@@ -178,10 +207,70 @@ public class TVShowsFragment extends Fragment {
         });
 
         if (NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+            isTVShowsFragmentLoaded = true;
             loadTVShowsFragment();
         }
 
         return view;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        tvshowsAiringTodayAdapter.notifyDataSetChanged();
+        tvshowsPopularAdapter.notifyDataSetChanged();
+        tvshowsOnTheAirAdapter.notifyDataSetChanged();
+        tvshowsTopRatedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (!isTVShowsFragmentLoaded && !NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
+            connectivitySnackbar = Snackbar.make(Objects.requireNonNull(getActivity())
+                            .findViewById(R.id.fragment_container_main),
+                    R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(
+                    new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isTVShowsFragmentLoaded = true;
+                    loadTVShowsFragment();
+                    isBroadcastReceiverRegistered = false;
+                    Objects.requireNonNull(getActivity()).unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            getActivity().registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        }else if (!isTVShowsFragmentLoaded && NetworkConnection.isConnected(getContext())){
+            isTVShowsFragmentLoaded = true;
+            loadTVShowsFragment();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            Objects.requireNonNull(getActivity()).unregisterReceiver(connectivityBroadcastReceiver);
+        }
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+
+        if (tvshowsAiringTodayResponseCall != null) tvshowsAiringTodayResponseCall.cancel();
+        if (tvshowsPopularResponseCall != null) tvshowsPopularResponseCall.cancel();
+        if (tvshowsOnTheAirResponseCall != null) tvshowsOnTheAirResponseCall.cancel();
+        if (tvshowsTopRatedResponseCall != null) tvshowsTopRatedResponseCall.cancel();
     }
 
     private void loadTVShowsFragment(){
@@ -194,13 +283,13 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsAiringToday(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY,1,REGION);
-        tvShowsAiringTodayResponseCall.enqueue(new Callback<TVShowsAiringTodayResponse>() {
+        tvshowsAiringTodayResponseCall = apiService.getTVShowsAiringToday(TMDB_API_KEY,1,REGION);
+        tvshowsAiringTodayResponseCall.enqueue(new Callback<TVShowsAiringTodayResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsAiringTodayResponse> call, @NonNull Response<TVShowsAiringTodayResponse> response) {
                 if (!response.isSuccessful()){
-                    tvShowsAiringTodayResponseCall = call.clone();
-                    tvShowsAiringTodayResponseCall.enqueue(this);
+                    tvshowsAiringTodayResponseCall = call.clone();
+                    tvshowsAiringTodayResponseCall.enqueue(this);
                     return;
                 }
 
@@ -208,7 +297,7 @@ public class TVShowsFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 tvshowsAiringTodaySectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (TVShowBrief tvshow : response.body().getResults()){
                     if (tvshow != null && tvshow.getPosterPath() != null)
@@ -228,13 +317,13 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsPopular(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY,1,REGION);
-        tvShowsPopularResponseCall.enqueue(new Callback<TVShowsPopularResponse>() {
+        tvshowsPopularResponseCall = apiService.getTVShowsPopular(TMDB_API_KEY,1,REGION);
+        tvshowsPopularResponseCall.enqueue(new Callback<TVShowsPopularResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsPopularResponse> call, @NonNull Response<TVShowsPopularResponse> response) {
                 if (!response.isSuccessful()){
-                    tvShowsPopularResponseCall = call.clone();
-                    tvShowsPopularResponseCall.enqueue(this);
+                    tvshowsPopularResponseCall = call.clone();
+                    tvshowsPopularResponseCall.enqueue(this);
                     return;
                 }
 
@@ -242,7 +331,7 @@ public class TVShowsFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 tvshowsPopularSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (TVShowBrief tvshow : response.body().getResults()){
                     if (tvshow != null && tvshow.getPosterPath() != null)
@@ -262,13 +351,13 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsOnTheAir(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY,1,REGION);
-        tvShowsOnTheAirResponseCall.enqueue(new Callback<TVShowsOnTheAirResponse>() {
+        tvshowsOnTheAirResponseCall = apiService.getTVShowsOnTheAir(TMDB_API_KEY,1,REGION);
+        tvshowsOnTheAirResponseCall.enqueue(new Callback<TVShowsOnTheAirResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsOnTheAirResponse> call, @NonNull Response<TVShowsOnTheAirResponse> response) {
                 if (!response.isSuccessful()){
-                    tvShowsOnTheAirResponseCall = call.clone();
-                    tvShowsOnTheAirResponseCall.enqueue(this);
+                    tvshowsOnTheAirResponseCall = call.clone();
+                    tvshowsOnTheAirResponseCall.enqueue(this);
                     return;
                 }
 
@@ -276,7 +365,7 @@ public class TVShowsFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 tvshowsOnTheAirSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (TVShowBrief tvshow : response.body().getResults()){
                     if (tvshow != null && tvshow.getPosterPath() != null)
@@ -296,13 +385,13 @@ public class TVShowsFragment extends Fragment {
     private void loadTVShowsTopRated(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvShowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY,1,REGION);
-        tvShowsTopRatedResponseCall.enqueue(new Callback<TVShowsTopRatedResponse>() {
+        tvshowsTopRatedResponseCall = apiService.getTVShowsTopRated(TMDB_API_KEY,1,REGION);
+        tvshowsTopRatedResponseCall.enqueue(new Callback<TVShowsTopRatedResponse>() {
             @Override
             public void onResponse(@NonNull Call<TVShowsTopRatedResponse> call, @NonNull Response<TVShowsTopRatedResponse> response) {
                 if (!response.isSuccessful()){
-                    tvShowsTopRatedResponseCall = call.clone();
-                    tvShowsTopRatedResponseCall.enqueue(this);
+                    tvshowsTopRatedResponseCall = call.clone();
+                    tvshowsTopRatedResponseCall.enqueue(this);
                     return;
                 }
 
@@ -310,7 +399,7 @@ public class TVShowsFragment extends Fragment {
                 if (response.body().getResults() == null) return;
 
                 tvshowsTopRatedSectionLoaded = true;
-                checkAllSectionLoaded();
+                checkAllSectionsLoaded();
 
                 for (TVShowBrief tvshow : response.body().getResults()){
                     if (tvshow != null && tvshow.getPosterPath() != null)
@@ -327,12 +416,12 @@ public class TVShowsFragment extends Fragment {
 
     }
 
-    private void checkAllSectionLoaded() {
+    private void checkAllSectionsLoaded() {
         if (tvshowsOnTheAirSectionLoaded && tvshowsPopularSectionLoaded
                 && tvshowsAiringTodaySectionLoaded && tvshowsTopRatedSectionLoaded){
 
             progressBar.setVisibility(View.GONE);
-            tvshowsLayout.setVisibility(View.VISIBLE);
+            linearLayoutTVShows.setVisibility(View.VISIBLE);
         }
     }
 
