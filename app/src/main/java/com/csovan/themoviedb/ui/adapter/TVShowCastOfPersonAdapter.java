@@ -79,7 +79,7 @@ public class TVShowCastOfPersonAdapter extends RecyclerView.Adapter<TVShowCastOf
             super(itemView);
 
             cardViewTVShowCard = itemView.findViewById(R.id.card_view_cast_of);
-            imageViewTVShowPoster = itemView.findViewById(R.id.image_view_poster);
+            imageViewTVShowPoster = itemView.findViewById(R.id.image_view_movie_poster);
             textViewTVShowTitle = itemView.findViewById(R.id.text_view_title);
             textViewCastCharacter = itemView.findViewById(R.id.text_view_cast_as);
 

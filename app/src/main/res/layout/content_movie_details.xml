@@ -3,12 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout_movie_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view_poster"
+        android:id="@+id/card_view_movie_poster"
         android:layout_width="0dp"
         android:layout_height="160dp"
         android:layout_marginStart="16dp"
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/image_view_poster"
+            android:id="@+id/image_view_movie_details_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/iv_poster_desc"
@@ -37,7 +38,7 @@
         android:layout_marginStart="@dimen/small"
         android:text="@string/director_label"
         android:textSize="@dimen/text_size_title"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -62,7 +63,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/release_date_label"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_director_label" />
 
     <TextView
@@ -86,7 +87,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/runtime_label"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_release_date_label" />
 
     <TextView
@@ -103,28 +104,28 @@
         app:layout_constraintTop_toTopOf="@+id/text_view_runtime_label" />
 
     <TextView
-        android:id="@+id/text_view_rating_label"
+        android:id="@+id/text_view_movie_details_rating_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="@string/rating_label"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_runtime_label" />
 
     <TextView
-        android:id="@+id/text_view_rating"
+        android:id="@+id/text_view_movie_details_rating"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="16dp"
         android:text="@string/rating"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_rating_label"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_movie_details_rating_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_view_rating_label"
-        app:layout_constraintTop_toTopOf="@+id/text_view_rating_label" />
+        app:layout_constraintStart_toEndOf="@+id/text_view_movie_details_rating_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_movie_details_rating_label" />
 
     <TextView
         android:id="@+id/text_view_budget_label"
@@ -134,8 +135,8 @@
         android:layout_marginTop="4dp"
         android:text="@string/budget_label"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_rating_label" />
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_movie_details_rating_label" />
 
     <TextView
         android:id="@+id/text_view_budget"
@@ -158,7 +159,7 @@
         android:layout_marginTop="4dp"
         android:text="@string/revenue_label"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_budget_label" />
 
     <TextView
@@ -175,7 +176,7 @@
         app:layout_constraintTop_toTopOf="@+id/text_view_revenue_label" />
 
     <TextView
-        android:id="@+id/text_view_genres_label"
+        android:id="@+id/text_view_movie_details_genres_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -183,10 +184,10 @@
         android:text="@string/genres_label"
         android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_view_poster" />
+        app:layout_constraintTop_toBottomOf="@+id/card_view_movie_poster" />
 
     <TextView
-        android:id="@+id/text_view_genres"
+        android:id="@+id/text_view_movie_details_genres"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -195,9 +196,9 @@
         android:maxLines="1"
         android:text="@string/genres"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_genres_label"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_movie_details_genres_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_view_genres_label"
-        app:layout_constraintTop_toTopOf="@+id/text_view_genres_label" />
+        app:layout_constraintStart_toEndOf="@+id/text_view_movie_details_genres_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_movie_details_genres_label" />
 
 </android.support.constraint.ConstraintLayout>

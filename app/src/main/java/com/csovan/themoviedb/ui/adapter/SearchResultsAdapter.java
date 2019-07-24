@@ -113,7 +113,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
             constraintLayoutSearchResults = itemView.findViewById(R.id.constraint_layout_search_result);
 
-            cardViewPoster = itemView.findViewById(R.id.card_view_poster);
+            cardViewPoster = itemView.findViewById(R.id.card_view_movie_poster);
             posterImageView = itemView.findViewById(R.id.image_view_poster_search);
             nameTextView = itemView.findViewById(R.id.text_view_name_search);
             mediaTypeTextView = itemView.findViewById(R.id.text_view_media_type_search);

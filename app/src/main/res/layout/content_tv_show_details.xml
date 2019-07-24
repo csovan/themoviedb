@@ -3,12 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout_tv_show_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view_poster"
+        android:id="@+id/card_view_tv_show_details_poster"
         android:layout_width="0dp"
         android:layout_height="160dp"
         android:layout_marginStart="16dp"
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/image_view_poster"
+            android:id="@+id/image_view_tv_show_details_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/iv_poster_desc"
@@ -31,114 +32,167 @@
     </android.support.v7.widget.CardView>
 
     <TextView
-        android:id="@+id/text_view_tv_show_title"
-        android:layout_width="0dp"
+        android:id="@+id/text_view_creator_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small"
-        android:layout_marginEnd="@dimen/small"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:text="@string/title"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        android:layout_marginStart="8dp"
+        android:text="@string/creator_label"
+        android:textSize="@dimen/text_size_title"
+        app:layout_constraintStart_toEndOf="@+id/card_view_tv_show_details_poster"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_release_date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small"
-        android:layout_marginTop="8dp"
-        android:text="@string/release_date"
-        android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_tv_show_title" />
-
-    <TextView
-        android:id="@+id/text_view_space_dot_date_runtime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/space_dot"
-        android:textSize="@dimen/text_size_small"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_release_date_label"
-        app:layout_constraintStart_toEndOf="@+id/text_view_release_date_label"
-        app:layout_constraintTop_toTopOf="@+id/text_view_release_date_label" />
-
-    <TextView
-        android:id="@+id/text_view_runtime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/runtime"
-        android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/text_view_space_dot_date_runtime"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_tv_show_title" />
-
-    <TextView
-        android:id="@+id/text_view_certification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="@dimen/text_size_small"
-        android:text="@string/certification"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_release_date_label" />
-
-    <TextView
-        android:id="@+id/text_view_space_dot_cert_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/space_dot"
-        android:textSize="@dimen/text_size_small"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_certification"
-        app:layout_constraintStart_toEndOf="@+id/text_view_certification"
-        app:layout_constraintTop_toTopOf="@+id/text_view_certification" />
-
-    <TextView
-        android:id="@+id/text_view_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/rating"
-        android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/text_view_space_dot_cert_rating"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_release_date_label" />
-
-    <ImageView
-        android:id="@+id/image_view_rating_star"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/image_view_rating_star_desc"
-        android:maxWidth="14dp"
-        android:maxHeight="14dp"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_rating"
-        app:layout_constraintStart_toEndOf="@+id/text_view_rating"
-        app:layout_constraintTop_toTopOf="@+id/text_view_rating"
-        app:srcCompat="@drawable/ic_star" />
-
-    <TextView
-        android:id="@+id/text_view_genres"
+        android:id="@+id/text_view_creator_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/creator_name"
+        android:textSize="@dimen/text_size_title"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_creator_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_creator_label" />
+
+    <TextView
+        android:id="@+id/text_view_first_air_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:text="@string/first_air_date_label"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/card_view_tv_show_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_creator_label" />
+
+    <TextView
+        android:id="@+id/text_view_first_air_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginEnd="16dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="@string/genres"
+        android:text="@string/first_air_date"
         android:textSize="@dimen/text_size_small"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_certification" />
+        app:layout_constraintStart_toEndOf="@+id/text_view_first_air_date_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_first_air_date_label" />
+
+    <TextView
+        android:id="@+id/text_view_episode_runtime_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/episode_runtime_label"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/card_view_tv_show_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_first_air_date_label" />
+
+    <TextView
+        android:id="@+id/text_view_episode_runtime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/episode_runtime"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_episode_runtime_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_episode_runtime_label" />
+
+    <TextView
+        android:id="@+id/text_view_tv_show_details_rating_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/rating_label"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/card_view_tv_show_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_episode_runtime_label" />
+
+    <TextView
+        android:id="@+id/text_view_tv_show_details_rating"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/rating"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_tv_show_details_rating_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_tv_show_details_rating_label" />
+
+    <TextView
+        android:id="@+id/text_view_network_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/network_label"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/card_view_tv_show_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_tv_show_details_rating_label" />
+
+    <TextView
+        android:id="@+id/text_view_network"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/network"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_network_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_network_label" />
+
+    <TextView
+        android:id="@+id/text_view_next_episode_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/next_episode_label"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/card_view_tv_show_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_network_label" />
+
+    <TextView
+        android:id="@+id/text_view_next_episode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/next_episode"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_next_episode_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_next_episode_label" />
+
+    <TextView
+        android:id="@+id/text_view_tv_show_details_genres_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/genres_label"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_view_tv_show_details_poster" />
+
+    <TextView
+        android:id="@+id/text_view_tv_show_details_genres"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/genres"
+        android:textSize="@dimen/text_size_small"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_tv_show_details_genres_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_tv_show_details_genres_label" />
 
 </android.support.constraint.ConstraintLayout>

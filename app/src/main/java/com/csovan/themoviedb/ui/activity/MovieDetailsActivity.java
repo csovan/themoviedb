@@ -134,23 +134,23 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieDetailsLoaded = false;
 
         // Set findViewById
-        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
         progressBar = findViewById(R.id.progress_bar);
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
         nestedScrollView = findViewById(R.id.nested_scroll_view_movie_details);
 
         collapsingToolbarLayout.setVisibility(View.INVISIBLE);
         nestedScrollView.setVisibility(View.INVISIBLE);
 
-        imageViewBackdrop = findViewById(R.id.image_view_backdrop);
-        imageViewPoster = findViewById(R.id.image_view_poster);
+        imageViewBackdrop = findViewById(R.id.image_view_movie_details_backdrop);
+        imageViewPoster = findViewById(R.id.image_view_movie_details_poster);
 
         textViewMovieDirectorName = findViewById(R.id.text_view_director_name);
         textViewMovieReleaseDate = findViewById(R.id.text_view_release_date);
         textViewMovieRuntime = findViewById(R.id.text_view_runtime);
-        textViewMovieRating = findViewById(R.id.text_view_rating);
+        textViewMovieRating = findViewById(R.id.text_view_movie_details_rating);
         textViewMovieBudget = findViewById(R.id.text_view_budget);
         textViewMovieRevenue = findViewById(R.id.text_view_revenue);
-        textViewMovieGenres = findViewById(R.id.text_view_genres);
+        textViewMovieGenres = findViewById(R.id.text_view_movie_details_genres);
         textViewMovieOverview = findViewById(R.id.text_view_overview_content_section);
 
         textViewNoDataAvailableCasts = findViewById(R.id.text_view_no_data_available_cast);
@@ -292,10 +292,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 // Get movie release date with simple date format
                 if (response.body().getReleaseDate() != null
                         && !response.body().getReleaseDate().trim().isEmpty()){
-                    SimpleDateFormat sdf1 = new SimpleDateFormat(
-                            "yyyy-MM-dd", Locale.getDefault());
-                    SimpleDateFormat sdf2 = new SimpleDateFormat(
-                            "MMMM d, yyyy", Locale.getDefault());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat
+                            ("yyyy-MM-dd", Locale.getDefault());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat
+                            ("MMMM d, yyyy", Locale.getDefault());
                     try{
                         Date releaseDate = sdf1.parse(response.body().getReleaseDate());
                         textViewMovieReleaseDate.setText(sdf2.format(releaseDate));

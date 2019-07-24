@@ -73,7 +73,7 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
             super(itemView);
 
             cvMovieCard = itemView.findViewById(R.id.card_view_small);
-            ivMoviePoster = itemView.findViewById(R.id.image_view_poster);
+            ivMoviePoster = itemView.findViewById(R.id.image_view_movie_poster);
             tvMovieTitle = itemView.findViewById(R.id.text_view_title);
 
             cvMovieCard.getLayoutParams().width =

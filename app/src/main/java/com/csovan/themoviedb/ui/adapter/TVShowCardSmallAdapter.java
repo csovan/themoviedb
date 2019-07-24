@@ -73,7 +73,7 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
             super(itemView);
 
             cvTVShowCard = itemView.findViewById(R.id.card_view_small);
-            ivTVShowPoster = itemView.findViewById(R.id.image_view_poster);
+            ivTVShowPoster = itemView.findViewById(R.id.image_view_movie_poster);
             tvTVShowTitle = itemView.findViewById(R.id.text_view_title);
 
             cvTVShowCard.getLayoutParams().width =

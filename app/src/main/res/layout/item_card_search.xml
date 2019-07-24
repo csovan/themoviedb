@@ -10,7 +10,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view_poster"
+        android:id="@+id/card_view_movie_poster"
         android:layout_width="120dp"
         android:layout_height="180dp"
         app:cardCornerRadius="@dimen/x_small"
@@ -40,7 +40,7 @@
         android:textSize="@dimen/text_size_title"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/text_view_overview_search"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -51,7 +51,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/media_type_search"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_name_search" />
 
     <TextView
@@ -65,7 +65,7 @@
         android:text="@string/overview_section_content"
         android:textSize="@dimen/text_size_small"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/card_view_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_media_type_search" />
 
     <TextView

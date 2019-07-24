@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout_movie_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -29,7 +30,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-                android:id="@+id/image_view_backdrop"
+                android:id="@+id/image_view_movie_details_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -38,6 +39,7 @@
                 android:contentDescription="@string/iv_backdrop_desc" />
 
             <View
+                android:id="@+id/view_movie_details"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -63,7 +65,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:id="@+id/linear_layout_movie_detail"
+            android:id="@+id/linear_layout_movie_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

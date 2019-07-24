@@ -110,7 +110,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
         nestedScrollView.setVisibility(View.INVISIBLE);
 
         backdropImageView = findViewById(R.id.image_view_backdrop);
-        posterImageView = findViewById(R.id.image_view_poster);
+        posterImageView = findViewById(R.id.image_view_movie_poster);
 
         textViewPersonName = findViewById(R.id.text_view_person_name);
         textViewBirthDate = findViewById(R.id.text_view_birth_date);
