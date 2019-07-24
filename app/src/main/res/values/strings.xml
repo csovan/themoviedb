@@ -80,7 +80,7 @@
     <string name="network_label">Network:</string>
     <string name="network">HBO</string>
     <string name="next_episode_label">Next Episode:</string>
-    <string name="next_episode">June 10, 2019 \u00b7 10:00 PM</string>
+    <string name="next_episode">June 10, 2019</string>
     <string name="tv_shows_similar_section_title">Similar TV Shows</string>
 
     <!-- Common details -->

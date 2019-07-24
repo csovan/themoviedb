@@ -1,6 +1,7 @@
 package com.csovan.themoviedb.ui.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -27,14 +28,13 @@ import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCastBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreditsResponse;
-import com.csovan.themoviedb.data.model.tvshow.TVShowCrewBrief;
 import com.csovan.themoviedb.data.model.tvshow.TVShowGenres;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
+import com.csovan.themoviedb.data.network.NetworkConnection;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCastAdapter;
-import com.csovan.themoviedb.ui.adapter.TVShowCrewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
 import java.text.ParseException;
@@ -61,7 +61,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private boolean tvshowDetailsLoaded;
     private boolean videosSectionLoaded;
     private boolean castsSectionLoaded;
-    private boolean crewSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
 
@@ -87,7 +86,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     // No data available
     private TextView textViewNoDataAvailableCasts;
-    private TextView textViewNoDataAvailableCrews;
     private TextView textViewNoDataAvailableVideos;
     private TextView textViewNoDataAvailableOverview;
     private TextView textViewNoDataAvailableSimilarTVShows;
@@ -102,18 +100,13 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private RecyclerView tvshowCastRecyclerView;
     private TVShowCastAdapter tvshowCastAdapter;
 
-    // Crew
-    private List<TVShowCrewBrief> tvshowCrewBriefList;
-    private RecyclerView tvshowCrewRecyclerView;
-    private TVShowCrewAdapter tvshowCrewAdapter;
-
     // Similar TV Shows
     private List<TVShowBrief> tvshowSimilarList;
     private RecyclerView tvshowsSimilarRecyclerView;
     private TVShowCardSmallAdapter tvshowsSimilarAdapter;
 
-    // Calls
-    private Call<TVShow> tvshowDetailCall;
+    // Retrofit network calls
+    private Call<TVShow> tvshowDetailsCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<TVShowCreditsResponse> tvshowCreditsResponseCall;
     private Call<TVShowsSimilarResponse> similarTVShowsResponseCall;
@@ -158,14 +151,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         textViewTVShowGenres = findViewById(R.id.text_view_tv_show_details_genres);
         textViewTVShowOverview = findViewById(R.id.text_view_overview_content_section);
 
-        // No data available
         textViewNoDataAvailableCasts = findViewById(R.id.text_view_no_data_available_cast);
-        textViewNoDataAvailableCrews = findViewById(R.id.text_view_no_data_available_crew);
         textViewNoDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         textViewNoDataAvailableVideos = findViewById(R.id.text_view_video_no_data);
         textViewNoDataAvailableSimilarTVShows = findViewById(R.id.text_view_similar_tv_shows_no_data);
 
-        // Videos
+        // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
         videoList = new ArrayList<>();
         videoAdapter = new VideoAdapter(TVShowDetailsActivity.this, videoList);
@@ -174,7 +165,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL, false));
         videosSectionLoaded = false;
 
-        // Cast
+        // Set adapter cast
         tvshowCastRecyclerView = findViewById(R.id.recycler_view_cast);
         tvshowCastBriefList = new ArrayList<>();
         tvshowCastAdapter = new TVShowCastAdapter(TVShowDetailsActivity.this, tvshowCastBriefList);
@@ -183,16 +174,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL, false));
         castsSectionLoaded = false;
 
-        // Crew
-        tvshowCrewRecyclerView = findViewById(R.id.recycler_view_crew);
-        tvshowCrewBriefList = new ArrayList<>();
-        tvshowCrewAdapter = new TVShowCrewAdapter(TVShowDetailsActivity.this, tvshowCrewBriefList);
-        tvshowCrewRecyclerView.setAdapter(tvshowCrewAdapter);
-        tvshowCrewRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
-                LinearLayoutManager.HORIZONTAL, false));
-        crewSectionLoaded = false;
-
-        // Similar TV Shows
+        // Set adapter similar tv shows
         tvshowsSimilarRecyclerView = findViewById(R.id.recycler_view_similar_tv_shows);
         tvshowSimilarList = new ArrayList<>();
         tvshowsSimilarAdapter = new TVShowCardSmallAdapter(TVShowDetailsActivity.this,tvshowSimilarList);
@@ -200,20 +182,79 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowsSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
 
-        loadActivity();
+        if (NetworkConnection.isConnected(TVShowDetailsActivity.this)){
+            isActivityLoaded = true;
+            loadActivity();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        tvshowsSimilarAdapter.notifyDataSetChanged();
+        videoAdapter.notifyDataSetChanged();
+        tvshowCastAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!isActivityLoaded && !NetworkConnection.isConnected(TVShowDetailsActivity.this)) {
+            connectivitySnackbar = Snackbar.make(collapsingToolbarLayout, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isActivityLoaded = true;
+                    loadActivity();
+                    isBroadcastReceiverRegistered = false;
+                    unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        } else if (!isActivityLoaded && NetworkConnection.isConnected(TVShowDetailsActivity.this)) {
+            isActivityLoaded = true;
+            loadActivity();
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (tvshowDetailsCall != null) tvshowDetailsCall.cancel();
+        if (videosResponseCall != null) videosResponseCall.cancel();
+        if (tvshowCreditsResponseCall != null) tvshowCreditsResponseCall.cancel();
+        if (similarTVShowsResponseCall != null) similarTVShowsResponseCall.cancel();
     }
 
     private void loadActivity(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        tvshowDetailCall = apiService.getTVShowDetails(tvshowId, TMDB_API_KEY, REGION);
-        tvshowDetailCall.enqueue(new Callback<TVShow>() {
+        tvshowDetailsCall = apiService.getTVShowDetails(tvshowId, TMDB_API_KEY, REGION);
+        tvshowDetailsCall.enqueue(new Callback<TVShow>() {
             @Override
             public void onResponse(@NonNull Call<TVShow> call, @NonNull final Response<TVShow> response) {
                 if (!response.isSuccessful()) {
-                    tvshowDetailCall = call.clone();
-                    tvshowDetailCall.enqueue(this);
+                    tvshowDetailsCall = call.clone();
+                    tvshowDetailsCall.enqueue(this);
                     return;
                 }
 
@@ -300,7 +341,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 setGenres(response.body().getGenres());
                 setVideos();
                 setCasts();
-                setCrews();
                 setSimilarTVShows();
 
                 tvshowDetailsLoaded = true;
@@ -353,6 +393,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // Get tv show genres
     private void setGenres(List<TVShowGenres> genresList) {
         String genres = "";
         if (genresList != null) {
@@ -406,42 +447,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void setCrews(){
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        tvshowCreditsResponseCall = apiService.getTVShowCredits(tvshowId, TMDB_API_KEY);
-        tvshowCreditsResponseCall.enqueue(new Callback<TVShowCreditsResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<TVShowCreditsResponse> call, @NonNull Response<TVShowCreditsResponse> response) {
-                if (!response.isSuccessful()){
-                    tvshowCreditsResponseCall = call.clone();
-                    tvshowCreditsResponseCall.enqueue(this);
-                    return;
-                }
-
-                if (response.body() == null) return;
-                if (response.body().getCrews() == null) return;
-
-                crewSectionLoaded = true;
-                checkTVShowDetailsLoaded();
-
-                for (TVShowCrewBrief crewBrief : response.body().getCrews()) {
-                    if (crewBrief != null && crewBrief.getName() != null)
-                        tvshowCrewBriefList.add(crewBrief);
-                }
-
-                if (!tvshowCrewBriefList.isEmpty()){
-                    textViewNoDataAvailableCrews.setVisibility(View.GONE);
-                    tvshowCrewAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<TVShowCreditsResponse> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
+    // Get similar tv shows
     private void setSimilarTVShows(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -478,7 +484,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     }
 
     private void checkTVShowDetailsLoaded(){
-        if (tvshowDetailsLoaded && videosSectionLoaded && castsSectionLoaded && crewSectionLoaded){
+        if (tvshowDetailsLoaded && videosSectionLoaded && castsSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);

@@ -76,9 +76,7 @@
 
             <include layout="@layout/videos_section" />
 
-            <include layout="@layout/cast_section" />
-
-            <include layout="@layout/crew_section" />
+            <include layout="@layout/casts_section" />
 
             <include layout="@layout/tv_shows_similar_section" />
 
