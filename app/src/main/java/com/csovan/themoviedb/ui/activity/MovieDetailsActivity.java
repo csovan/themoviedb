@@ -64,13 +64,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private boolean movieDetailsLoaded;
     private boolean videosSectionLoaded;
-    private boolean castsSectionLoaded;
-    private boolean crewSectionLoaded;
+    private boolean creditsSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private AppBarLayout appBarLayout;
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
     private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
@@ -92,7 +90,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     // No data available
     private TextView textViewNoDataAvailableCasts;
-    private TextView textViewNoDataAvailableCrews;
     private TextView textViewNoDataAvailableVideos;
     private TextView textViewNoDataAvailableOverview;
     private TextView textViewNoDataAvailableSimilarMovies;
@@ -106,11 +103,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private List<MovieCastBrief> movieCastBriefList;
     private RecyclerView movieCastRecyclerView;
     private MovieCastAdapter movieCastAdapter;
-
-    // Crew
-    private List<MovieCrewBrief> movieCrewBriefList;
-    private RecyclerView movieCrewRecyclerView;
-    private MovieCrewAdapter movieCrewAdapter;
 
     // Similar movies
     private List<MovieBrief> movieSimilarList;
@@ -145,7 +137,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         // Set findViewById
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
-        appBarLayout = findViewById(R.id.app_bar_movie_details);
         progressBar = findViewById(R.id.progress_bar);
         nestedScrollView = findViewById(R.id.nested_scroll_view_movie_details);
 
@@ -165,7 +156,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         textViewMovieOverview = findViewById(R.id.text_view_overview_content_section);
 
         textViewNoDataAvailableCasts = findViewById(R.id.text_view_no_data_available_cast);
-        textViewNoDataAvailableCrews = findViewById(R.id.text_view_no_data_available_crew);
         textViewNoDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         textViewNoDataAvailableVideos = findViewById(R.id.text_view_video_no_data);
         textViewNoDataAvailableSimilarMovies = findViewById(R.id.text_view_similar_movies_no_data);
@@ -186,16 +176,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieCastRecyclerView.setAdapter(movieCastAdapter);
         movieCastRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
-        castsSectionLoaded = false;
-
-        // Set adapter crew
-        movieCrewRecyclerView = findViewById(R.id.recycler_view_crew);
-        movieCrewBriefList = new ArrayList<>();
-        movieCrewAdapter = new MovieCrewAdapter(MovieDetailsActivity.this, movieCrewBriefList);
-        movieCrewRecyclerView.setAdapter(movieCrewAdapter);
-        movieCrewRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
-                LinearLayoutManager.HORIZONTAL, false));
-        crewSectionLoaded = false;
+        creditsSectionLoaded = false;
 
         // Set adapter similar movies
         moviesSimilarRecyclerView = findViewById(R.id.recycler_view_similar_movies);
@@ -285,7 +266,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
 
                 // Get movie title
-                if (response.body().getTitle() != null) {
+                if (response.body().getTitle() != null
+                        && !response.body().getTitle().trim().isEmpty()) {
                     collapsingToolbarLayout.setTitle(response.body().getTitle());
                 }else {
                     collapsingToolbarLayout.setTitle(getString(R.string.no_title_available));
@@ -310,7 +292,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .into(imageViewPoster);
 
                 // Get movie release date with simple date format
-                if (response.body().getReleaseDate() != null){
+                if (response.body().getReleaseDate() != null
+                        && !response.body().getReleaseDate().trim().isEmpty()){
                     SimpleDateFormat sdf1 = new SimpleDateFormat(
                             "yyyy-MM-dd", Locale.getDefault());
                     SimpleDateFormat sdf2 = new SimpleDateFormat(
@@ -354,18 +337,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
                 currencyFormat.setMinimumFractionDigits(0);
 
-                Integer budget = response.body().getBudget();
+                int budget = response.body().getBudget();
                 String budgetFormat = currencyFormat.format(budget) + " USD";
-                if (response.body().getBudget() != null){
+                if (response.body().getBudget() != 0){
                     textViewMovieBudget.setText(budgetFormat);
                 }else {
                     textViewMovieBudget.setText("N/A");
                 }
 
                 //Get movie revenue
-                Integer revenue = response.body().getRevenue();
+                long revenue = response.body().getRevenue();
                 String revenueFormat = currencyFormat.format(revenue) + " USD";
-                if (response.body().getRevenue() != null){
+                if (response.body().getRevenue() != 0){
                     textViewMovieRevenue.setText(revenueFormat);
                 }else {
                     textViewMovieRevenue.setText("N/A");
@@ -383,8 +366,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 setGenres(response.body().getGenres());
                 setVideos();
-                setCasts();
-                setCrews();
+                setCredits();
                 setSimilarMovies();
 
                 movieDetailsLoaded = true;
@@ -425,7 +407,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         videoList.add(video);
                 }
 
-                videoAdapter.notifyDataSetChanged();
+                if (!videoList.isEmpty()){
+                    videoAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -435,6 +419,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // Get movie genres
     private void setGenres(List<MovieGenres> genresList) {
         String genres = "";
         if (genresList != null) {
@@ -446,11 +431,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     genres = genres.concat(genresList.get(i).getGenreName() + " \u00b7 ");
                 }
             }
+        }else {
+            textViewMovieGenres.setText("N/A");
         }
         textViewMovieGenres.setText(genres);
     }
 
-    private void setCasts(){
+    // Get movie credits
+    private void setCredits(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         movieCreditsResponseCall = apiService.getMovieCredits(movieId, TMDB_API_KEY);
         movieCreditsResponseCall.enqueue(new Callback<MovieCreditsResponse>() {
@@ -465,9 +453,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getCasts() == null) return;
 
-                castsSectionLoaded = true;
+                creditsSectionLoaded = true;
                 checkMovieDetailsLoaded();
 
+                // Get movie casts
                 for (MovieCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
                         textViewNoDataAvailableCasts.setVisibility(View.GONE);
@@ -477,48 +466,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (!movieCastBriefList.isEmpty()){
                     movieCastAdapter.notifyDataSetChanged();
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<MovieCreditsResponse> call, @NonNull Throwable t) {
-
-            }
-        });
-
-    }
-
-    private void setCrews(){
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        movieCreditsResponseCall = apiService.getMovieCredits(movieId, TMDB_API_KEY);
-        movieCreditsResponseCall.enqueue(new Callback<MovieCreditsResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MovieCreditsResponse> call, @NonNull Response<MovieCreditsResponse> response) {
-                if (!response.isSuccessful()){
-                    movieCreditsResponseCall = call.clone();
-                    movieCreditsResponseCall.enqueue(this);
-                    return;
-                }
-
-                if (response.body() == null) return;
-                if (response.body().getCrews() == null) return;
-
-                crewSectionLoaded = true;
-                checkMovieDetailsLoaded();
-
-                for (MovieCrewBrief crewBrief : response.body().getCrews()) {
-                    if (crewBrief != null && crewBrief.getName() != null) {
-                        textViewNoDataAvailableCrews.setVisibility(View.GONE);
-                        movieCrewBriefList.add(crewBrief);
-                    }
-                    assert crewBrief != null;
+                // Get director name
+                for (MovieCrewBrief crewBrief : response.body().getCrews()){
                     if (crewBrief.getJob().equals("Director")){
                         textViewMovieDirectorName.setText(crewBrief.getName());
                     }
                 }
-
-                if (!movieCrewBriefList.isEmpty()){
-                    movieCrewAdapter.notifyDataSetChanged();
-                }
             }
 
             @Override
@@ -529,6 +483,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     }
 
+    // Get similar movies
     private void setSimilarMovies(){
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -565,7 +520,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void checkMovieDetailsLoaded(){
-        if (movieDetailsLoaded && videosSectionLoaded && castsSectionLoaded && crewSectionLoaded){
+        if (movieDetailsLoaded && videosSectionLoaded && creditsSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);
