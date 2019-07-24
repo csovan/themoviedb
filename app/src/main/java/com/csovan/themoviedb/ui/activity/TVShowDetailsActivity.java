@@ -208,25 +208,14 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
                 if (response.body() == null) return;
 
-                //Get tv show title
-                appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                    @Override
-                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                        if (response.body().getName() != null){
-                            if (appBarLayout.getTotalScrollRange() + verticalOffset == 0){
-                                collapsingToolbarLayout.setTitle(response.body().getName());
-                                tvshowTitle.setText("");
-                            }else {
-                                collapsingToolbarLayout.setTitle("");
-                                tvshowTitle.setText(response.body().getName());
-                            }
-                        }else {
-                            tvshowTitle.setText("");
-                        }
-                    }
-                });
+                // Get tv show title
+                if (response.body().getName() != null
+                        && !response.body().getName().trim().isEmpty()) {
+                    collapsingToolbarLayout.setTitle(response.body().getName());
+                }else {
+                    collapsingToolbarLayout.setTitle(getString(R.string.no_title_available));
+                }
 
-                assert response.body() != null;
                 Glide.with(getApplicationContext())
                         .load(IMAGE_LOADING_BASE_URL_1280 + response.body().getBackdropPath())
                         .asBitmap()

@@ -58,26 +58,40 @@
     <string name="tv_shows_top_rated">TV Shows Top Rated</string>
 
     <!-- Movie Details Activity -->
-    <string name="title">Title</string>
     <string name="director_label">Director:</string>
     <string name="director_name">Director Name</string>
     <string name="release_date_label">Release:</string>
-    <string name="release_date">Jun 1, 2019</string>
+    <string name="release_date">June 1, 2019</string>
     <string name="runtime_label">Runtime:</string>
     <string name="runtime">2 hr 30 mins</string>
-    <string name="rating_label">Rating:</string>
-    <string name="rating">4.5/10</string>
-    <string name="genres_label">Genres:</string>
-    <string name="genres">Action \u00b7 Sci-Fi \u00b7 Fantasy</string>
     <string name="budget_label">Budget:</string>
     <string name="budget">$200,000,000</string>
     <string name="revenue_label">Revenue:</string>
     <string name="revenue">$1,000,0000,0000</string>
+    <string name="movies_similar_section_title">Similar Movies</string>
 
+    <!-- TV Show Details Activity -->
+    <string name="creator_label">Creator:</string>
+    <string name="creator_name">Creator Name</string>
+    <string name="first_air_date_label">Release:</string>
+    <string name="first_air_date">June 3, 2019</string>
+    <string name="episode_runtime_label">Runtime:</string>
+    <string name="episode_runtime">1 hr 15 mins</string>
+    <string name="network_label">Network:</string>
+    <string name="network">HBO</string>
+    <string name="next_episode_label">Next Episode:</string>
+    <string name="next_episode">June 10, 2019 \u00b7 10:00 PM</string>
+    <string name="tv_shows_similar_section_title">Similar TV Shows</string>
+
+    <!-- Common details -->
+    <string name="rating_label">Rating:</string>
+    <string name="rating">4.5/10</string>
+    <string name="genres_label">Genres:</string>
+    <string name="genres">Action \u00b7 Sci-Fi \u00b7 Fantasy</string>
+
+    <string name="title">Title</string>
     <string name="certification">PG-13</string>
     <string name="space_dot">\u00b7</string>
-    <string name="movies_similar_section_title">Similar Movies</string>
-    <string name="tv_shows_similar_section_title">Similar TV Shows</string>
 
     <!-- Person details -->
     <string name="person_name">Name</string>
