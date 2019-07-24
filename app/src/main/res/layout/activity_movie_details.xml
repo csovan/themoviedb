@@ -76,8 +76,6 @@
 
             <include layout="@layout/cast_section" />
 
-            <include layout="@layout/crew_section" />
-
             <include layout="@layout/movies_similar_section" />
 
         </LinearLayout>

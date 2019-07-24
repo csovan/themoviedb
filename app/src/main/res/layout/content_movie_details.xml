@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/text_view_director_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small"
         android:text="@string/director_label"
@@ -195,6 +195,7 @@
         android:maxLines="1"
         android:text="@string/genres"
         android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_genres_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_view_genres_label"
         app:layout_constraintTop_toTopOf="@+id/text_view_genres_label" />
