@@ -25,6 +25,7 @@ import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreator;
 import com.csovan.themoviedb.data.model.tvshow.TVShowNetwork;
+import com.csovan.themoviedb.data.model.tvshow.TVShowNextEpisode;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsSimilarResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
@@ -291,6 +292,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 // Get tv show first air date with simple date format
                 if (response.body().getFirstAirDate() != null
                         && !response.body().getFirstAirDate().trim().isEmpty()){
+
                     SimpleDateFormat sdf1 = new SimpleDateFormat
                             ("yyyy-MM-dd", Locale.getDefault());
                     SimpleDateFormat sdf2 = new SimpleDateFormat
@@ -340,6 +342,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     textViewTVShowOverview.setText("");
                 }
 
+                setNextEpisodeAirDate(response.body().getNextEpisode());
                 setCreators(response.body().getCreators());
                 setNetworks(response.body().getNetworks());
                 setGenres(response.body().getGenres());
@@ -357,6 +360,27 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // Get tv show next episode air date
+    private void setNextEpisodeAirDate(TVShowNextEpisode tvshowNextEpisode){
+
+        if (tvshowNextEpisode != null){
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat
+                    ("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat sdf2 = new SimpleDateFormat
+                    ("MMMM d, yyyy", Locale.getDefault());
+
+            try{
+                Date nextAirDate = sdf1.parse(tvshowNextEpisode.getNextAirDate());
+                textViewTVShowNextEpisode.setText(sdf2.format(nextAirDate));
+            }catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else {
+            textViewTVShowNextEpisode.setText("N/A");
+        }
     }
 
     // Get videos
@@ -415,7 +439,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // Get tv shows networks
+    // Get tv show networks
     private void setNetworks(List<TVShowNetwork> networkList){
         String networks = "";
         if (networkList != null && !networkList.isEmpty()){
@@ -433,7 +457,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // Get tv shows creators
+    // Get tv show creators
     private void setCreators(List<TVShowCreator> creatorList){
         String creators = "";
         if (creatorList != null && !creatorList.isEmpty()){
