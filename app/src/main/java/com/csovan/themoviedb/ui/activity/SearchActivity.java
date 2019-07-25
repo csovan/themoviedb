@@ -46,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -118,7 +119,7 @@ public class SearchActivity extends AppCompatActivity {
                         searchResultList.add(searchResult);
                 }
                 searchResultsAdapter.notifyDataSetChanged();
-                if (searchResponse.getPage() == searchResponse.getTotalPages())
+                if (searchResponse.getPage().equals(searchResponse.getTotalPages()))
                     pagesOver = true;
                 else
                     presentPage++;

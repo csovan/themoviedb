@@ -39,7 +39,7 @@ import static com.csovan.themoviedb.util.Constant.VIEW_ALL_TV_SHOWS_TYPE;
 
 public class TVShowsViewAllActivity extends AppCompatActivity {
 
-    private RecyclerView rvViewAll;
+    private RecyclerView viewAllRecyclerView;
     private List<TVShowBrief> tvshowList;
     private TVShowCardSmallAdapter tvshowCardSmallAdapter;
 
@@ -90,21 +90,21 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                 break;
         }
 
-        rvViewAll = findViewById(R.id.recycler_view_tv_shows_view_all);
-        rvViewAll.setVisibility(View.INVISIBLE);
+        viewAllRecyclerView = findViewById(R.id.recycler_view_tv_shows_view_all);
+        viewAllRecyclerView.setVisibility(View.INVISIBLE);
 
         tvshowList = new ArrayList<>();
 
         tvshowCardSmallAdapter = new TVShowCardSmallAdapter(TVShowsViewAllActivity.this, tvshowList);
 
-        rvViewAll.setAdapter(tvshowCardSmallAdapter);
+        viewAllRecyclerView.setAdapter(tvshowCardSmallAdapter);
 
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(
                 TVShowsViewAllActivity.this, 3);
 
-        rvViewAll.setLayoutManager(gridLayoutManager);
+        viewAllRecyclerView.setLayoutManager(gridLayoutManager);
 
-        rvViewAll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        viewAllRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
@@ -128,6 +128,23 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
         loadTVShows(tvshowsTypeList);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        tvshowCardSmallAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (tvShowsAiringTodayResponseCall != null) tvShowsAiringTodayResponseCall.cancel();
+        if (tvShowsOnTheAirResponseCall != null) tvShowsOnTheAirResponseCall.cancel();
+        if (tvShowsPopularResponseCall != null) tvShowsPopularResponseCall.cancel();
+        if (tvShowsTopRatedResponseCall != null) tvShowsTopRatedResponseCall.cancel();
+    }
+
     private void loadTVShows(int tvshowsTypeList) {
 
         if (pagesOver) return;
@@ -149,14 +166,14 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (TVShowBrief tvShowBrief : response.body().getResults()) {
                             if (tvShowBrief != null && tvShowBrief.getPosterPath() != null)
                                 tvshowList.add(tvShowBrief);
                         }
                         tvshowCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;
@@ -184,14 +201,14 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (TVShowBrief tvShowBrief : response.body().getResults()) {
                             if (tvShowBrief != null && tvShowBrief.getPosterPath() != null)
                                 tvshowList.add(tvShowBrief);
                         }
                         tvshowCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;
@@ -220,7 +237,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (TVShowBrief tvShowBrief : response.body().getResults()) {
                             if (tvShowBrief != null && tvShowBrief.getPosterPath() != null)
@@ -228,7 +245,7 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
 
                         }
                         tvshowCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;
@@ -256,14 +273,14 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (TVShowBrief tvShowBrief : response.body().getResults()) {
                             if (tvShowBrief != null && tvShowBrief.getPosterPath() != null)
                                 tvshowList.add(tvShowBrief);
                         }
                         tvshowCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;

@@ -39,7 +39,7 @@ import static com.csovan.themoviedb.util.Constant.VIEW_ALL_MOVIES_TYPE;
 
 public class MoviesViewAllActivity extends AppCompatActivity {
 
-    private RecyclerView rvViewAll;
+    private RecyclerView viewAllRecyclerView;
     private List<MovieBrief> movieList;
     private MovieCardSmallAdapter movieCardSmallAdapter;
 
@@ -63,6 +63,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_view_all);
 
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_view_all);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -90,20 +91,20 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                 break;
         }
 
-        rvViewAll = findViewById(R.id.recycler_view_movies_view_all);
-        rvViewAll.setVisibility(View.INVISIBLE);
+        viewAllRecyclerView = findViewById(R.id.recycler_view_movies_view_all);
+        viewAllRecyclerView.setVisibility(View.INVISIBLE);
 
         movieList = new ArrayList<>();
 
         movieCardSmallAdapter = new MovieCardSmallAdapter(MoviesViewAllActivity.this, movieList);
-        rvViewAll.setAdapter(movieCardSmallAdapter);
+        viewAllRecyclerView.setAdapter(movieCardSmallAdapter);
 
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(
                 MoviesViewAllActivity.this, 3);
 
-        rvViewAll.setLayoutManager(gridLayoutManager);
+        viewAllRecyclerView.setLayoutManager(gridLayoutManager);
 
-        rvViewAll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        viewAllRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
@@ -127,6 +128,23 @@ public class MoviesViewAllActivity extends AppCompatActivity {
         loadMovies(movieListType);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        movieCardSmallAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (moviesNowPlayingResponseCall != null) moviesNowPlayingResponseCall.cancel();
+        if (moviesPopularResponseCall != null) moviesPopularResponseCall.cancel();
+        if (moviesUpcomingResponseCall != null) moviesUpcomingResponseCall.cancel();
+        if (moviesTopRatedResponseCall != null) moviesTopRatedResponseCall.cancel();
+    }
+
     private void loadMovies(int movieListType){
 
         if (pagesOver) return;
@@ -135,7 +153,7 @@ public class MoviesViewAllActivity extends AppCompatActivity {
 
         switch (movieListType){
             case NOW_PLAYING_MOVIES_TYPE:
-                moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, presentPage,REGION);
+                moviesNowPlayingResponseCall = apiService.getMoviesNowPlaying(TMDB_API_KEY, presentPage, REGION);
                 moviesNowPlayingResponseCall.enqueue(new Callback<MoviesNowPlayingResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<MoviesNowPlayingResponse> call, @NonNull Response<MoviesNowPlayingResponse> response) {
@@ -149,14 +167,14 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (MovieBrief movieBrief : response.body().getResults()) {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
                         movieCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;
@@ -184,14 +202,14 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (MovieBrief movieBrief : response.body().getResults()) {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
                         movieCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;
@@ -219,14 +237,14 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (MovieBrief movieBrief : response.body().getResults()) {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
                         movieCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;
@@ -254,14 +272,14 @@ public class MoviesViewAllActivity extends AppCompatActivity {
                         if (response.body().getResults() == null) return;
 
                         progressBar.setVisibility(View.GONE);
-                        rvViewAll.setVisibility(View.VISIBLE);
+                        viewAllRecyclerView.setVisibility(View.VISIBLE);
 
                         for (MovieBrief movieBrief : response.body().getResults()) {
                             if (movieBrief != null && movieBrief.getPosterPath() != null)
                                 movieList.add(movieBrief);
                         }
                         movieCardSmallAdapter.notifyDataSetChanged();
-                        if (response.body().getPage() == response.body().getTotalPages()){
+                        if (response.body().getPage().equals(response.body().getTotalPages())){
                             pagesOver = true;
                         }else {
                             presentPage++;

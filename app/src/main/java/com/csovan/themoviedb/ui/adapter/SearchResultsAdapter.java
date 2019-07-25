@@ -121,7 +121,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             yearTextView = itemView.findViewById(R.id.text_view_release_date_search);
 
             cardViewPoster.getLayoutParams().width =
-                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
             cardViewPoster.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
