@@ -3,6 +3,7 @@ package com.csovan.themoviedb.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -69,6 +70,8 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
         ImageView ivMoviePoster;
         TextView tvMovieTitle;
 
+        ConstraintLayout constraintLayoutItemCardSmall;
+
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -76,12 +79,14 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
             ivMoviePoster = itemView.findViewById(R.id.image_view_movie_poster);
             tvMovieTitle = itemView.findViewById(R.id.text_view_title);
 
+            constraintLayoutItemCardSmall = itemView.findViewById(R.id.constraint_layout_item_card_small);
+
             cvMovieCard.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
             cvMovieCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
-            cvMovieCard.setOnClickListener(new View.OnClickListener(){
+            constraintLayoutItemCardSmall.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, MovieDetailsActivity.class);

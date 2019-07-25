@@ -34,6 +34,7 @@
         android:layout_marginTop="@dimen/small"
         android:paddingEnd="@dimen/small"
         android:paddingStart="8dp"
+        android:paddingBottom="8dp"
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,5 +42,4 @@
         app:layout_constraintTop_toBottomOf="@+id/text_view_label_tv_shows_cast_of_person">
 
     </android.support.v7.widget.RecyclerView>
-
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -70,6 +71,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         TextView videoTextView;
         ImageButton videoPlayImageButton;
 
+        ConstraintLayout constraintLayoutItemVideo;
+
         VideoViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -78,7 +81,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             videoTextView = itemView.findViewById(R.id.text_view_video_title);
             videoPlayImageButton = itemView.findViewById(R.id.image_button_video_play_button);
 
-            videoCardView.setOnClickListener(new View.OnClickListener(){
+            constraintLayoutItemVideo = itemView.findViewById(R.id.constraint_layout_item_video);
+
+            constraintLayoutItemVideo.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
                     Intent youtubeIntent = new Intent(Intent.ACTION_VIEW,
@@ -87,14 +92,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 }
             });
 
-            videoPlayImageButton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    Intent youtubeIntent = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse(YOUTUBE_WATCH_BASE_URL + videoList.get(getAdapterPosition()).getKey()));
-                    context.startActivity(youtubeIntent);
-                }
-            });
         }
     }
 }

@@ -47,14 +47,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_birth_date"
+        android:id="@+id/text_view_person_age_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/birth_date"
-        android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/text_view_birth_date_label"
-        app:layout_constraintTop_toTopOf="@+id/text_view_birth_date_label" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/person_age_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_person_name" />
 
     <TextView
         android:id="@+id/text_view_age"
@@ -65,6 +65,36 @@
         android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toEndOf="@+id/text_view_person_age_label"
         app:layout_constraintTop_toTopOf="@+id/text_view_person_age_label" />
+
+    <TextView
+        android:id="@+id/text_view_birth_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/birth_date_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_age" />
+
+    <TextView
+        android:id="@+id/text_view_birth_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/birth_date"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/text_view_birth_date_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_birth_date_label" />
+
+    <TextView
+        android:id="@+id/text_view_birth_place_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/birth_place_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_birth_date_label" />
 
     <TextView
         android:id="@+id/text_view_birth_place"
@@ -79,41 +109,11 @@
         app:layout_constraintTop_toTopOf="@+id/text_view_birth_place_label" />
 
     <TextView
-        android:id="@+id/text_view_person_age_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/person_age_label"
-        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_person_name" />
-
-    <TextView
-        android:id="@+id/text_view_birth_date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/birth_date_label"
-        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_age" />
-
-    <TextView
-        android:id="@+id/text_view_birth_place_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/birth_place_label"
-        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_birth_date_label" />
-
-    <TextView
         android:id="@+id/text_view_known_for_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/known_for_label"
         app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
         app:layout_constraintTop_toBottomOf="@+id/text_view_birth_place" />

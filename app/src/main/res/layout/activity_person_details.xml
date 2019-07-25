@@ -69,7 +69,7 @@
 
             <include layout="@layout/biography_section" />
 
-            <include layout="@layout/movies_cast_of_person_section" />
+            <include layout="@layout/movies_cast_in_section" />
 
             <include layout="@layout/tv_shows_cast_in_section" />
 
