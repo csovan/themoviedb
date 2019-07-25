@@ -429,10 +429,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     genres = genres.concat(genresList.get(i).getGenreName() + " \u00b7 ");
                 }
             }
+            textViewMovieGenres.setText(genres);
         }else {
             textViewMovieGenres.setText("N/A");
         }
-        textViewMovieGenres.setText(genres);
     }
 
     // Get movie credits
@@ -467,8 +467,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 // Get director name
                 for (MovieCrewBrief crewBrief : response.body().getCrews()){
-                    if (crewBrief.getJob().equals("Director")){
+                    if (crewBrief != null && crewBrief.getJob() != null
+                            && crewBrief.getJob().equals("Director")){
                         textViewMovieDirectorName.setText(crewBrief.getName());
+                    }
+                    if (response.body().getCrews().isEmpty() || response.body().getCrews() == null){
+                        textViewMovieDirectorName.setText("N/A");
                     }
                 }
             }

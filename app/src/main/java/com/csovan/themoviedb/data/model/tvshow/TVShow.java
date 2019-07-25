@@ -48,10 +48,14 @@ public class TVShow {
     @SerializedName("networks")
     private List<TVShowNetwork> networks;
 
+    @SerializedName("created_by")
+    private List<TVShowCreator> creators;
+
     public TVShow(Integer id, String name, List<Integer> episodeRunTime, String firstAirDate,
                   String lastAirDate, Integer numberOfEpisodes, Integer numberOfSeasons,
                   String posterPath, String backdropPath, String overview, String status,
-                  Double voteAverage, List<TVShowGenres> genres, List<TVShowNetwork> networks) {
+                  Double voteAverage, List<TVShowGenres> genres, List<TVShowNetwork> networks,
+                  List<TVShowCreator> creators) {
         this.id = id;
         this.name = name;
         this.episodeRunTime = episodeRunTime;
@@ -66,6 +70,7 @@ public class TVShow {
         this.voteAverage = voteAverage;
         this.genres = genres;
         this.networks = networks;
+        this.creators = creators;
     }
 
     public Integer getId() {
@@ -178,5 +183,13 @@ public class TVShow {
 
     public void setNetworks(List<TVShowNetwork> networks) {
         this.networks = networks;
+    }
+
+    public List<TVShowCreator> getCreators() {
+        return creators;
+    }
+
+    public void setCreators(List<TVShowCreator> creators) {
+        this.creators = creators;
     }
 }

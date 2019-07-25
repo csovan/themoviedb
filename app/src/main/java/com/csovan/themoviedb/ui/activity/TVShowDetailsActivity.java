@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
+import com.csovan.themoviedb.data.model.tvshow.TVShowCreator;
 import com.csovan.themoviedb.data.model.tvshow.TVShowNetwork;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsSimilarResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
@@ -339,6 +340,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     textViewTVShowOverview.setText("");
                 }
 
+                setCreators(response.body().getCreators());
                 setNetworks(response.body().getNetworks());
                 setGenres(response.body().getGenres());
                 setVideos();
@@ -407,10 +409,10 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     genres = genres.concat(genresList.get(i).getGenreName() + " \u00b7 ");
                 }
             }
+            textViewTVShowGenres.setText(genres);
         }else {
             textViewTVShowGenres.setText("N/A");
         }
-        textViewTVShowGenres.setText(genres);
     }
 
     // Get tv shows networks
@@ -425,10 +427,28 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     networks = networks.concat(networkList.get(i).getName() + " \u00b7 ");
                 }
             }
+            textViewTVShowNetwork.setText(networks);
         }else {
             textViewTVShowNetwork.setText("N/A");
         }
-        textViewTVShowNetwork.setText(networks);
+    }
+
+    // Get tv shows creators
+    private void setCreators(List<TVShowCreator> creatorList){
+        String creators = "";
+        if (creatorList != null && !creatorList.isEmpty()){
+            for (int i = 0; i < creatorList.size(); i++){
+                if (creatorList.get(i) == null) continue;
+                if (i == creatorList.size() - 1){
+                    creators = creators.concat(creatorList.get(i).getName());
+                }else {
+                    creators = creators.concat(creatorList.get(i).getName() + " \u00b7 ");
+                }
+            }
+            textViewTVShowCreatorName.setText(creators);
+        }else {
+            textViewTVShowCreatorName.setText("N/A");
+        }
     }
 
     private void setCasts(){
