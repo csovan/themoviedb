@@ -63,6 +63,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private boolean movieDetailsLoaded;
     private boolean videosSectionLoaded;
     private boolean creditsSectionLoaded;
+    private boolean similarMoviesSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
 
@@ -133,7 +134,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         movieDetailsLoaded = false;
 
-        // Set findViewById
+        // Set findViewByIds
         progressBar = findViewById(R.id.progress_bar);
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_movie_details);
         nestedScrollView = findViewById(R.id.nested_scroll_view_movie_details);
@@ -183,6 +184,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         moviesSimilarRecyclerView.setAdapter(moviesSimilarAdapter);
         moviesSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        similarMoviesSectionLoaded = false;
 
         if (NetworkConnection.isConnected(MovieDetailsActivity.this)) {
             isActivityLoaded = true;
@@ -289,69 +291,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageViewPoster);
 
-                // Get movie release date with simple date format
-                if (response.body().getReleaseDate() != null
-                        && !response.body().getReleaseDate().trim().isEmpty()){
-                    SimpleDateFormat sdf1 = new SimpleDateFormat
-                            ("yyyy-MM-dd", Locale.getDefault());
-                    SimpleDateFormat sdf2 = new SimpleDateFormat
-                            ("MMMM d, yyyy", Locale.getDefault());
-                    try{
-                        Date releaseDate = sdf1.parse(response.body().getReleaseDate());
-                        textViewMovieReleaseDate.setText(sdf2.format(releaseDate));
-                    }catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    textViewMovieReleaseDate.setText("N/A");
-                }
-
-                // Get movie runtime and format it to hrs and mins
-                Integer runtime = response.body().getRuntime();
-                String runtimeFormat;
-                if (runtime != null && runtime != 0){
-                    if (runtime < 60){
-                        runtimeFormat = runtime + " mins";
-                    }else {
-                        runtimeFormat = runtime /60 + " hr " + runtime % 60 + " mins";
-                    }
-                    textViewMovieRuntime.setText(runtimeFormat);
-                } else{
-                    textViewMovieRuntime.setText("N/A");
-                }
-
-                // Get movie rating
-                Double rating = response.body().getVoteAverage();
-                String ratingFormat;
-                if (response.body().getVoteAverage() != null
-                        && response.body().getVoteAverage() != 0){
-                    ratingFormat = rating + "/10";
-                    textViewMovieRating.setText(ratingFormat);
-                }else {
-                    textViewMovieRating.setText("N/A");
-                }
-
-                // Get movie budget
-                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-                currencyFormat.setMinimumFractionDigits(0);
-
-                int budget = response.body().getBudget();
-                String budgetFormat = currencyFormat.format(budget) + " USD";
-                if (response.body().getBudget() != 0){
-                    textViewMovieBudget.setText(budgetFormat);
-                }else {
-                    textViewMovieBudget.setText("N/A");
-                }
-
-                //Get movie revenue
-                long revenue = response.body().getRevenue();
-                String revenueFormat = currencyFormat.format(revenue) + " USD";
-                if (response.body().getRevenue() != 0){
-                    textViewMovieRevenue.setText(revenueFormat);
-                }else {
-                    textViewMovieRevenue.setText("N/A");
-                }
-
                 // Get movie overview
                 if (response.body().getOverview() != null
                         && !response.body().getOverview().trim().isEmpty()){
@@ -362,6 +301,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     textViewMovieOverview.setText("");
                 }
 
+                setReleaseDate(response.body().getReleaseDate());
+                setMovieRuntime(response.body().getRuntime());
+                setMovieRating(response.body().getVoteAverage());
+                setBudgetAndRevenue(response.body().getBudget(), response.body().getRevenue());
                 setGenres(response.body().getGenres());
                 setVideos();
                 setCredits();
@@ -377,6 +320,71 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // Get movie release date
+    private void setReleaseDate(String releaseDateString){
+        if (releaseDateString != null && !releaseDateString.trim().isEmpty()){
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat
+                    ("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat sdf2 = new SimpleDateFormat
+                    ("MMMM d, yyyy", Locale.getDefault());
+            try{
+                Date releaseDate = sdf1.parse(releaseDateString);
+                textViewMovieReleaseDate.setText(sdf2.format(releaseDate));
+            }catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            textViewMovieReleaseDate.setText("N/A");
+        }
+    }
+
+    // Get movie runtime
+    private void setMovieRuntime(Integer runtime){
+        String runtimeString;
+        if (runtime != null && runtime != 0){
+            if (runtime < 60){
+                runtimeString = runtime + " mins";
+            }else {
+                runtimeString = runtime /60 + " hr " + runtime % 60 + " mins";
+            }
+            textViewMovieRuntime.setText(runtimeString);
+        } else{
+            textViewMovieRuntime.setText("N/A");
+        }
+    }
+
+    // Get movie rating
+    private void setMovieRating(Double rating){
+        String ratingString;
+        if (rating != null && rating != 0){
+            ratingString = rating + "/10";
+            textViewMovieRating.setText(ratingString);
+        }else {
+            textViewMovieRating.setText("N/A");
+        }
+    }
+
+    // Get movie budget and revenue
+    private void setBudgetAndRevenue(int budget, long revenue){
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        currencyFormat.setMinimumFractionDigits(0);
+        String budgetString;
+        String revenueString;
+        if (budget != 0){
+            budgetString = currencyFormat.format(budget) + " USD";
+            textViewMovieBudget.setText(budgetString);
+        }else {
+            textViewMovieBudget.setText("N/A");
+        }
+        if (revenue != 0){
+            revenueString = currencyFormat.format(revenue) + " USD";
+            textViewMovieRevenue.setText(revenueString);
+        }else {
+            textViewMovieRevenue.setText("N/A");
+        }
     }
 
     // Get videos
@@ -395,9 +403,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getVideos() == null) return;
 
-                videosSectionLoaded = true;
-                checkMovieDetailsLoaded();
-
                 for (Video video : response.body().getVideos()) {
                     if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
                             && video.getType() != null && video.getType().equals("Trailer"))
@@ -408,6 +413,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (!videoList.isEmpty()){
                     videoAdapter.notifyDataSetChanged();
                 }
+
+                videosSectionLoaded = true;
+                checkMovieDetailsLoaded();
             }
 
             @Override
@@ -451,9 +459,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getCasts() == null) return;
 
-                creditsSectionLoaded = true;
-                checkMovieDetailsLoaded();
-
                 // Get movie casts
                 for (MovieCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
@@ -475,6 +480,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         textViewMovieDirectorName.setText("N/A");
                     }
                 }
+
+                creditsSectionLoaded = true;
+                checkMovieDetailsLoaded();
             }
 
             @Override
@@ -512,6 +520,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (!movieSimilarList.isEmpty()){
                     moviesSimilarAdapter.notifyDataSetChanged();
                 }
+
+                similarMoviesSectionLoaded = true;
+                checkMovieDetailsLoaded();
             }
 
             @Override
@@ -521,8 +532,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // Check if all sections loaded
     private void checkMovieDetailsLoaded(){
-        if (movieDetailsLoaded && videosSectionLoaded && creditsSectionLoaded){
+        if (movieDetailsLoaded && videosSectionLoaded && creditsSectionLoaded && similarMoviesSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);

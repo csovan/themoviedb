@@ -64,6 +64,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private boolean tvshowDetailsLoaded;
     private boolean videosSectionLoaded;
     private boolean castsSectionLoaded;
+    private boolean similarTVShowsSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
 
@@ -134,7 +135,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
         tvshowDetailsLoaded = false;
 
-        // Set findViewById
+        // Set findViewByIds
         progressBar = findViewById(R.id.progress_bar);
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_tv_show_details);
         nestedScrollView = findViewById(R.id.nested_scroll_view_tv_show_details);
@@ -184,6 +185,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowsSimilarRecyclerView.setAdapter(tvshowsSimilarAdapter);
         tvshowsSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        similarTVShowsSectionLoaded = false;
 
         if (NetworkConnection.isConnected(TVShowDetailsActivity.this)){
             isActivityLoaded = true;
@@ -289,52 +291,8 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageViewPoster);
 
-                // Get tv show first air date with simple date format
-                if (response.body().getFirstAirDate() != null
-                        && !response.body().getFirstAirDate().trim().isEmpty()){
-
-                    SimpleDateFormat sdf1 = new SimpleDateFormat
-                            ("yyyy-MM-dd", Locale.getDefault());
-                    SimpleDateFormat sdf2 = new SimpleDateFormat
-                            ("MMMM d, yyyy", Locale.getDefault());
-                    try {
-                        Date releaseDate = sdf1.parse(response.body().getFirstAirDate());
-                        textViewTVShowFirstAirDate.setText(sdf2.format(releaseDate));
-                    }catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else{
-                    textViewTVShowFirstAirDate.setText("N/A");
-                }
-
-                // Get tv show episode runtime
-                List<Integer> runtime = response.body().getEpisodeRunTime();
-                String runtimeFormat;
-                if (runtime != null && !runtime.isEmpty() && runtime.get(0) != 0){
-                    if (runtime.get(0) < 60){
-                        runtimeFormat = runtime.get(0) + " mins";
-                    }else{
-                        runtimeFormat = runtime.get(0) / 60 + " hr " + runtime.get(0) % 60 + " mins";
-                    }
-                    textViewTVShowEpisodeRuntime.setText(runtimeFormat);
-                } else{
-                    textViewTVShowEpisodeRuntime.setText("N/A");
-                }
-
-                // Get tv show rating
-                Double rating = response.body().getVoteAverage();
-                String ratingFormat;
-                if (response.body().getVoteAverage() != null
-                        && response.body().getVoteAverage() != 0){
-                    ratingFormat = rating + "/10";
-                    textViewTVShowRating.setText(ratingFormat);
-                }else {
-                    textViewTVShowRating.setText("N/A");
-                }
-
                 // Get tv show overview
-                if (response.body().getOverview() != null
-                        && !response.body().getOverview().trim().isEmpty()) {
+                if (response.body().getOverview() != null && !response.body().getOverview().trim().isEmpty()) {
                     textViewNoDataAvailableOverview.setVisibility(View.GONE);
                     textViewTVShowOverview.setText(response.body().getOverview());
                 }
@@ -342,7 +300,10 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     textViewTVShowOverview.setText("");
                 }
 
+                setFirstAirDate(response.body().getFirstAirDate());
                 setNextEpisodeAirDate(response.body().getNextEpisode());
+                setEpisodeRunTime(response.body().getEpisodeRunTime());
+                setTVShowRating(response.body().getVoteAverage());
                 setCreators(response.body().getCreators());
                 setNetworks(response.body().getNetworks());
                 setGenres(response.body().getGenres());
@@ -360,6 +321,26 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // Get tv show first air date
+    private void setFirstAirDate(String firstAirDateString){
+        if (firstAirDateString != null && !firstAirDateString.trim().isEmpty()){
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat
+                    ("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat sdf2 = new SimpleDateFormat
+                    ("MMMM d, yyyy", Locale.getDefault());
+
+            try {
+                Date firstAirDate = sdf1.parse(firstAirDateString);
+                textViewTVShowFirstAirDate.setText(sdf2.format(firstAirDate));
+            }catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else {
+            textViewTVShowFirstAirDate.setText("N/A");
+        }
     }
 
     // Get tv show next episode air date
@@ -383,6 +364,33 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Get tv show run time
+    private void setEpisodeRunTime(List<Integer> episodeRunTime){
+
+        String episodeRuntimeString;
+        if (episodeRunTime != null && !episodeRunTime.isEmpty() && episodeRunTime.get(0) != 0){
+            if (episodeRunTime.get(0) < 60){
+                episodeRuntimeString = episodeRunTime.get(0) + " mins";
+            }else{
+                episodeRuntimeString = episodeRunTime.get(0) / 60 + " hr " + episodeRunTime.get(0) % 60 + " mins";
+            }
+            textViewTVShowEpisodeRuntime.setText(episodeRuntimeString);
+        }else{
+            textViewTVShowEpisodeRuntime.setText("N/A");
+        }
+    }
+
+    // Get tv show rating
+    private void setTVShowRating(Double rating){
+        String ratingString;
+        if (rating != null && rating != 0){
+            ratingString = rating + "/10";
+            textViewTVShowRating.setText(ratingString);
+        }else {
+            textViewTVShowRating.setText("N/A");
+        }
+    }
+
     // Get videos
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -399,9 +407,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getVideos() == null) return;
 
-                videosSectionLoaded = true;
-                checkTVShowDetailsLoaded();
-
                 for (Video video : response.body().getVideos()) {
                     if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
                             && video.getType() != null && video.getType().equals("Trailer"))
@@ -412,6 +417,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (!videoList.isEmpty()){
                     videoAdapter.notifyDataSetChanged();
                 }
+
+                videosSectionLoaded = true;
+                checkTVShowDetailsLoaded();
             }
 
             @Override
@@ -475,6 +483,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Get tv show casts
     private void setCasts(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         tvshowCreditsResponseCall = apiService.getTVShowCredits(tvshowId, TMDB_API_KEY);
@@ -490,9 +499,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (response.body() == null) return;
                 if (response.body().getCasts() == null) return;
 
-                castsSectionLoaded = true;
-                checkTVShowDetailsLoaded();
-
                 for (TVShowCastBrief castBrief : response.body().getCasts()) {
                     if (castBrief != null && castBrief.getName() != null)
                         textViewNoDataAvailableCasts.setVisibility(View.GONE);
@@ -502,6 +508,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (!tvshowCastBriefList.isEmpty()){
                     tvshowCastAdapter.notifyDataSetChanged();
                 }
+
+                castsSectionLoaded = true;
+                checkTVShowDetailsLoaded();
             }
 
             @Override
@@ -538,6 +547,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (!tvshowSimilarList.isEmpty()){
                     tvshowsSimilarAdapter.notifyDataSetChanged();
                 }
+
+                similarTVShowsSectionLoaded = true;
+                checkTVShowDetailsLoaded();
             }
 
             @Override
@@ -547,8 +559,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // Check if all details are loaded
     private void checkTVShowDetailsLoaded(){
-        if (tvshowDetailsLoaded && videosSectionLoaded && castsSectionLoaded){
+        if (tvshowDetailsLoaded && videosSectionLoaded && castsSectionLoaded && similarTVShowsSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);

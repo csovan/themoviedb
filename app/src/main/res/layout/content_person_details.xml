@@ -3,16 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout_person_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view_movie_poster"
+        android:id="@+id/card_view_person_details_poster"
         android:layout_width="0dp"
         android:layout_height="160dp"
-        android:layout_marginStart="16dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginStart="16dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="4dp"
         app:layout_constraintDimensionRatio="w,2:3"
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/image_view_movie_poster"
+            android:id="@+id/image_view_person_details_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/iv_poster_desc"
@@ -35,60 +36,95 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small"
-        android:layout_marginEnd="@dimen/small"
-        android:maxLines="2"
+        android:layout_marginEnd="16dp"
         android:ellipsize="end"
+        android:maxLines="2"
         android:text="@string/person_name"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_view_birth_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
         android:text="@string/birth_date"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_person_name" />
-
-    <TextView
-        android:id="@+id/text_view_space_dot_date_age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/space_dot"
-        android:textSize="@dimen/text_size_small"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_birth_date"
-        app:layout_constraintStart_toEndOf="@+id/text_view_birth_date"
-        app:layout_constraintTop_toTopOf="@+id/text_view_birth_date" />
+        app:layout_constraintStart_toEndOf="@+id/text_view_birth_date_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_birth_date_label" />
 
     <TextView
         android:id="@+id/text_view_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
         android:text="@string/person_age"
         android:textSize="@dimen/text_size_small"
-        app:layout_constraintStart_toEndOf="@+id/text_view_space_dot_date_age"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_person_name" />
+        app:layout_constraintStart_toEndOf="@+id/text_view_person_age_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_person_age_label" />
 
     <TextView
         android:id="@+id/text_view_birth_place"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/birth_place"
         android:textSize="@dimen/text_size_small"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/card_view_movie_poster"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_birth_date" />
+        app:layout_constraintStart_toEndOf="@+id/text_view_birth_place_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_birth_place_label" />
+
+    <TextView
+        android:id="@+id/text_view_person_age_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/person_age_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_person_name" />
+
+    <TextView
+        android:id="@+id/text_view_birth_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/birth_date_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_age" />
+
+    <TextView
+        android:id="@+id/text_view_birth_place_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/birth_place_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_birth_date_label" />
+
+    <TextView
+        android:id="@+id/text_view_known_for_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/known_for_label"
+        app:layout_constraintStart_toEndOf="@+id/card_view_person_details_poster"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_birth_place" />
+
+    <TextView
+        android:id="@+id/text_view_known_for"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/known_for"
+        app:layout_constraintStart_toEndOf="@+id/text_view_known_for_label"
+        app:layout_constraintTop_toTopOf="@+id/text_view_known_for_label" />
 
 </android.support.constraint.ConstraintLayout>

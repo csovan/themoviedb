@@ -83,6 +83,21 @@
     <string name="next_episode">June 10, 2019</string>
     <string name="tv_shows_similar_section_title">Similar TV Shows</string>
 
+    <!-- Person details -->
+    <string name="person_name">Person Name</string>
+    <string name="person_age_label">Age:</string>
+    <string name="person_age">24</string>
+    <string name="birth_date_label">Born:</string>
+    <string name="birth_date">July 4, 1999</string>
+    <string name="birth_place_label">From:</string>
+    <string name="birth_place">Queens, New York, USA</string>
+    <string name="known_for_label">Known For:</string>
+    <string name="known_for">Known For</string>
+    <string name="biography_label">Biography</string>
+    <string name="biography_content">John was born on…</string>
+    <string name="movies_cast_in">Movies Cast In</string>
+    <string name="tv_shows_cast_in">TV Shows Cast In</string>
+
     <!-- Common details -->
     <string name="rating_label">Rating:</string>
     <string name="rating">4.5/10</string>
@@ -90,18 +105,6 @@
     <string name="genres">Action \u00b7 Sci-Fi \u00b7 Fantasy</string>
 
     <string name="title">Title</string>
-    <string name="certification">PG-13</string>
-    <string name="space_dot">\u00b7</string>
-
-    <!-- Person details -->
-    <string name="person_name">Name</string>
-    <string name="birth_date">July 4, 1999</string>
-    <string name="person_age">24</string>
-    <string name="birth_place">Queens, New York, USA</string>
-    <string name="biography_label">Biography</string>
-    <string name="biography_content">John was born on…</string>
-    <string name="movies_cast_in">Movies Cast In</string>
-    <string name="tv_shows_cast_in">TV Shows Cast In</string>
 
     <!-- Overview section -->
     <string name="overview_section_title">Overview</string>

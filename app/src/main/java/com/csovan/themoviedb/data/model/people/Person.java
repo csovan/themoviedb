@@ -6,6 +6,8 @@ public class Person {
 
     @SerializedName("birthday")
     private String dateOfBirth;
+    @SerializedName("known_for_department")
+    private String knownFor;
     @SerializedName("deathday")
     private String dateOfDeath;
     @SerializedName("id")
@@ -23,9 +25,10 @@ public class Person {
     @SerializedName("profile_path")
     private String profilePath;
 
-    public Person(String dateOfBirth, String dateOfDeath, Integer id, String name, Integer gender,
+    public Person(String dateOfBirth, String knownFor, String dateOfDeath, Integer id, String name, Integer gender,
                   String biography, Double popularity, String placeOfBirth, String profilePath) {
         this.dateOfBirth = dateOfBirth;
+        this.knownFor = knownFor;
         this.dateOfDeath = dateOfDeath;
         this.id = id;
         this.name = name;
@@ -42,6 +45,14 @@ public class Person {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getKnownFor() {
+        return knownFor;
+    }
+
+    public void setKnownFor(String knownFor) {
+        this.knownFor = knownFor;
     }
 
     public String getDateOfDeath() {
