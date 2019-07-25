@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
+import com.csovan.themoviedb.data.model.tvshow.TVShowNetwork;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsSimilarResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowBrief;
@@ -338,6 +339,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                     textViewTVShowOverview.setText("");
                 }
 
+                setNetworks(response.body().getNetworks());
                 setGenres(response.body().getGenres());
                 setVideos();
                 setCasts();
@@ -409,6 +411,24 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             textViewTVShowGenres.setText("N/A");
         }
         textViewTVShowGenres.setText(genres);
+    }
+
+    // Get tv shows networks
+    private void setNetworks(List<TVShowNetwork> networkList){
+        String networks = "";
+        if (networkList != null && !networkList.isEmpty()){
+            for (int i = 0; i < networkList.size(); i++){
+                if (networkList.get(i) == null) continue;
+                if (i == networkList.size() - 1){
+                    networks = networks.concat(networkList.get(i).getName());
+                }else {
+                    networks = networks.concat(networkList.get(i).getName() + " \u00b7 ");
+                }
+            }
+        }else {
+            textViewTVShowNetwork.setText("N/A");
+        }
+        textViewTVShowNetwork.setText(networks);
     }
 
     private void setCasts(){

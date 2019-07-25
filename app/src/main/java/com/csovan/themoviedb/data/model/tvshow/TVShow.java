@@ -45,10 +45,13 @@ public class TVShow {
     @SerializedName("genres")
     private List<TVShowGenres> genres;
 
+    @SerializedName("networks")
+    private List<TVShowNetwork> networks;
+
     public TVShow(Integer id, String name, List<Integer> episodeRunTime, String firstAirDate,
                   String lastAirDate, Integer numberOfEpisodes, Integer numberOfSeasons,
                   String posterPath, String backdropPath, String overview, String status,
-                  Double voteAverage, List<TVShowGenres> genres) {
+                  Double voteAverage, List<TVShowGenres> genres, List<TVShowNetwork> networks) {
         this.id = id;
         this.name = name;
         this.episodeRunTime = episodeRunTime;
@@ -62,6 +65,7 @@ public class TVShow {
         this.status = status;
         this.voteAverage = voteAverage;
         this.genres = genres;
+        this.networks = networks;
     }
 
     public Integer getId() {
@@ -166,5 +170,13 @@ public class TVShow {
 
     public void setGenres(List<TVShowGenres> genres) {
         this.genres = genres;
+    }
+
+    public List<TVShowNetwork> getNetworks() {
+        return networks;
+    }
+
+    public void setNetworks(List<TVShowNetwork> networks) {
+        this.networks = networks;
     }
 }
