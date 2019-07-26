@@ -229,7 +229,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause(){
+    protected void onPause(){
         super.onPause();
 
         if (isBroadcastReceiverRegistered){

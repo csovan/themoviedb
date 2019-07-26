@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity
         final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
+        searchView.setQueryHint(getResources().getString(R.string.search_hints_movies_tv_shows_people));
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
