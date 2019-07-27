@@ -1,7 +1,9 @@
 package com.csovan.themoviedb.ui.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +21,8 @@ import com.csovan.themoviedb.data.model.tvshow.TVShowsAiringTodayResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsOnTheAirResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsPopularResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsTopRatedResponse;
+import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
+import com.csovan.themoviedb.data.network.NetworkConnection;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
 
 import java.util.ArrayList;
@@ -50,6 +54,12 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
     private boolean loading = true;
     private int previousTotal = 0;
     private int visibleThreshold = 5;
+
+    private boolean isTVShowsLoaded;
+    private boolean isBroadcastReceiverRegistered;
+
+    private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
+    private Snackbar connectivitySnackbar;
 
     private Call<TVShowsOnTheAirResponse> tvShowsOnTheAirResponseCall;
     private Call<TVShowsPopularResponse> tvShowsPopularResponseCall;
@@ -125,7 +135,10 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
             }
         });
 
-        loadTVShows(tvshowsTypeList);
+        if (NetworkConnection.isConnected(TVShowsViewAllActivity.this)) {
+            isTVShowsLoaded = true;
+            loadTVShows(tvshowsTypeList);
+        }
     }
 
     @Override
@@ -133,6 +146,43 @@ public class TVShowsViewAllActivity extends AppCompatActivity {
         super.onStart();
 
         tvshowCardSmallAdapter.notifyDataSetChanged();
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        if (!isTVShowsLoaded && !NetworkConnection.isConnected(TVShowsViewAllActivity.this)) {
+            connectivitySnackbar = Snackbar.make(findViewById(R.id.frame_layout_tv_shows_view_all),
+                    R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isTVShowsLoaded = true;
+                    loadTVShows(tvshowsTypeList);
+                    isBroadcastReceiverRegistered = false;
+                    unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        } else if (!isTVShowsLoaded && NetworkConnection.isConnected(TVShowsViewAllActivity.this)) {
+            isTVShowsLoaded = true;
+            loadTVShows(tvshowsTypeList);
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
     }
 
     @Override

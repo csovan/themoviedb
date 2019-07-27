@@ -1,7 +1,9 @@
 package com.csovan.themoviedb.ui.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +21,8 @@ import com.csovan.themoviedb.data.model.movie.MoviesNowPlayingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesPopularResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
+import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
+import com.csovan.themoviedb.data.network.NetworkConnection;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 
 import java.util.ArrayList;
@@ -50,6 +54,12 @@ public class MoviesViewAllActivity extends AppCompatActivity {
     private boolean loading = true;
     private int previousTotal = 0;
     private int visibleThreshold = 5;
+
+    private boolean isMoviesLoaded;
+    private boolean isBroadcastReceiverRegistered;
+
+    private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
+    private Snackbar connectivitySnackbar;
 
     private Call<MoviesNowPlayingResponse> moviesNowPlayingResponseCall;
     private Call<MoviesPopularResponse> moviesPopularResponseCall;
@@ -125,7 +135,10 @@ public class MoviesViewAllActivity extends AppCompatActivity {
             }
         });
 
-        loadMovies(movieListType);
+        if (NetworkConnection.isConnected(MoviesViewAllActivity.this)) {
+            isMoviesLoaded = true;
+            loadMovies(movieListType);
+        }
     }
 
     @Override
@@ -133,6 +146,43 @@ public class MoviesViewAllActivity extends AppCompatActivity {
         super.onStart();
 
         movieCardSmallAdapter.notifyDataSetChanged();
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        if (!isMoviesLoaded && !NetworkConnection.isConnected(MoviesViewAllActivity.this)) {
+            connectivitySnackbar = Snackbar.make(findViewById(R.id.frame_layout_movies_view_all),
+                    R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isMoviesLoaded = true;
+                    loadMovies(movieListType);
+                    isBroadcastReceiverRegistered = false;
+                    unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        } else if (!isMoviesLoaded && NetworkConnection.isConnected(MoviesViewAllActivity.this)) {
+            isMoviesLoaded = true;
+            loadMovies(movieListType);
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
     }
 
     @Override

@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.search.SearchAsyncTaskLoader;
@@ -180,8 +181,9 @@ public class SearchActivity extends AppCompatActivity {
                 searchResultsRecyclerView.setVisibility(View.VISIBLE);
 
                 for (SearchResult searchResult : searchResponse.getResults()) {
-                    if (searchResult != null)
+                    if (searchResult != null) {
                         searchResultList.add(searchResult);
+                    }
                 }
                 searchResultsAdapter.notifyDataSetChanged();
                 if (searchResponse.getPage().equals(searchResponse.getTotalPages()))

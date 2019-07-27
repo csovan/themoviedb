@@ -153,10 +153,6 @@ public class MoviesFragment extends Fragment {
         textViewMoviesNowPlayingViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, NOW_PLAYING_MOVIES_TYPE);
                 startActivity(intent);
@@ -166,10 +162,6 @@ public class MoviesFragment extends Fragment {
         textViewMoviesPopularViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, POPULAR_MOVIES_TYPE);
                 startActivity(intent);
@@ -179,10 +171,6 @@ public class MoviesFragment extends Fragment {
         textViewMoviesUpcomingViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, UPCOMING_MOVIES_TYPE);
                 startActivity(intent);
@@ -192,10 +180,6 @@ public class MoviesFragment extends Fragment {
         textViewMoviesTopRatedViewAll.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), MoviesViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_MOVIES_TYPE, TOP_RATED_MOVIES_TYPE);
                 startActivity(intent);

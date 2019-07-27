@@ -154,10 +154,6 @@ public class TVShowsFragment extends Fragment {
             @Override
             public void onClick(View view){
 
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, ON_THE_AIR_TV_SHOWS_TYPE);
                 startActivity(intent);
@@ -168,10 +164,6 @@ public class TVShowsFragment extends Fragment {
             @Override
             public void onClick(View view){
 
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, POPULAR_TV_SHOWS_TYPE);
                 startActivity(intent);
@@ -182,10 +174,6 @@ public class TVShowsFragment extends Fragment {
             @Override
             public void onClick(View view){
 
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, AIRING_TODAY_TV_SHOWS_TYPE);
                 startActivity(intent);
@@ -196,10 +184,6 @@ public class TVShowsFragment extends Fragment {
             @Override
             public void onClick(View view){
 
-                if (!NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-                    Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 Intent intent = new Intent(getContext(), TVShowsViewAllActivity.class);
                 intent.putExtra(VIEW_ALL_TV_SHOWS_TYPE, TOP_RATED_TV_SHOWS_TYPE);
                 startActivity(intent);
