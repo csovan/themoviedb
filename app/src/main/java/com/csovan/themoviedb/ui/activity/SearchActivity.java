@@ -1,9 +1,14 @@
 package com.csovan.themoviedb.ui.activity;
 
 import android.app.LoaderManager;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,12 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.search.SearchAsyncTaskLoader;
 import com.csovan.themoviedb.data.model.search.SearchResponse;
 import com.csovan.themoviedb.data.model.search.SearchResult;
+import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
 import com.csovan.themoviedb.data.network.NetworkConnection;
 import com.csovan.themoviedb.ui.adapter.SearchResultsAdapter;
 
@@ -32,6 +37,11 @@ import static com.csovan.themoviedb.util.Constant.QUERY;
 public class SearchActivity extends AppCompatActivity {
 
     private String query;
+
+    private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
+    private Snackbar connectivitySnackbar;
+    private boolean isBroadcastReceiverRegistered;
+    private boolean isActivityLoaded;
 
     private RecyclerView searchResultsRecyclerView;
     private List<SearchResult> searchResultList;
@@ -58,7 +68,10 @@ public class SearchActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
 
         Intent receivedIntent = getIntent();
-        query = receivedIntent.getStringExtra(QUERY);
+
+        if (Intent.ACTION_SEARCH.equals(receivedIntent.getAction())){
+            query = receivedIntent.getStringExtra(QUERY);
+        }
 
         if (query == null || query.trim().isEmpty()) finish();
 
@@ -96,7 +109,55 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        loadSearchResults();
+        if (NetworkConnection.isConnected(SearchActivity.this)) {
+            isActivityLoaded = true;
+            loadSearchResults();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        searchResultsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!isActivityLoaded && !NetworkConnection.isConnected(SearchActivity.this)) {
+            connectivitySnackbar = Snackbar.make(findViewById(R.id.frame_layout_search_results),
+                    R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            connectivitySnackbar.show();
+            connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
+                @Override
+                public void onNetworkConnectionConnected() {
+                    connectivitySnackbar.dismiss();
+                    isActivityLoaded = true;
+                    loadSearchResults();
+                    isBroadcastReceiverRegistered = false;
+                    unregisterReceiver(connectivityBroadcastReceiver);
+                }
+            });
+            IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+            isBroadcastReceiverRegistered = true;
+            registerReceiver(connectivityBroadcastReceiver, intentFilter);
+        } else if (!isActivityLoaded && NetworkConnection.isConnected(SearchActivity.this)) {
+            isActivityLoaded = true;
+            loadSearchResults();
+        }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        if (isBroadcastReceiverRegistered){
+            connectivitySnackbar.dismiss();
+            isBroadcastReceiverRegistered = false;
+            unregisterReceiver(connectivityBroadcastReceiver);
+        }
     }
 
     private void loadSearchResults() {
@@ -134,6 +195,24 @@ public class SearchActivity extends AppCompatActivity {
 
             }
         }).forceLoad();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+        searchView.setQueryHint(getResources().getString(R.string.search_hints));
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(
+                this, SearchActivity.class)));
+
+        return true;
     }
 
     @Override

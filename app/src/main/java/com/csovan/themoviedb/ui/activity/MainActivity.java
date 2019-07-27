@@ -1,5 +1,8 @@
 package com.csovan.themoviedb.ui.activity;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
@@ -36,7 +40,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        setTitle(getString(R.string.menu_home));
+        // Set title
+        setTitle(String.format(
+                "%s - %s",
+                getString(R.string.app_name),
+                getString(R.string.menu_home)));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_main);
         NavigationView navigationView = findViewById(R.id.nav_view_main);
@@ -70,21 +78,18 @@ public class MainActivity extends AppCompatActivity
         final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-        searchView.setQueryHint(getResources().getString(R.string.search_hints_movies_tv_shows_people));
+        searchView.setQueryHint(getResources().getString(R.string.search_hints));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!NetworkConnection.isConnected(MainActivity.this)) {
-                    Toast.makeText(MainActivity.this, R.string.no_network_connection,
-                            Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra(QUERY, query);
-                startActivity(intent);
+
+                // Associate searchable configuration with the SearchView
+                SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(
+                        MainActivity.this, SearchActivity.class)));
                 searchMenuItem.collapseActionView();
-                return true;
+                return false;
             }
 
             @Override
@@ -114,18 +119,30 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 setFragment(new HomeFragment());
-                setTitle(getString(R.string.menu_home));
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.menu_home)));
                 return true;
             case R.id.nav_movies:
                 setFragment(new MoviesFragment());
-                setTitle(getString(R.string.menu_movies));
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.menu_movies)));
                 return true;
             case R.id.nav_tv_shows:
                 setFragment(new TVShowsFragment());
-                setTitle(getString(R.string.menu_tv_shows));
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.menu_tv_shows)));
                 return true;
             case R.id.nav_favorites:
-                setTitle(getString(R.string.menu_favorites));
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.menu_favorites)));
                 return true;
         }
         return false;
