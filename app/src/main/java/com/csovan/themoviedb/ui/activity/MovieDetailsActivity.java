@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
+import com.csovan.themoviedb.data.database.Favorites;
 import com.csovan.themoviedb.data.model.movie.Movie;
 import com.csovan.themoviedb.data.model.movie.MovieBrief;
 import com.csovan.themoviedb.data.model.movie.MovieCastBrief;
@@ -59,6 +60,8 @@ import static com.csovan.themoviedb.util.Constant.REGION;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     private int movieId;
+    private String posterPath;
+    private String movieTitle;
 
     private boolean movieDetailsLoaded;
     private boolean videosSectionLoaded;
@@ -71,7 +74,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
     private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
-    private Snackbar connectivitySnackbar;
+    private Snackbar snackbar;
 
     // ImageView
     private ImageView imageViewBackdrop;
@@ -207,12 +210,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onResume();
 
         if (!isActivityLoaded && !NetworkConnection.isConnected(MovieDetailsActivity.this)) {
-            connectivitySnackbar = Snackbar.make(collapsingToolbarLayout, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
-            connectivitySnackbar.show();
+            snackbar = Snackbar.make(collapsingToolbarLayout, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
             connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
                 @Override
                 public void onNetworkConnectionConnected() {
-                    connectivitySnackbar.dismiss();
+                    snackbar.dismiss();
                     isActivityLoaded = true;
                     loadActivity();
                     isBroadcastReceiverRegistered = false;
@@ -233,7 +236,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onPause();
 
         if (isBroadcastReceiverRegistered){
-            connectivitySnackbar.dismiss();
+            snackbar.dismiss();
             isBroadcastReceiverRegistered = false;
             unregisterReceiver(connectivityBroadcastReceiver);
         }
@@ -309,6 +312,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 setVideos();
                 setCredits();
                 setSimilarMovies();
+
+                posterPath = response.body().getPosterPath();
+                movieTitle = response.body().getTitle();
 
                 movieDetailsLoaded = true;
                 checkMovieDetailsLoaded();
@@ -545,13 +551,45 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.details, menu);
+
+        MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
+
+        // If movie is favorite set icon to favorite else set icon to favorite border
+        if (Favorites.isMovieFavorite(this, movieId)){
+            favoriteItem.setIcon(R.drawable.ic_favorite)
+                    .setTitle(R.string.action_favorite);
+        }else {
+            favoriteItem.setIcon(R.drawable.ic_favorite_border)
+                    .setTitle(R.string.action_remove_from_favorites);
+        }
+
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
+        if (item.getItemId() == R.id.action_favorite){
+            onFavoriteSelected();
+            invalidateOptionsMenu();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onFavoriteSelected(){
+        if (!Favorites.isMovieFavorite(this, movieId)){
+            Favorites.addMovieToFavorites(MovieDetailsActivity.this, movieId, posterPath, movieTitle);
+            snackbar = Snackbar.make(collapsingToolbarLayout,
+                    R.string.movie_added_to_favorites_successfully, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }else {
+            Favorites.removeMovieFromFavorites(this, movieId);
+            snackbar = Snackbar.make(collapsingToolbarLayout,
+                    R.string.movie_removed_from_favorites_successfully, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 }

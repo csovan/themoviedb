@@ -23,7 +23,9 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.csovan.themoviedb.R;
+import com.csovan.themoviedb.ui.fragment.FavoritesFragment;
 import com.csovan.themoviedb.ui.fragment.HomeFragment;
+import com.csovan.themoviedb.ui.fragment.MoviesFavoriteFragment;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
 import com.csovan.themoviedb.ui.fragment.TVShowsFragment;
 import com.csovan.themoviedb.data.network.NetworkConnection;
@@ -108,7 +110,6 @@ public class MainActivity extends AppCompatActivity
        return false;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity
                         getString(R.string.menu_tv_shows)));
                 return true;
             case R.id.nav_favorites:
+                setFragment(new FavoritesFragment());
                 setTitle(String.format(
                         "%s - %s",
                         getString(R.string.app_name),
