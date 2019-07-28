@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
@@ -64,7 +63,7 @@ public class HomeFragment extends Fragment {
     private ProgressBar progressBar;
     private LinearLayout linearLayoutHome;
     private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
-    private Snackbar connectivitySnackbar;
+    private Snackbar snackbar;
     private boolean isBroadcastReceiverRegistered;
     private boolean isHomeFragmentLoaded;
 
@@ -347,15 +346,15 @@ public class HomeFragment extends Fragment {
     public void onResume(){
         super.onResume();
         if (!isHomeFragmentLoaded && !NetworkConnection.isConnected(Objects.requireNonNull(getContext()))){
-            connectivitySnackbar = Snackbar.make(Objects.requireNonNull(getActivity())
+            snackbar = Snackbar.make(Objects.requireNonNull(getActivity())
                             .findViewById(R.id.fragment_container_main),
                     R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
-            connectivitySnackbar.show();
+            snackbar.show();
             connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(
                     new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
                         @Override
                         public void onNetworkConnectionConnected() {
-                            connectivitySnackbar.dismiss();
+                            snackbar.dismiss();
                             isHomeFragmentLoaded = true;
                             loadHomeFragment();
                             isBroadcastReceiverRegistered = false;
@@ -376,7 +375,7 @@ public class HomeFragment extends Fragment {
         super.onPause();
 
         if (isBroadcastReceiverRegistered){
-            connectivitySnackbar.dismiss();
+            snackbar.dismiss();
             isBroadcastReceiverRegistered = false;
             Objects.requireNonNull(getActivity()).unregisterReceiver(connectivityBroadcastReceiver);
         }

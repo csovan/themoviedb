@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frame_layout_movies_favorite"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.MoviesFavoriteFragment">
+    tools:context=".ui.fragment.MoviesFavoriteFragment"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_movies_favorite"
@@ -14,6 +16,9 @@
         android:paddingEnd="@dimen/small"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"/>
+
+    <include layout="@layout/progress_bar" />
 
 </FrameLayout>

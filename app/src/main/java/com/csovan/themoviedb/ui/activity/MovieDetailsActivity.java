@@ -552,7 +552,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.details, menu);
 
-        MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
+        final MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
 
         // If movie is favorite set icon to favorite else set icon to favorite border
         if (Favorites.isMovieFavorite(this, movieId)){
@@ -572,6 +572,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
+
         if (item.getItemId() == R.id.action_favorite){
             onFavoriteSelected();
             invalidateOptionsMenu();
@@ -580,15 +581,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void onFavoriteSelected(){
+        // If movie is not favorite add it to favorites else remove movie from favorites
         if (!Favorites.isMovieFavorite(this, movieId)){
             Favorites.addMovieToFavorites(MovieDetailsActivity.this, movieId, posterPath, movieTitle);
             snackbar = Snackbar.make(collapsingToolbarLayout,
-                    R.string.movie_added_to_favorites_successfully, Snackbar.LENGTH_LONG);
+                    R.string.movie_added_to_favorites, Snackbar.LENGTH_LONG);
             snackbar.show();
         }else {
             Favorites.removeMovieFromFavorites(this, movieId);
             snackbar = Snackbar.make(collapsingToolbarLayout,
-                    R.string.movie_removed_from_favorites_successfully, Snackbar.LENGTH_LONG);
+                    R.string.movie_removed_from_favorites, Snackbar.LENGTH_LONG);
             snackbar.show();
         }
     }

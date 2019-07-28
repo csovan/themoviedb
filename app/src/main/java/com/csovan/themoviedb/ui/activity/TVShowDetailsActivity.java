@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
+import com.csovan.themoviedb.data.database.Favorites;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreator;
 import com.csovan.themoviedb.data.model.tvshow.TVShowNetwork;
 import com.csovan.themoviedb.data.model.tvshow.TVShowNextEpisode;
@@ -60,6 +61,8 @@ import static com.csovan.themoviedb.util.Constant.TV_SHOW_ID;
 public class TVShowDetailsActivity extends AppCompatActivity {
 
     private int tvshowId;
+    private String posterPath;
+    private String tvshowTitle;
 
     private boolean tvshowDetailsLoaded;
     private boolean videosSectionLoaded;
@@ -72,7 +75,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
     private ConnectivityBroadcastReceiver connectivityBroadcastReceiver;
-    private Snackbar connectivitySnackbar;
+    private Snackbar snackbar;
 
     // ImageView
     private ImageView imageViewBackdrop;
@@ -207,12 +210,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         super.onResume();
 
         if (!isActivityLoaded && !NetworkConnection.isConnected(TVShowDetailsActivity.this)) {
-            connectivitySnackbar = Snackbar.make(collapsingToolbarLayout, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
-            connectivitySnackbar.show();
+            snackbar = Snackbar.make(collapsingToolbarLayout, R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
             connectivityBroadcastReceiver = new ConnectivityBroadcastReceiver(new ConnectivityBroadcastReceiver.ConnectivityReceiverListener() {
                 @Override
                 public void onNetworkConnectionConnected() {
-                    connectivitySnackbar.dismiss();
+                    snackbar.dismiss();
                     isActivityLoaded = true;
                     loadActivity();
                     isBroadcastReceiverRegistered = false;
@@ -233,7 +236,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         super.onPause();
 
         if (isBroadcastReceiverRegistered){
-            connectivitySnackbar.dismiss();
+            snackbar.dismiss();
             isBroadcastReceiverRegistered = false;
             unregisterReceiver(connectivityBroadcastReceiver);
         }
@@ -310,6 +313,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 setVideos();
                 setCasts();
                 setSimilarTVShows();
+
+                posterPath = response.body().getPosterPath();
+                tvshowTitle = response.body().getName();
 
                 tvshowDetailsLoaded = true;
                 checkTVShowDetailsLoaded();
@@ -572,13 +578,47 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.details, menu);
+
+        final MenuItem favoriteItem = menu.findItem(R.id.action_favorite);
+
+        // If tv show is favorite set icon to favorite else set icon to favorite border
+        if (Favorites.isTVShowFavorites(this, tvshowId)){
+            favoriteItem.setIcon(R.drawable.ic_favorite)
+                    .setTitle(R.string.action_favorite);
+        }else {
+            favoriteItem.setIcon(R.drawable.ic_favorite_border)
+                    .setTitle(R.string.action_remove_from_favorites);
+        }
+
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
+
+        if (item.getItemId() == R.id.action_favorite){
+            onFavoriteSelected();
+            invalidateOptionsMenu();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onFavoriteSelected(){
+        // If tv show is not favorite add it to favorites else remove tv show from favorites
+        if (!Favorites.isTVShowFavorites(this, tvshowId)){
+            Favorites.addTVShowToFavorites(TVShowDetailsActivity.this, tvshowId, posterPath, tvshowTitle);
+            snackbar = Snackbar.make(collapsingToolbarLayout,
+                    R.string.tv_show_added_to_favorites, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }else {
+            Favorites.removeTVShowFromFavorites(this, tvshowId);
+            snackbar = Snackbar.make(collapsingToolbarLayout,
+                    R.string.tv_show_removed_from_favorites, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 }

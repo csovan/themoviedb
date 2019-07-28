@@ -86,12 +86,12 @@ public class Favorites {
     // TV Shows
 
     // Add tv show to favorites
-    public static void addTVShowToFav(Context context, Integer tvShowId, String posterPath, String name) {
+    public static void addTVShowToFavorites(Context context, Integer tvShowId, String posterPath, String name) {
         if (tvShowId == null) return;
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
 
-        if (!isTVShowFav(context, tvShowId)) {
+        if (!isTVShowFavorites(context, tvShowId)) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DatabaseHelper.TV_SHOW_ID, tvShowId);
             contentValues.put(DatabaseHelper.POSTER_PATH, posterPath);
@@ -102,18 +102,18 @@ public class Favorites {
     }
 
     // Remove tv show from favorites
-    public static void removeTVShowFromFav(Context context, Integer tvShowId) {
+    public static void removeTVShowFromFavorites(Context context, Integer tvShowId) {
         if (tvShowId == null) return;
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        if (isTVShowFav(context, tvShowId)) {
+        if (isTVShowFavorites(context, tvShowId)) {
             database.delete(DatabaseHelper.FAV_TV_SHOWS_TABLE_NAME, DatabaseHelper.TV_SHOW_ID + " = " + tvShowId, null);
         }
         database.close();
     }
 
     // Check if tv show is favorite
-    public static boolean isTVShowFav(Context context, Integer tvShowId) {
+    public static boolean isTVShowFavorites(Context context, Integer tvShowId) {
         if (tvShowId == null) return false;
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
@@ -131,7 +131,7 @@ public class Favorites {
     }
 
     // Get tv show favorites
-    public static List<TVShowBrief> getFavTVShowBriefs(Context context) {
+    public static List<TVShowBrief> getFavoritesTVShowBriefs(Context context) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 

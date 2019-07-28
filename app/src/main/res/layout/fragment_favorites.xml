@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         app:stl_defaultTabBackground="?attr/selectableItemBackground"
-        app:stl_defaultTabTextColor="@android:color/black"
+        app:stl_defaultTabTextColor="@android:color/white"
         app:stl_distributeEvenly="true"
         app:stl_dividerThickness="0dp"
         app:stl_drawDecorationAfterTab="true"
