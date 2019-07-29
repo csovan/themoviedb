@@ -96,6 +96,11 @@ public class MoviesFavoriteFragment extends Fragment {
             isMoviesFavoriteFragmentLoaded = true;
             loadFavoriteMovies();
         }
+        // Clear old reference list
+        movieFavoriteList.clear();
+        // Add current list
+        movieFavoriteList.addAll(Favorites.getFavoriteMovieBriefs(getContext()));
+        moviesFavoriteAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -112,9 +117,7 @@ public class MoviesFavoriteFragment extends Fragment {
     private void loadFavoriteMovies(){
         List<MovieBrief> favoriteMovieBriefs = Favorites.getFavoriteMovieBriefs(getContext());
 
-        for (MovieBrief movieBrief : favoriteMovieBriefs){
-            movieFavoriteList.add(movieBrief);
-        }
+        movieFavoriteList.addAll(favoriteMovieBriefs);
         progressBar.setVisibility(View.GONE);
         recyclerViewMoviesFavorite.setVisibility(View.VISIBLE);
         moviesFavoriteAdapter.notifyDataSetChanged();

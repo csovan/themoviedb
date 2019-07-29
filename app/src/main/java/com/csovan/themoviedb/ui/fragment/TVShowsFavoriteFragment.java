@@ -95,6 +95,12 @@ public class TVShowsFavoriteFragment extends Fragment {
             isTVShowsFavoriteFragmentLoaded = true;
             loadFavoriteTVShows();
         }
+
+        // Clear old reference list
+        tvshowFavoriteList.clear();
+        // Add current list
+        tvshowFavoriteList.addAll(Favorites.getFavoritesTVShowBriefs(getContext()));
+        tvshowsFavoriteAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -111,9 +117,7 @@ public class TVShowsFavoriteFragment extends Fragment {
     private void loadFavoriteTVShows() {
         List<TVShowBrief> favoriteTVShowBriefs = Favorites.getFavoritesTVShowBriefs(getContext());
 
-        for (TVShowBrief tvShowBrief : favoriteTVShowBriefs) {
-            tvshowFavoriteList.add(tvShowBrief);
-        }
+        tvshowFavoriteList.addAll(favoriteTVShowBriefs);
         progressBar.setVisibility(View.GONE);
         recyclerViewTVShowsFavorite.setVisibility(View.VISIBLE);
         tvshowsFavoriteAdapter.notifyDataSetChanged();
