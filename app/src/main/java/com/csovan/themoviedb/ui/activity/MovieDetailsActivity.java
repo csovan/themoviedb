@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -585,12 +586,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (!Favorites.isMovieFavorite(this, movieId)){
             Favorites.addMovieToFavorites(MovieDetailsActivity.this, movieId, posterPath, movieTitle);
             snackbar = Snackbar.make(collapsingToolbarLayout,
-                    R.string.movie_added_to_favorites, Snackbar.LENGTH_LONG);
+                    R.string.added_to_favorites, Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat
+                    .getColor(getApplicationContext(), R.color.colorAccent));
             snackbar.show();
         }else {
             Favorites.removeMovieFromFavorites(this, movieId);
             snackbar = Snackbar.make(collapsingToolbarLayout,
-                    R.string.movie_removed_from_favorites, Snackbar.LENGTH_LONG);
+                    R.string.removed_from_favorites, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
     }

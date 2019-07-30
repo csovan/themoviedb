@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#7C00574B</color>
     <color name="colorPrimaryDark">#081c24</color>
     <color name="colorAccent">#01d277</color>
+
+    <!-- Override snackbar default background color-->
+    <color name="design_snackbar_background_color" tools:override="true">@android:color/holo_red_light</color>
 </resources>

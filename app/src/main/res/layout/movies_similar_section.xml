@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/medium"
         android:layout_marginTop="@dimen/small"
-        android:text="@string/movies_similar_section_title"
+        android:text="@string/movies_similar_section_label"
         android:textSize="@dimen/text_size_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

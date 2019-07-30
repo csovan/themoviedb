@@ -612,12 +612,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         if (!Favorites.isTVShowFavorites(this, tvshowId)){
             Favorites.addTVShowToFavorites(TVShowDetailsActivity.this, tvshowId, posterPath, tvshowTitle);
             snackbar = Snackbar.make(collapsingToolbarLayout,
-                    R.string.tv_show_added_to_favorites, Snackbar.LENGTH_LONG);
+                    R.string.added_to_favorites, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }else {
             Favorites.removeTVShowFromFavorites(this, tvshowId);
             snackbar = Snackbar.make(collapsingToolbarLayout,
-                    R.string.tv_show_removed_from_favorites, Snackbar.LENGTH_LONG);
+                    R.string.removed_from_favorites, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
     }

@@ -20,6 +20,8 @@
     <string name="no_network_connection">No internet connection!</string>
     <string name="no_title_available">No Title Available</string>
 
+    <string name="network_connected">Internet connected \u2713</string>
+
     <!-- Navigation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -32,9 +34,7 @@
     <string name="iv_poster_desc">Image view poster desc</string>
     <string name="iv_thumbnail_desc">Image view thumbnail desc</string>
     <string name="image_button_play_desc">Image button play Desc</string>
-    <string name="image_view_rating_star_desc">Image view rating star desc</string>
     <string name="cast_poster_desc">Cast poster desc</string>
-    <string name="crew_poster_desc">Crew poster desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -42,14 +42,14 @@
     <string name="menu_tv_shows">TV Shows</string>
     <string name="menu_favorites">Favorites</string>
     <string name="menu_about">About</string>
+
+    <!-- Actions -->
     <string name="action_search">Search</string>
     <string name="search_hints">Search Movies, TV Shows, People</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_remove_from_favorites">Delete from favorites</string>
-    <string name="movie_added_to_favorites">Movie added to your favorites successfully!</string>
-    <string name="movie_removed_from_favorites">Movie removed from your favorites successfully!</string>
-    <string name="tv_show_added_to_favorites">TV Show added to your favorites successfully!</string>
-    <string name="tv_show_removed_from_favorites">TV Show removed from your favorites successfully!</string>
+    <string name="added_to_favorites">Added to favorites successfully!</string>
+    <string name="removed_from_favorites">Removed from favorites successfully!</string>
 
     <!-- Movies -->
     <string name="movies_now_playing">Movies Now Playing</string>
@@ -74,7 +74,7 @@
     <string name="budget">$200,000,000</string>
     <string name="revenue_label">Revenue:</string>
     <string name="revenue">$1,000,0000,0000</string>
-    <string name="movies_similar_section_title">Similar Movies</string>
+    <string name="movies_similar_section_label">Similar Movies</string>
 
     <!-- TV Show Details Activity -->
     <string name="creator_label">Creator:</string>
@@ -113,23 +113,18 @@
     <string name="title">Title</string>
 
     <!-- Overview section -->
-    <string name="overview_section_title">Overview</string>
+    <string name="overview_section_label">Overview</string>
     <string name="overview_section_content">Once upon of time!</string>
 
     <!-- Videos section-->
-    <string name="videos_section_title">Videos</string>
+    <string name="videos_section_label">Videos</string>
     <string name="video_title">Video Title</string>
 
     <!-- Cast section -->
     <string name="cast_name">Cast Name</string>
     <string name="cast_as">Cast Character</string>
-    <string name="cast_section_title">Cast</string>
+    <string name="cast_section_label">Casts</string>
     <string name="as">as</string>
-
-    <!-- Crew section-->
-    <string name="crew_name">Crew Name</string>
-    <string name="crew_section_title">Crew</string>
-    <string name="crew_job_title">Job Title</string>
 
     <!-- Search -->
     <string name="media_type_search">Media Type</string>

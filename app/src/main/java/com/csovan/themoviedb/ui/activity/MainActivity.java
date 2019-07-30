@@ -3,34 +3,26 @@ package com.csovan.themoviedb.ui.activity;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SearchView;
-import android.view.MenuItem;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.Toast;
+import android.view.MenuItem;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.ui.fragment.FavoritesFragment;
 import com.csovan.themoviedb.ui.fragment.HomeFragment;
-import com.csovan.themoviedb.ui.fragment.MoviesFavoriteFragment;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
 import com.csovan.themoviedb.ui.fragment.TVShowsFragment;
-import com.csovan.themoviedb.data.network.NetworkConnection;
-
-import static com.csovan.themoviedb.util.Constant.QUERY;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
