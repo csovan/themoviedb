@@ -35,6 +35,7 @@
     <string name="iv_thumbnail_desc">Image view thumbnail desc</string>
     <string name="image_button_play_desc">Image button play Desc</string>
     <string name="cast_poster_desc">Cast poster desc</string>
+    <string name="image_view_author_desc">Image view author desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -115,6 +116,11 @@
     <!-- Overview section -->
     <string name="overview_section_label">Overview</string>
     <string name="overview_section_content">Once upon of time!</string>
+
+    <!-- Reviews section -->
+    <string name="reviews_section_label">Reviews</string>
+    <string name="reviews_author_name">Author Name</string>
+    <string name="reviews_content">This is awesome!</string>
 
     <!-- Videos section-->
     <string name="videos_section_label">Videos</string>

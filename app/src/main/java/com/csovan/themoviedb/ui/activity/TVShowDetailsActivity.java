@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -70,6 +71,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private boolean similarTVShowsSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
+    private boolean isOverviewTextViewClicked = false;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ProgressBar progressBar;
@@ -189,6 +191,20 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowsSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
         similarTVShowsSectionLoaded = false;
+
+        // Set onClickerListener to overview textView
+        textViewTVShowOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOverviewTextViewClicked){
+                    textViewTVShowOverview.setMaxLines(5);
+                    isOverviewTextViewClicked = false;
+                }else {
+                    textViewTVShowOverview.setMaxLines(Integer.MAX_VALUE);
+                    isOverviewTextViewClicked = true;
+                }
+            }
+        });
 
         if (NetworkConnection.isConnected(TVShowDetailsActivity.this)){
             isActivityLoaded = true;
@@ -613,6 +629,8 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             Favorites.addTVShowToFavorites(TVShowDetailsActivity.this, tvshowId, posterPath, tvshowTitle);
             snackbar = Snackbar.make(collapsingToolbarLayout,
                     R.string.added_to_favorites, Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(ContextCompat
+                    .getColor(getApplicationContext(), R.color.colorAccent));
             snackbar.show();
         }else {
             Favorites.removeTVShowFromFavorites(this, tvshowId);
@@ -621,4 +639,5 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             snackbar.show();
         }
     }
+
 }

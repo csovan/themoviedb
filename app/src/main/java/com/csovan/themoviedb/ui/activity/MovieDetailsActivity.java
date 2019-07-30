@@ -70,6 +70,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private boolean similarMoviesSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
+    private boolean isOverviewTextViewClicked = false;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ProgressBar progressBar;
@@ -189,6 +190,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
         moviesSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
         similarMoviesSectionLoaded = false;
+
+        // Set onClickerListener to overview textView
+        textViewMovieOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOverviewTextViewClicked){
+                    textViewMovieOverview.setMaxLines(5);
+                    isOverviewTextViewClicked = false;
+                }else {
+                    textViewMovieOverview.setMaxLines(Integer.MAX_VALUE);
+                    isOverviewTextViewClicked = true;
+                }
+            }
+        });
 
         if (NetworkConnection.isConnected(MovieDetailsActivity.this)) {
             isActivityLoaded = true;
