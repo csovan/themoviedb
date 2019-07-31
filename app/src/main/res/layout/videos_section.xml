@@ -43,4 +43,16 @@
         app:layout_constraintStart_toEndOf="@+id/text_view_videos_section_label"
         app:layout_constraintTop_toTopOf="@+id/text_view_videos_section_label" />
 
+    <View
+        android:id="@+id/divider_videos_section"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_view_videos" />
+
 </android.support.constraint.ConstraintLayout>

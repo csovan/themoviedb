@@ -100,6 +100,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView textViewNoDataAvailableVideos;
     private TextView textViewNoDataAvailableOverview;
     private TextView textViewNoDataAvailableSimilarMovies;
+    private TextView textViewNoDataAvailableReviews;
 
     // Reviews
     private RecyclerView reviewRecyclerView;
@@ -172,6 +173,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         textViewNoDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         textViewNoDataAvailableVideos = findViewById(R.id.text_view_video_no_data);
         textViewNoDataAvailableSimilarMovies = findViewById(R.id.text_view_similar_movies_no_data);
+        textViewNoDataAvailableReviews = findViewById(R.id.text_view_reviews_no_data);
 
         // Set adapter reviews
         reviewRecyclerView = findViewById(R.id.recycler_view_reviews);
@@ -463,6 +465,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 for (Review review : response.body().getReviews()){
                     if (review != null && review.getAuthor() != null){
+                        textViewNoDataAvailableReviews.setVisibility(View.GONE);
                         reviewList.add(review);
                     }
                 }

@@ -81,6 +81,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             videoTextView = itemView.findViewById(R.id.text_view_video_title);
             videoPlayImageButton = itemView.findViewById(R.id.image_button_video_play_button);
 
+            videoCardView.getLayoutParams().width =
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.75);
+            videoCardView.getLayoutParams().height =
+                    (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.70) / 1.75);
+
             constraintLayoutItemVideo = itemView.findViewById(R.id.constraint_layout_item_video);
 
             constraintLayoutItemVideo.setOnClickListener(new View.OnClickListener(){
