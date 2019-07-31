@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraint_layout_item_reviews"
-    android:layout_marginStart="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_width="256dp"
     android:layout_height="wrap_content">
 
@@ -20,9 +21,8 @@
         android:id="@+id/text_view_author_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:text="@string/reviews_author_name"
-        android:textSize="@dimen/text_size_small"
+        android:textSize="@dimen/text_size_title"
         android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/image_view_author_profile"
         app:layout_constraintStart_toEndOf="@+id/image_view_author_profile"

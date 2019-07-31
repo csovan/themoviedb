@@ -5,10 +5,9 @@
     android:id="@+id/constraint_layout_item_video"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
     android:clickable="true"
     android:focusable="true"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <android.support.v7.widget.CardView
@@ -47,6 +46,7 @@
         android:id="@+id/text_view_video_title"
         android:layout_width="240dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/video_title"

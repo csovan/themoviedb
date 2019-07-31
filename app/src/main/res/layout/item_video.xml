@@ -5,6 +5,7 @@
     android:id="@+id/constraint_layout_item_video"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
     android:clickable="true"
     android:focusable="true">
 
@@ -12,8 +13,6 @@
         android:id="@+id/card_view_video"
         android:layout_width="240dp"
         android:layout_height="135dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,6 @@
         android:id="@+id/text_view_video_title"
         android:layout_width="240dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="2"
