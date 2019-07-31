@@ -15,6 +15,7 @@
         android:paddingEnd="@dimen/small"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
+        android:nestedScrollingEnabled="false"
         android:clipToPadding="false" />
 
 </FrameLayout>

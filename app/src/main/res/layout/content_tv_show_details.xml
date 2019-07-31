@@ -200,7 +200,7 @@
         app:layout_constraintTop_toTopOf="@+id/text_view_tv_show_details_genres_label" />
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/divider_tv_show_details"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="16dp"

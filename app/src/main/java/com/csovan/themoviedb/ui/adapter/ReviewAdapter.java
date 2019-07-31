@@ -2,6 +2,7 @@ package com.csovan.themoviedb.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         if (reviewList.get(position).getContent() != null){
             holder.textViewReviewContent.setText(reviewList.get(position).getContent());
         }else {
-            holder.textViewReviewContent.setText("N/A");
+            holder.textViewReviewContent.setText("");
         }
     }
 
@@ -55,8 +56,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         TextView textViewAuthorName;
         TextView textViewReviewContent;
 
+        ConstraintLayout constraintLayoutItemReviews;
+
         ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            constraintLayoutItemReviews = itemView.findViewById(R.id.constraint_layout_item_reviews);
+
+            constraintLayoutItemReviews.getLayoutParams().width =
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.80);
+            constraintLayoutItemReviews.getLayoutParams().height =
+                    (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.80) / 1.80);
 
             textViewAuthorName = itemView.findViewById(R.id.text_view_author_name);
             textViewReviewContent = itemView.findViewById(R.id.text_view_review_content);

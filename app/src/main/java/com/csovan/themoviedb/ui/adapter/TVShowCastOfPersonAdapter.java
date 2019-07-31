@@ -93,7 +93,7 @@ public class TVShowCastOfPersonAdapter extends RecyclerView.Adapter<TVShowCastOf
             constraintLayoutItemCastOf = itemView.findViewById(R.id.constraint_layout_item_cast_of);
 
             cardViewTVShowCard.getLayoutParams().width =
-                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.26);
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
             cardViewTVShowCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
