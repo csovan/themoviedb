@@ -104,7 +104,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
-    // Cast
+    // Casts
     private List<TVShowCastBrief> tvshowCastBriefList;
     private RecyclerView tvshowCastRecyclerView;
     private TVShowCastAdapter tvshowCastAdapter;
@@ -413,44 +413,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
-    // Get videos
-    private void setVideos(){
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        videosResponseCall = apiService.getTVShowVideos(tvshowId, TMDB_API_KEY, REGION);
-        videosResponseCall.enqueue(new Callback<VideosResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
-                if (!response.isSuccessful()) {
-                    videosResponseCall = call.clone();
-                    videosResponseCall.enqueue(this);
-                    return;
-                }
-
-                if (response.body() == null) return;
-                if (response.body().getVideos() == null) return;
-
-                for (Video video : response.body().getVideos()) {
-                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
-                            && video.getType() != null && video.getType().equals("Trailer"))
-                        textViewNoDataAvailableVideos.setVisibility(View.GONE);
-                        videoList.add(video);
-                }
-
-                if (!videoList.isEmpty()){
-                    videoAdapter.notifyDataSetChanged();
-                }
-
-                videosSectionLoaded = true;
-                checkTVShowDetailsLoaded();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<VideosResponse> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
     // Get tv show genres
     private void setGenres(List<TVShowGenres> genresList) {
         String genres = "";
@@ -503,6 +465,45 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }else {
             textViewTVShowCreatorName.setText("N/A");
         }
+    }
+
+
+    // Get videos
+    private void setVideos(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        videosResponseCall = apiService.getTVShowVideos(tvshowId, TMDB_API_KEY);
+        videosResponseCall.enqueue(new Callback<VideosResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
+                if (!response.isSuccessful()) {
+                    videosResponseCall = call.clone();
+                    videosResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getVideos() == null) return;
+
+                for (Video video : response.body().getVideos()) {
+                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
+                            && video.getType() != null && video.getType().equals("Trailer"))
+                        textViewNoDataAvailableVideos.setVisibility(View.GONE);
+                        videoList.add(video);
+                }
+
+                if (!videoList.isEmpty()){
+                    videoAdapter.notifyDataSetChanged();
+                }
+
+                videosSectionLoaded = true;
+                checkTVShowDetailsLoaded();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<VideosResponse> call, @NonNull Throwable t) {
+
+            }
+        });
     }
 
     // Get tv show casts

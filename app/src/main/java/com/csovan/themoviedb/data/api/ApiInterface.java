@@ -9,6 +9,7 @@ import com.csovan.themoviedb.data.model.movie.MoviesTopRatedResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesUpcomingResponse;
 import com.csovan.themoviedb.data.model.movie.MoviesSimilarResponse;
 import com.csovan.themoviedb.data.model.people.Person;
+import com.csovan.themoviedb.data.model.review.ReviewsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowsSimilarResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShow;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCastsOfPersonResponse;
@@ -57,11 +58,15 @@ public interface ApiInterface {
             @Query("api_key") String apiKey,
             @Query("region") String region);
 
+    @GET("movie/{id}/reviews")
+    Call<ReviewsResponse> getMovieReviews(
+            @Path("id") Integer movieId,
+            @Query("api_key") String apiKey);
+
     @GET("movie/{id}/videos")
     Call<VideosResponse> getMovieVideos(
             @Path("id") Integer movieId,
-            @Query("api_key") String apiKey,
-            @Query("region") String region);
+            @Query("api_key") String apiKey);
 
     @GET("movie/{id}/credits")
     Call<MovieCreditsResponse> getMovieCredits(
@@ -109,8 +114,7 @@ public interface ApiInterface {
     @GET("tv/{id}/videos")
     Call<VideosResponse> getTVShowVideos(
             @Path("id") Integer tvshowId,
-            @Query("api_key") String apiKey,
-            @Query("region") String region);
+            @Query("api_key") String apiKey);
 
     @GET("tv/{id}/credits")
     Call<TVShowCreditsResponse> getTVShowCredits(

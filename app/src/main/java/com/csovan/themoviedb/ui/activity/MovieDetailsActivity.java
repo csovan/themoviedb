@@ -32,12 +32,15 @@ import com.csovan.themoviedb.data.model.movie.MovieCreditsResponse;
 import com.csovan.themoviedb.data.model.movie.MovieCrewBrief;
 import com.csovan.themoviedb.data.model.movie.MovieGenres;
 import com.csovan.themoviedb.data.model.movie.MoviesSimilarResponse;
+import com.csovan.themoviedb.data.model.review.Review;
+import com.csovan.themoviedb.data.model.review.ReviewsResponse;
 import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
 import com.csovan.themoviedb.data.network.NetworkConnection;
 import com.csovan.themoviedb.ui.adapter.MovieCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.MovieCastAdapter;
+import com.csovan.themoviedb.ui.adapter.ReviewAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
 
 import java.text.NumberFormat;
@@ -98,12 +101,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView textViewNoDataAvailableOverview;
     private TextView textViewNoDataAvailableSimilarMovies;
 
+    // Reviews
+    private RecyclerView reviewRecyclerView;
+    private List<Review> reviewList;
+    private ReviewAdapter reviewAdapter;
+
     // Videos
     private RecyclerView videoRecyclerView;
     private List<Video> videoList;
     private VideoAdapter videoAdapter;
 
-    // Cast
+    // Casts
     private List<MovieCastBrief> movieCastBriefList;
     private RecyclerView movieCastRecyclerView;
     private MovieCastAdapter movieCastAdapter;
@@ -115,6 +123,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     // Retrofit network calls
     private Call<Movie> movieDetailsCall;
+    private Call<ReviewsResponse> reviewsResponseCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<MovieCreditsResponse> movieCreditsResponseCall;
     private Call<MoviesSimilarResponse> similarMoviesResponseCall;
@@ -163,6 +172,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         textViewNoDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         textViewNoDataAvailableVideos = findViewById(R.id.text_view_video_no_data);
         textViewNoDataAvailableSimilarMovies = findViewById(R.id.text_view_similar_movies_no_data);
+
+        // Set adapter reviews
+        reviewRecyclerView = findViewById(R.id.recycler_view_reviews);
+        reviewList = new ArrayList<>();
+        reviewAdapter = new ReviewAdapter(MovieDetailsActivity.this, reviewList);
+        reviewRecyclerView.setAdapter(reviewAdapter);
+        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -325,6 +342,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 setMovieRating(response.body().getVoteAverage());
                 setBudgetAndRevenue(response.body().getBudget(), response.body().getRevenue());
                 setGenres(response.body().getGenres());
+                setReviews();
                 setVideos();
                 setCredits();
                 setSimilarMovies();
@@ -409,10 +427,63 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Get movie genres
+    private void setGenres(List<MovieGenres> genresList) {
+        String genres = "";
+        if (genresList != null) {
+            for (int i = 0; i < genresList.size(); i++) {
+                if (genresList.get(i) == null) continue;
+                if (i == genresList.size() - 1) {
+                    genres = genres.concat(genresList.get(i).getGenreName());
+                } else {
+                    genres = genres.concat(genresList.get(i).getGenreName() + " \u00b7 ");
+                }
+            }
+            textViewMovieGenres.setText(genres);
+        }else {
+            textViewMovieGenres.setText("N/A");
+        }
+    }
+
+    // Get movie reviews
+    private void setReviews(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        reviewsResponseCall = apiService.getMovieReviews(movieId, TMDB_API_KEY);
+        reviewsResponseCall.enqueue(new Callback<ReviewsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ReviewsResponse> call, @NonNull Response<ReviewsResponse> response) {
+                if (!response.isSuccessful()) {
+                    reviewsResponseCall = call.clone();
+                    reviewsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getReviews() == null) return;
+
+                for (Review review : response.body().getReviews()){
+                    if (review != null && review.getAuthor() != null){
+                        reviewList.add(review);
+                    }
+                }
+
+                if (!reviewList.isEmpty()){
+                    reviewAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ReviewsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+    }
+
     // Get videos
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY, REGION);
+        videosResponseCall = apiService.getMovieVideos(movieId, TMDB_API_KEY);
         videosResponseCall.enqueue(new Callback<VideosResponse>() {
             @Override
             public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
@@ -445,24 +516,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    // Get movie genres
-    private void setGenres(List<MovieGenres> genresList) {
-        String genres = "";
-        if (genresList != null) {
-            for (int i = 0; i < genresList.size(); i++) {
-                if (genresList.get(i) == null) continue;
-                if (i == genresList.size() - 1) {
-                    genres = genres.concat(genresList.get(i).getGenreName());
-                } else {
-                    genres = genres.concat(genresList.get(i).getGenreName() + " \u00b7 ");
-                }
-            }
-            textViewMovieGenres.setText(genres);
-        }else {
-            textViewMovieGenres.setText("N/A");
-        }
     }
 
     // Get movie credits
