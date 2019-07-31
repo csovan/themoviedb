@@ -5,7 +5,7 @@
     android:id="@+id/constraint_layout_item_reviews"
     android:layout_marginStart="16dp"
     android:layout_width="256dp"
-    android:layout_height="144dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/image_view_author_profile"
@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text="@string/reviews_author_name"
+        android:textSize="@dimen/text_size_small"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/image_view_author_profile"
         app:layout_constraintStart_toEndOf="@+id/image_view_author_profile"
         app:layout_constraintTop_toTopOf="@+id/image_view_author_profile" />
@@ -29,12 +31,11 @@
     <TextView
         android:id="@+id/text_view_review_content"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ellipsize="end"
-        android:maxLines="6"
+        android:maxLines="8"
         android:text="@string/reviews_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_view_author_profile" />

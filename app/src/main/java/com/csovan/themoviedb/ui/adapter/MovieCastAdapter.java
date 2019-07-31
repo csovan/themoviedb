@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,7 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
         TextView castName;
         TextView castCharacter;
 
+        CardView castCardView;
         ConstraintLayout constraintLayoutItemCast;
 
         CastViewHolder(@NonNull View itemView) {
@@ -79,8 +81,15 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
             castImageView = itemView.findViewById(R.id.image_view_cast_profile_pic);
             castName = itemView.findViewById(R.id.text_view_cast_name);
             castCharacter = itemView.findViewById(R.id.text_view_cast_as);
+            castCardView = itemView.findViewById(R.id.card_view_cast);
 
             constraintLayoutItemCast = itemView.findViewById(R.id.constraint_layout_item_cast);
+
+            constraintLayoutItemCast.getLayoutParams().width =
+                    (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
+
+            castCardView.getLayoutParams().height =
+                    (int) ((context.getResources().getDisplayMetrics().widthPixels * .25) / 1);
 
             constraintLayoutItemCast.setOnClickListener(new View.OnClickListener(){
                 @Override

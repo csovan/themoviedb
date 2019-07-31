@@ -65,8 +65,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
             constraintLayoutItemReviews.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.80);
-            constraintLayoutItemReviews.getLayoutParams().height =
-                    (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.80) / 1.80);
 
             textViewAuthorName = itemView.findViewById(R.id.text_view_author_name);
             textViewReviewContent = itemView.findViewById(R.id.text_view_review_content);
