@@ -73,7 +73,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private boolean similarMoviesSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
-    private boolean isOverviewTextViewClicked = false;
+    private boolean isOverviewTextViewClicked;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ProgressBar progressBar;
@@ -464,7 +464,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body().getReviews() == null) return;
 
                 for (Review review : response.body().getReviews()){
-                    if (review != null && review.getAuthor() != null){
+                    if (review != null && review.getAuthor() != null && !review.getAuthor().contains("tmdb")){
                         textViewNoDataAvailableReviews.setVisibility(View.GONE);
                         reviewList.add(review);
                     }

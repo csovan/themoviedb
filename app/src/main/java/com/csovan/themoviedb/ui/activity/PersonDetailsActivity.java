@@ -59,6 +59,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private boolean tvshowsCastInLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
+    private boolean isBiographyTextViewClicked;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private NestedScrollView nestedScrollView;
@@ -158,6 +159,20 @@ public class PersonDetailsActivity extends AppCompatActivity {
         tvshowsCastInRecyclerView.setLayoutManager(new LinearLayoutManager(PersonDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
         tvshowsCastInLoaded = false;
+
+        // Set onClickerListener to biography content textView
+        textViewBiography.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isBiographyTextViewClicked){
+                    textViewBiography.setMaxLines(10);
+                    isBiographyTextViewClicked = false;
+                }else {
+                    textViewBiography.setMaxLines(Integer.MAX_VALUE);
+                    isBiographyTextViewClicked = true;
+                }
+            }
+        });
 
         if (NetworkConnection.isConnected(PersonDetailsActivity.this)){
             isActivityLoaded = true;
