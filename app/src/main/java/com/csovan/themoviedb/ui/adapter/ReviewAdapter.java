@@ -71,6 +71,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             textViewAuthorName = itemView.findViewById(R.id.text_view_author_name);
             textViewReviewContent = itemView.findViewById(R.id.text_view_review_content);
 
+            // Set on click listener for review content to expand or collapse
             textViewReviewContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

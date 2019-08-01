@@ -75,6 +75,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
     private boolean isOverviewTextViewClicked;
+    private boolean isGenresTextViewClicked;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ProgressBar progressBar;
@@ -212,7 +213,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL, false));
         similarMoviesSectionLoaded = false;
 
-        // Set onClickerListener to overview textView
+        // Set onClickerListener to overview textView to expand or collapse
         textViewMovieOverview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,6 +223,20 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 }else {
                     textViewMovieOverview.setMaxLines(Integer.MAX_VALUE);
                     isOverviewTextViewClicked = true;
+                }
+            }
+        });
+
+        // Set onClickListener to genres textView to expand or collapse
+        textViewMovieGenres.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isGenresTextViewClicked){
+                    textViewMovieGenres.setMaxLines(1);
+                    isGenresTextViewClicked = false;
+                }else {
+                    textViewMovieGenres.setMaxLines(Integer.MAX_VALUE);
+                    isGenresTextViewClicked = true;
                 }
             }
         });
