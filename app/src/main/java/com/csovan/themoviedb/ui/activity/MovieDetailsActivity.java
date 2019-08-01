@@ -71,6 +71,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private boolean videosSectionLoaded;
     private boolean creditsSectionLoaded;
     private boolean similarMoviesSectionLoaded;
+    private boolean reviewsSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
     private boolean isOverviewTextViewClicked;
@@ -182,6 +183,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         reviewRecyclerView.setAdapter(reviewAdapter);
         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        reviewsSectionLoaded = false;
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -238,6 +240,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         moviesSimilarAdapter.notifyDataSetChanged();
         videoAdapter.notifyDataSetChanged();
         movieCastAdapter.notifyDataSetChanged();
+        reviewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -282,6 +285,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onDestroy();
 
         if (movieDetailsCall != null) movieDetailsCall.cancel();
+        if (reviewsResponseCall != null) reviewsResponseCall.cancel();
         if (videosResponseCall != null) videosResponseCall.cancel();
         if (movieCreditsResponseCall != null) movieCreditsResponseCall.cancel();
         if (similarMoviesResponseCall != null) similarMoviesResponseCall.cancel();
@@ -473,6 +477,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (!reviewList.isEmpty()){
                     reviewAdapter.notifyDataSetChanged();
                 }
+
+                reviewsSectionLoaded = true;
+                checkMovieDetailsLoaded();
             }
 
             @Override
@@ -612,7 +619,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     // Check if all sections loaded
     private void checkMovieDetailsLoaded(){
-        if (movieDetailsLoaded && videosSectionLoaded && creditsSectionLoaded && similarMoviesSectionLoaded){
+        if (movieDetailsLoaded && reviewsSectionLoaded
+                && videosSectionLoaded && creditsSectionLoaded
+                && similarMoviesSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);

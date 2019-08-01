@@ -58,6 +58,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
         ConstraintLayout constraintLayoutItemReviews;
 
+        boolean textViewReviewContentClicked;
+
         ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -68,6 +70,19 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
             textViewAuthorName = itemView.findViewById(R.id.text_view_author_name);
             textViewReviewContent = itemView.findViewById(R.id.text_view_review_content);
+
+            textViewReviewContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (textViewReviewContentClicked){
+                        textViewReviewContent.setMaxLines(8);
+                        textViewReviewContentClicked = false;
+                    }else {
+                        textViewReviewContent.setMaxLines(Integer.MAX_VALUE);
+                        textViewReviewContentClicked = true;
+                    }
+                }
+            });
         }
     }
 }

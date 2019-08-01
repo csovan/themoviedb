@@ -467,7 +467,6 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
-
     // Get videos
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
