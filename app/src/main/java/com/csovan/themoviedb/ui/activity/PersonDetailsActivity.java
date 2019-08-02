@@ -60,6 +60,7 @@ public class PersonDetailsActivity extends AppCompatActivity {
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
     private boolean isBiographyTextViewClicked;
+    private boolean isBirthPlaceTextViewClicked;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private NestedScrollView nestedScrollView;
@@ -170,6 +171,20 @@ public class PersonDetailsActivity extends AppCompatActivity {
                 }else {
                     textViewBiography.setMaxLines(Integer.MAX_VALUE);
                     isBiographyTextViewClicked = true;
+                }
+            }
+        });
+
+        // Set onClickerListener to birth place textView
+        textViewBirthPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isBirthPlaceTextViewClicked){
+                    textViewBirthPlace.setMaxLines(2);
+                    isBirthPlaceTextViewClicked = false;
+                }else {
+                    textViewBirthPlace.setMaxLines(Integer.MAX_VALUE);
+                    isBirthPlaceTextViewClicked = true;
                 }
             }
         });

@@ -25,6 +25,8 @@ import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.api.ApiClient;
 import com.csovan.themoviedb.data.api.ApiInterface;
 import com.csovan.themoviedb.data.database.Favorites;
+import com.csovan.themoviedb.data.model.review.Review;
+import com.csovan.themoviedb.data.model.review.ReviewsResponse;
 import com.csovan.themoviedb.data.model.tvshow.TVShowCreator;
 import com.csovan.themoviedb.data.model.tvshow.TVShowNetwork;
 import com.csovan.themoviedb.data.model.tvshow.TVShowNextEpisode;
@@ -38,6 +40,7 @@ import com.csovan.themoviedb.data.model.video.Video;
 import com.csovan.themoviedb.data.model.video.VideosResponse;
 import com.csovan.themoviedb.data.network.ConnectivityBroadcastReceiver;
 import com.csovan.themoviedb.data.network.NetworkConnection;
+import com.csovan.themoviedb.ui.adapter.ReviewAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCardSmallAdapter;
 import com.csovan.themoviedb.ui.adapter.TVShowCastAdapter;
 import com.csovan.themoviedb.ui.adapter.VideoAdapter;
@@ -66,12 +69,14 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private String tvshowTitle;
 
     private boolean tvshowDetailsLoaded;
+    private boolean reviewsSectionLoaded;
     private boolean videosSectionLoaded;
     private boolean castsSectionLoaded;
     private boolean similarTVShowsSectionLoaded;
     private boolean isActivityLoaded;
     private boolean isBroadcastReceiverRegistered;
-    private boolean isOverviewTextViewClicked = false;
+    private boolean isOverviewTextViewClicked;
+    private boolean isGenresTextViewClicked;
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ProgressBar progressBar;
@@ -98,6 +103,12 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private TextView textViewNoDataAvailableVideos;
     private TextView textViewNoDataAvailableOverview;
     private TextView textViewNoDataAvailableSimilarTVShows;
+    private TextView textViewNoDataAvailableReviews;
+
+    // Reviews
+    private RecyclerView reviewRecyclerView;
+    private List<Review> reviewList;
+    private ReviewAdapter reviewAdapter;
 
     // Videos
     private RecyclerView videoRecyclerView;
@@ -116,6 +127,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     // Retrofit network calls
     private Call<TVShow> tvshowDetailsCall;
+    private Call<ReviewsResponse> reviewsResponseCall;
     private Call<VideosResponse> videosResponseCall;
     private Call<TVShowCreditsResponse> tvshowCreditsResponseCall;
     private Call<TVShowsSimilarResponse> similarTVShowsResponseCall;
@@ -164,6 +176,16 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         textViewNoDataAvailableOverview = findViewById(R.id.text_view_overview_no_data);
         textViewNoDataAvailableVideos = findViewById(R.id.text_view_video_no_data);
         textViewNoDataAvailableSimilarTVShows = findViewById(R.id.text_view_similar_tv_shows_no_data);
+        textViewNoDataAvailableReviews = findViewById(R.id.text_view_reviews_no_data);
+
+        // Set adapter reviews
+        reviewRecyclerView = findViewById(R.id.recycler_view_reviews);
+        reviewList = new ArrayList<>();
+        reviewAdapter = new ReviewAdapter(TVShowDetailsActivity.this, reviewList);
+        reviewRecyclerView.setAdapter(reviewAdapter);
+        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(TVShowDetailsActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
+        reviewsSectionLoaded = false;
 
         // Set adapter videos
         videoRecyclerView = findViewById(R.id.recycler_view_videos);
@@ -206,6 +228,20 @@ public class TVShowDetailsActivity extends AppCompatActivity {
             }
         });
 
+        // Set onClickListener to genres textView to expand or collapse
+        textViewTVShowGenres.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isGenresTextViewClicked){
+                    textViewTVShowGenres.setMaxLines(1);
+                    isGenresTextViewClicked = false;
+                }else {
+                    textViewTVShowGenres.setMaxLines(Integer.MAX_VALUE);
+                    isGenresTextViewClicked = true;
+                }
+            }
+        });
+
         if (NetworkConnection.isConnected(TVShowDetailsActivity.this)){
             isActivityLoaded = true;
             loadActivity();
@@ -219,6 +255,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvshowsSimilarAdapter.notifyDataSetChanged();
         videoAdapter.notifyDataSetChanged();
         tvshowCastAdapter.notifyDataSetChanged();
+        reviewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -263,6 +300,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         super.onDestroy();
 
         if (tvshowDetailsCall != null) tvshowDetailsCall.cancel();
+        if (reviewsResponseCall != null) reviewsResponseCall.cancel();
         if (videosResponseCall != null) videosResponseCall.cancel();
         if (tvshowCreditsResponseCall != null) tvshowCreditsResponseCall.cancel();
         if (similarTVShowsResponseCall != null) similarTVShowsResponseCall.cancel();
@@ -326,6 +364,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 setCreators(response.body().getCreators());
                 setNetworks(response.body().getNetworks());
                 setGenres(response.body().getGenres());
+                setReviews();
                 setVideos();
                 setCasts();
                 setSimilarTVShows();
@@ -467,6 +506,45 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // Get tv show reviews
+    private void setReviews(){
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        reviewsResponseCall = apiService.getTVShowReviews(tvshowId, TMDB_API_KEY);
+        reviewsResponseCall.enqueue(new Callback<ReviewsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ReviewsResponse> call, @NonNull Response<ReviewsResponse> response) {
+                if (!response.isSuccessful()) {
+                    reviewsResponseCall = call.clone();
+                    reviewsResponseCall.enqueue(this);
+                    return;
+                }
+
+                if (response.body() == null) return;
+                if (response.body().getReviews() == null) return;
+
+                for (Review review : response.body().getReviews()){
+                    if (review != null && review.getAuthor() != null && !review.getAuthor().contains("tmdb")){
+                        textViewNoDataAvailableReviews.setVisibility(View.GONE);
+                        reviewList.add(review);
+                    }
+                }
+
+                if (!reviewList.isEmpty()){
+                    reviewAdapter.notifyDataSetChanged();
+                }
+
+                reviewsSectionLoaded = true;
+                checkTVShowDetailsLoaded();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ReviewsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+    }
+
     // Get videos
     private void setVideos(){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -583,7 +661,9 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
     // Check if all details are loaded
     private void checkTVShowDetailsLoaded(){
-        if (tvshowDetailsLoaded && videosSectionLoaded && castsSectionLoaded && similarTVShowsSectionLoaded){
+        if (tvshowDetailsLoaded && reviewsSectionLoaded
+                && videosSectionLoaded && castsSectionLoaded
+                && similarTVShowsSectionLoaded){
             progressBar.setVisibility(View.GONE);
             collapsingToolbarLayout.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.VISIBLE);

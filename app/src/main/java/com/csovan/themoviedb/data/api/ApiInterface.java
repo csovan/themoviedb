@@ -111,6 +111,11 @@ public interface ApiInterface {
             @Query("api_key") String apiKey,
             @Query("region") String region);
 
+    @GET("tv/{id}/reviews")
+    Call<ReviewsResponse> getTVShowReviews(
+            @Path("id") Integer tvshowId,
+            @Query("api_key") String apiKey);
+
     @GET("tv/{id}/videos")
     Call<VideosResponse> getTVShowVideos(
             @Path("id") Integer tvshowId,

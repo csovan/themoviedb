@@ -43,8 +43,8 @@
 
     <TextView
         android:id="@+id/text_view_video_title"
-        android:layout_width="240dp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="2"

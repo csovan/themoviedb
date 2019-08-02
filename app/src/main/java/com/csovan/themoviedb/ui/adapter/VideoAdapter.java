@@ -86,7 +86,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             videoCardView.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.80);
             videoCardView.getLayoutParams().height =
-                    (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.80) / 1.80);
+                    (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.80) / 1.8);
 
             constraintLayoutItemVideo.setOnClickListener(new View.OnClickListener(){
                 @Override
