@@ -2,7 +2,6 @@ package com.csovan.themoviedb.ui.activity;
 
 import android.app.LoaderManager;
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.csovan.themoviedb.R;
 import com.csovan.themoviedb.data.model.search.SearchAsyncTaskLoader;
@@ -32,8 +30,6 @@ import com.csovan.themoviedb.ui.adapter.SearchResultsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.csovan.themoviedb.util.Constant.QUERY;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -68,10 +64,9 @@ public class SearchActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
 
-        Intent receivedIntent = getIntent();
-
-        if (Intent.ACTION_SEARCH.equals(receivedIntent.getAction())){
-            query = receivedIntent.getStringExtra(QUERY);
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            query = intent.getStringExtra(SearchManager.QUERY);
         }
 
         if (query == null || query.trim().isEmpty()) finish();
@@ -204,15 +199,18 @@ public class SearchActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        // Get action menu item
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+        // Set search query hints
         searchView.setQueryHint(getResources().getString(R.string.search_hints));
 
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(
-                this, SearchActivity.class)));
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
