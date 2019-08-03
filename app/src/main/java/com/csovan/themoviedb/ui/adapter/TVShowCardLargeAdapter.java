@@ -46,6 +46,8 @@ public class TVShowCardLargeAdapter extends RecyclerView.Adapter<TVShowCardLarge
                 .asBitmap()
                 .centerCrop()
                 .placeholder(R.drawable.ic_film)
+                .fallback(R.drawable.ic_film)
+                .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivTVShowBackdrop);
 

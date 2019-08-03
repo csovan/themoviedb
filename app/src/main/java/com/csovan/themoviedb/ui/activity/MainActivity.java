@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.csovan.themoviedb.R;
+import com.csovan.themoviedb.ui.fragment.AboutFragment;
 import com.csovan.themoviedb.ui.fragment.FavoritesFragment;
 import com.csovan.themoviedb.ui.fragment.HomeFragment;
 import com.csovan.themoviedb.ui.fragment.MoviesFragment;
@@ -137,6 +138,13 @@ public class MainActivity extends AppCompatActivity
                         "%s - %s",
                         getString(R.string.app_name),
                         getString(R.string.menu_favorites)));
+                return true;
+            case R.id.nav_about:
+                setFragment(new AboutFragment());
+                setTitle(String.format(
+                        "%s - %s",
+                        getString(R.string.app_name),
+                        getString(R.string.menu_about)));
                 return true;
         }
         return false;

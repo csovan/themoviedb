@@ -36,6 +36,7 @@
     <string name="image_button_play_desc">Image button play Desc</string>
     <string name="cast_poster_desc">Cast poster desc</string>
     <string name="image_view_author_desc">Image view author desc</string>
+    <string name="image_view_logo_desc">Image view logo desc</string>
 
     <!-- Menus -->
     <string name="menu_home">Home</string>
@@ -134,5 +135,16 @@
 
     <!-- Search -->
     <string name="media_type_search">Media Type</string>
+
+    <!-- About -->
+    <string name="disclaimer">This is not the official TMDb android app. This app uses The Movie
+        Database services but it is not endorsed or certified by it.</string>
+
+    <string name="tmdb_about">The Movie Database (TMDb) is a community built movie and TV database.
+        Every piece of data has been added by the amazing community dating back to 2008.
+        For more information follow the link below:</string>
+
+    <string name="tmdb_about_link">https://www.themoviedb.org/about</string>
+
 
 </resources>

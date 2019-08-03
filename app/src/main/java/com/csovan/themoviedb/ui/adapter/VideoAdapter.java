@@ -50,6 +50,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 .asBitmap()
                 .centerCrop()
                 .placeholder(R.drawable.ic_film)
+                .fallback(R.drawable.ic_film)
+                .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.videoImageView);
 

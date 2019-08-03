@@ -451,7 +451,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     // Get movie genres
     private void setGenres(List<MovieGenres> genresList) {
         String genres = "";
-        if (genresList != null) {
+        if (genresList != null && !genresList.isEmpty()) {
             for (int i = 0; i < genresList.size(); i++) {
                 if (genresList.get(i) == null) continue;
                 if (i == genresList.size() - 1) {
@@ -522,8 +522,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (response.body().getVideos() == null) return;
 
                 for (Video video : response.body().getVideos()) {
-                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
-                            && video.getType() != null && video.getType().equals("Trailer"))
+                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube"))
                         textViewNoDataAvailableVideos.setVisibility(View.GONE);
                         videoList.add(video);
                 }
@@ -558,6 +557,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
                 if (response.body() == null) return;
                 if (response.body().getCasts() == null) return;
+                if (response.body().getCrews() == null) return;
 
                 // Get movie casts
                 for (MovieCastBrief castBrief : response.body().getCasts()) {
@@ -575,9 +575,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     if (crewBrief != null && crewBrief.getJob() != null
                             && crewBrief.getJob().equals("Director")){
                         textViewMovieDirectorName.setText(crewBrief.getName());
-                    }
-                    if (response.body().getCrews().isEmpty() || response.body().getCrews() == null){
-                        textViewMovieDirectorName.setText("N/A");
                     }
                 }
 

@@ -48,6 +48,8 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
                 .asBitmap()
                 .centerCrop()
                 .placeholder(R.drawable.ic_person)
+                .fallback(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.castImageView);
 

@@ -48,6 +48,8 @@ public class TVShowCastAdapter extends RecyclerView.Adapter<TVShowCastAdapter.Ca
                 .asBitmap()
                 .centerCrop()
                 .placeholder(R.drawable.ic_person)
+                .fallback(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.castImageView);
 
