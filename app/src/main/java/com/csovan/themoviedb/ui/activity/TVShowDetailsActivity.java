@@ -562,8 +562,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
                 if (response.body().getVideos() == null) return;
 
                 for (Video video : response.body().getVideos()) {
-                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube")
-                            && video.getType() != null && video.getType().equals("Trailer"))
+                    if (video != null && video.getSite() != null && video.getSite().equals("YouTube"))
                         textViewNoDataAvailableVideos.setVisibility(View.GONE);
                         videoList.add(video);
                 }
