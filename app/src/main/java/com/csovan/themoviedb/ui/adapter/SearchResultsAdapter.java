@@ -59,38 +59,38 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 .fallback(R.drawable.ic_film)
                 .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.posterImageView);
+                .into(holder.imageViewPoster);
 
         if (searchResults.get(position).getName() != null && !searchResults.get(position).getName().trim().isEmpty())
-            holder.nameTextView.setText(searchResults.get(position).getName());
+            holder.textViewNameSearch.setText(searchResults.get(position).getName());
         else
-            holder.nameTextView.setText("");
+            holder.textViewNameSearch.setText("");
 
         if (searchResults.get(position).getMediaType() != null && searchResults.get(position).getMediaType().equals("movie"))
-            holder.mediaTypeTextView.setText(R.string.movie);
+            holder.textViewMediaType.setText(R.string.movie);
         else if (searchResults.get(position).getMediaType() != null && searchResults.get(position).getMediaType().equals("tv"))
-            holder.mediaTypeTextView.setText(R.string.tv_show);
+            holder.textViewMediaType.setText(R.string.tv_show);
         else if (searchResults.get(position).getMediaType() != null && searchResults.get(position).getMediaType().equals("person"))
-            holder.mediaTypeTextView.setText(R.string.person);
+            holder.textViewMediaType.setText(R.string.person);
         else
-            holder.mediaTypeTextView.setText("");
+            holder.textViewMediaType.setText("");
 
         if (searchResults.get(position).getOverview() != null && !searchResults.get(position).getOverview().trim().isEmpty())
-            holder.overviewTextView.setText(searchResults.get(position).getOverview());
+            holder.textViewOverview.setText(searchResults.get(position).getOverview());
         else
-            holder.overviewTextView.setText("");
+            holder.textViewOverview.setText("");
 
         if (searchResults.get(position).getReleaseDate() != null && !searchResults.get(position).getReleaseDate().trim().isEmpty()) {
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy", Locale.getDefault());
             try {
                 Date releaseDate = sdf1.parse(searchResults.get(position).getReleaseDate());
-                holder.yearTextView.setText(sdf2.format(releaseDate));
+                holder.textViewYear.setText(sdf2.format(releaseDate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         } else {
-            holder.yearTextView.setText("");
+            holder.textViewYear.setText("");
         }
     }
 
@@ -104,11 +104,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         ConstraintLayout constraintLayoutSearchResults;
 
         CardView cardViewPoster;
-        ImageView posterImageView;
-        TextView nameTextView;
-        TextView mediaTypeTextView;
-        TextView overviewTextView;
-        TextView yearTextView;
+        ImageView imageViewPoster;
+        TextView textViewNameSearch;
+        TextView textViewMediaType;
+        TextView textViewOverview;
+        TextView textViewYear;
 
         ResultViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,11 +116,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             constraintLayoutSearchResults = itemView.findViewById(R.id.constraint_layout_search_result);
 
             cardViewPoster = itemView.findViewById(R.id.card_view_movie_poster);
-            posterImageView = itemView.findViewById(R.id.image_view_poster_search);
-            nameTextView = itemView.findViewById(R.id.text_view_name_search);
-            mediaTypeTextView = itemView.findViewById(R.id.text_view_media_type_search);
-            overviewTextView = itemView.findViewById(R.id.text_view_overview_search);
-            yearTextView = itemView.findViewById(R.id.text_view_release_date_search);
+            imageViewPoster = itemView.findViewById(R.id.image_view_poster_search);
+            textViewNameSearch = itemView.findViewById(R.id.text_view_name_search);
+            textViewMediaType = itemView.findViewById(R.id.text_view_media_type_search);
+            textViewOverview = itemView.findViewById(R.id.text_view_overview_search);
+            textViewYear = itemView.findViewById(R.id.text_view_release_date_search);
 
             cardViewPoster.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);

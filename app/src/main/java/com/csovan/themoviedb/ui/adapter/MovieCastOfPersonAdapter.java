@@ -88,7 +88,7 @@ public class MovieCastOfPersonAdapter extends RecyclerView.Adapter<MovieCastOfPe
             super(itemView);
 
             cardViewMovieCard = itemView.findViewById(R.id.card_view_cast_of);
-            imageViewMoviePoster = itemView.findViewById(R.id.image_view_movie_poster);
+            imageViewMoviePoster = itemView.findViewById(R.id.image_view_poster);
             textViewMovieTitle = itemView.findViewById(R.id.text_view_title);
             textViewCastCharacter = itemView.findViewById(R.id.text_view_cast_as);
 

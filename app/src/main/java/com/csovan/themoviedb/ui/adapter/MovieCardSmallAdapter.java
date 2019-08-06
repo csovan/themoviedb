@@ -51,12 +51,12 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
                 .fallback(R.drawable.ic_film)
                 .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivMoviePoster);
+                .into(holder.imageViewMoviePoster);
 
         if (movieList.get(position).getTitle() != null){
-            holder.tvMovieTitle.setText(movieList.get(position).getTitle());
+            holder.textViewMovieTitle.setText(movieList.get(position).getTitle());
         }else {
-            holder.tvMovieTitle.setText("N/A");
+            holder.textViewMovieTitle.setText("N/A");
         }
 
     }
@@ -68,24 +68,24 @@ public class MovieCardSmallAdapter extends RecyclerView.Adapter<MovieCardSmallAd
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cvMovieCard;
-        ImageView ivMoviePoster;
-        TextView tvMovieTitle;
+        CardView cardViewMovieCardSmall;
+        ImageView imageViewMoviePoster;
+        TextView textViewMovieTitle;
 
         ConstraintLayout constraintLayoutItemCardSmall;
 
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cvMovieCard = itemView.findViewById(R.id.card_view_small);
-            ivMoviePoster = itemView.findViewById(R.id.image_view_movie_poster);
-            tvMovieTitle = itemView.findViewById(R.id.text_view_title);
+            cardViewMovieCardSmall = itemView.findViewById(R.id.card_view_small);
+            imageViewMoviePoster = itemView.findViewById(R.id.image_view_poster);
+            textViewMovieTitle = itemView.findViewById(R.id.text_view_title);
 
             constraintLayoutItemCardSmall = itemView.findViewById(R.id.constraint_layout_item_card_small);
 
-            cvMovieCard.getLayoutParams().width =
+            cardViewMovieCardSmall.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
-            cvMovieCard.getLayoutParams().height =
+            cardViewMovieCardSmall.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
             constraintLayoutItemCardSmall.setOnClickListener(new View.OnClickListener(){

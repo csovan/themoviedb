@@ -51,16 +51,16 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
                 .fallback(R.drawable.ic_person)
                 .error(R.drawable.ic_person)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.castImageView);
+                .into(holder.imageViewCastProfile);
 
         if (castBriefList.get(position).getName() != null)
-            holder.castName.setText(castBriefList.get(position).getName());
+            holder.textViewCastName.setText(castBriefList.get(position).getName());
         else
-            holder.castName.setText("");
+            holder.textViewCastName.setText("");
 
         if (castBriefList.get(position).getCharacter() != null)
-            holder.castCharacter.setText(castBriefList.get(position).getCharacter());
-        else holder.castCharacter.setText("");
+            holder.textViewCastCharacter.setText(castBriefList.get(position).getCharacter());
+        else holder.textViewCastCharacter.setText("");
     }
 
     @Override
@@ -70,27 +70,27 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Cast
 
     class CastViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView castImageView;
-        TextView castName;
-        TextView castCharacter;
+        ImageView imageViewCastProfile;
+        TextView textViewCastName;
+        TextView textViewCastCharacter;
 
-        CardView castCardView;
+        CardView cardViewCastCard;
         ConstraintLayout constraintLayoutItemCast;
 
         CastViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            castImageView = itemView.findViewById(R.id.image_view_cast_profile_pic);
-            castName = itemView.findViewById(R.id.text_view_cast_name);
-            castCharacter = itemView.findViewById(R.id.text_view_cast_as);
-            castCardView = itemView.findViewById(R.id.card_view_cast);
+            imageViewCastProfile = itemView.findViewById(R.id.image_view_cast_profile_pic);
+            textViewCastName = itemView.findViewById(R.id.text_view_cast_name);
+            textViewCastCharacter = itemView.findViewById(R.id.text_view_cast_as);
+            cardViewCastCard = itemView.findViewById(R.id.card_view_cast);
 
             constraintLayoutItemCast = itemView.findViewById(R.id.constraint_layout_item_cast);
 
             constraintLayoutItemCast.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
 
-            castCardView.getLayoutParams().height =
+            cardViewCastCard.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * .25) / 1);
 
             constraintLayoutItemCast.setOnClickListener(new View.OnClickListener(){

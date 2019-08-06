@@ -51,7 +51,7 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
                 .fallback(R.drawable.ic_film)
                 .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivTVShowPoster);
+                .into(holder.imageViewTVShowPoster);
 
         if (tvshowList.get(position).getName() != null){
             holder.tvTVShowTitle.setText(tvshowList.get(position).getName());
@@ -68,8 +68,8 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
 
     class TVShowViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cvTVShowCard;
-        ImageView ivTVShowPoster;
+        CardView cardViewTVShowCardSmall;
+        ImageView imageViewTVShowPoster;
         TextView tvTVShowTitle;
 
         ConstraintLayout constraintLayoutItemCardSmall;
@@ -77,15 +77,15 @@ public class TVShowCardSmallAdapter extends RecyclerView.Adapter<TVShowCardSmall
         TVShowViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cvTVShowCard = itemView.findViewById(R.id.card_view_small);
-            ivTVShowPoster = itemView.findViewById(R.id.image_view_movie_poster);
+            cardViewTVShowCardSmall = itemView.findViewById(R.id.card_view_small);
+            imageViewTVShowPoster = itemView.findViewById(R.id.image_view_poster);
             tvTVShowTitle = itemView.findViewById(R.id.text_view_title);
 
             constraintLayoutItemCardSmall = itemView.findViewById(R.id.constraint_layout_item_card_small);
 
-            cvTVShowCard.getLayoutParams().width =
+            cardViewTVShowCardSmall.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.25);
-            cvTVShowCard.getLayoutParams().height =
+            cardViewTVShowCardSmall.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.25) / 0.65);
 
             constraintLayoutItemCardSmall.setOnClickListener(new View.OnClickListener(){

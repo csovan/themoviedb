@@ -53,12 +53,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 .fallback(R.drawable.ic_film)
                 .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.videoImageView);
+                .into(holder.imageViewVideoThumbnail);
 
         if (videoList.get(position).getName() != null)
-            holder.videoTextView.setText(videoList.get(position).getName());
+            holder.textViewVideoTitle.setText(videoList.get(position).getName());
         else
-            holder.videoTextView.setText("");
+            holder.textViewVideoTitle.setText("");
     }
 
     @Override
@@ -68,26 +68,26 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     class VideoViewHolder extends RecyclerView.ViewHolder {
 
-        CardView videoCardView;
-        ImageView videoImageView;
-        TextView videoTextView;
-        ImageButton videoPlayImageButton;
+        CardView cardViewVideo;
+        ImageView imageViewVideoThumbnail;
+        TextView textViewVideoTitle;
+        ImageButton imageButtonPlayButton;
 
         ConstraintLayout constraintLayoutItemVideo;
 
         VideoViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            videoCardView = itemView.findViewById(R.id.card_view_video);
-            videoImageView = itemView.findViewById(R.id.image_view_video_thumbnail);
-            videoTextView = itemView.findViewById(R.id.text_view_video_title);
-            videoPlayImageButton = itemView.findViewById(R.id.image_button_video_play_button);
+            cardViewVideo = itemView.findViewById(R.id.card_view_video);
+            imageViewVideoThumbnail = itemView.findViewById(R.id.image_view_video_thumbnail);
+            textViewVideoTitle = itemView.findViewById(R.id.text_view_video_title);
+            imageButtonPlayButton = itemView.findViewById(R.id.image_button_video_play_button);
 
             constraintLayoutItemVideo = itemView.findViewById(R.id.constraint_layout_item_video);
 
-            videoCardView.getLayoutParams().width =
+            cardViewVideo.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.80);
-            videoCardView.getLayoutParams().height =
+            cardViewVideo.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.80) / 1.8);
 
             constraintLayoutItemVideo.setOnClickListener(new View.OnClickListener(){

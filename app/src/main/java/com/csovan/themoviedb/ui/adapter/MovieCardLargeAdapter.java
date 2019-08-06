@@ -51,12 +51,12 @@ public class MovieCardLargeAdapter extends RecyclerView.Adapter<MovieCardLargeAd
                 .fallback(R.drawable.ic_film)
                 .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivMovieBackDrop);
+                .into(holder.imageViewMovieBackdrop);
 
         if (movieList.get(position).getTitle() != null)
-            holder.tvMovieTitle.setText(movieList.get(position).getTitle());
+            holder.textViewMovieTitle.setText(movieList.get(position).getTitle());
         else
-            holder.tvMovieTitle.setText("");
+            holder.textViewMovieTitle.setText("");
 
     }
 
@@ -66,23 +66,23 @@ public class MovieCardLargeAdapter extends RecyclerView.Adapter<MovieCardLargeAd
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
-        CardView cvMovieCard;
-        ImageView ivMovieBackDrop;
-        TextView tvMovieTitle;
+        CardView cardViewMovieCardLarge;
+        ImageView imageViewMovieBackdrop;
+        TextView textViewMovieTitle;
 
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cvMovieCard = itemView.findViewById(R.id.card_view_large);
-            ivMovieBackDrop = itemView.findViewById(R.id.image_view_backdrop);
-            tvMovieTitle = itemView.findViewById(R.id.text_view_title_card_large);
+            cardViewMovieCardLarge = itemView.findViewById(R.id.card_view_large);
+            imageViewMovieBackdrop = itemView.findViewById(R.id.image_view_backdrop);
+            textViewMovieTitle = itemView.findViewById(R.id.text_view_title_card_large);
 
-            cvMovieCard.getLayoutParams().width =
+            cardViewMovieCardLarge.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.85);
-            cvMovieCard.getLayoutParams().height =
+            cardViewMovieCardLarge.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.85) / 1.75);
 
-            cvMovieCard.setOnClickListener(new View.OnClickListener(){
+            cardViewMovieCardLarge.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, MovieDetailsActivity.class);

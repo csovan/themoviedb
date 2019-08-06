@@ -49,12 +49,12 @@ public class TVShowCardLargeAdapter extends RecyclerView.Adapter<TVShowCardLarge
                 .fallback(R.drawable.ic_film)
                 .error(R.drawable.ic_film)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.ivTVShowBackdrop);
+                .into(holder.imageViewBackdrop);
 
         if (tvshowList.get(position).getName() != null)
-            holder.tvTVShowTitle.setText(tvshowList.get(position).getName());
+            holder.textViewTVShowTitle.setText(tvshowList.get(position).getName());
         else
-            holder.tvTVShowTitle.setText("");
+            holder.textViewTVShowTitle.setText("");
     }
 
     @Override
@@ -64,23 +64,23 @@ public class TVShowCardLargeAdapter extends RecyclerView.Adapter<TVShowCardLarge
 
     class TVShowViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cvTVShowCard;
-        ImageView ivTVShowBackdrop;
-        TextView tvTVShowTitle;
+        CardView cardViewTVShowCardLarge;
+        ImageView imageViewBackdrop;
+        TextView textViewTVShowTitle;
 
         TVShowViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cvTVShowCard = itemView.findViewById(R.id.card_view_large);
-            ivTVShowBackdrop = itemView.findViewById(R.id.image_view_backdrop);
-            tvTVShowTitle = itemView.findViewById(R.id.text_view_title_card_large);
+            cardViewTVShowCardLarge = itemView.findViewById(R.id.card_view_large);
+            imageViewBackdrop = itemView.findViewById(R.id.image_view_backdrop);
+            textViewTVShowTitle = itemView.findViewById(R.id.text_view_title_card_large);
 
-            cvTVShowCard.getLayoutParams().width =
+            cardViewTVShowCardLarge.getLayoutParams().width =
                     (int) (context.getResources().getDisplayMetrics().widthPixels * 0.85);
-            cvTVShowCard.getLayoutParams().height =
+            cardViewTVShowCardLarge.getLayoutParams().height =
                     (int) ((context.getResources().getDisplayMetrics().widthPixels * 0.85) / 1.75);
 
-            cvTVShowCard.setOnClickListener(new View.OnClickListener(){
+            cardViewTVShowCardLarge.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
                     Intent intent = new Intent(context, TVShowDetailsActivity.class);
