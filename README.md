@@ -1,3 +1,6 @@
+# Try it here:
+https://play.google.com/store/apps/details?id=com.csovan.themoviedb
+
 # themoviedb
 
 require api key from https://www.themoviedb.org/ to run the app.
